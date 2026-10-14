@@ -1,0 +1,10 @@
+node_modules
+dist
+storybook-static
+*.local
+.env
+.env.*
+!.env.example
+coverage
+
+.vercel

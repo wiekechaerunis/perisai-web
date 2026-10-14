@@ -1,0 +1,27 @@
+/*
+ * Nilai dari Figma CORE-PERISAI yang TIDAK ADA di PERISAI Design System.
+ * Dipakai hanya di layar yang punya frame Figma (Login 85-4791, Aktivasi 66-2546/2569/2582/2602, OTP 116-144/118-235).
+ * Setiap nilai tercatat di DS_GAPS.md ("Nilai Figma di luar DS") untuk diputuskan: masuk DS atau diganti token DS.
+ * Jangan dipakai di komponen reusable.
+ */
+:root {
+  /* "Lupa kata sandi?" (85:4822). DS: merah hanya untuk severitas / error form. */
+  --figma-link-accent: #c8202f;
+  /* "Hubungi Support" di header layar publik (66:2551). DS: biru hanya untuk focus-ring. */
+  --figma-link-support: #2b81f3;
+  /* "Hubungi Support" di dalam alert login (85:4916). Sama dengan focus-ring DS. */
+  --figma-link-inline: #2459c8;
+  /* Alert login (85:4911): latar, border, judul. DS Callout tidak punya varian ini. */
+  --figma-alert-bg: #fffbfb;
+  --figma-alert-border: #fecaca;
+  --figma-alert-title: #dc2626;
+  /* Teks hero di atas foto (85:4833, 85:4834). */
+  --figma-hero-ink: #ffffff;
+  --figma-hero-ink-muted: rgba(255, 255, 255, 0.85);
+  /* Footer hak cipta (85:4825). */
+  --figma-footer-ink: #8a8f93;
+  /* Garis header layar publik (66:2547). */
+  --figma-header-border: #e6e6e7;
+  /* Teks "Butuh Bantuan?" (66:2550). */
+  --figma-header-muted: #777980;
+}

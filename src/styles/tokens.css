@@ -1,0 +1,172 @@
+/* GENERATED dari design-system/tokens.json (PERISAI v1) oleh scripts/build-tokens.ts. Jangan disunting. */
+:root, [data-theme="standar"] {
+  --font-sans: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", Consolas, monospace;
+  --type-display-family: var(--font-sans);
+  --type-display-size: 30px;
+  --type-display-line: 38px;
+  --type-display-weight: 600;
+  --type-display-tracking: -0.01em;
+  --type-heading-1-family: var(--font-sans);
+  --type-heading-1-size: 26px;
+  --type-heading-1-line: 32px;
+  --type-heading-1-weight: 600;
+  --type-heading-1-tracking: -0.01em;
+  --type-heading-2-family: var(--font-sans);
+  --type-heading-2-size: 17px;
+  --type-heading-2-line: 24px;
+  --type-heading-2-weight: 600;
+  --type-heading-2-tracking: normal;
+  --type-heading-3-family: var(--font-sans);
+  --type-heading-3-size: 14px;
+  --type-heading-3-line: 20px;
+  --type-heading-3-weight: 600;
+  --type-heading-3-tracking: normal;
+  --type-body-lg-family: var(--font-sans);
+  --type-body-lg-size: 18px;
+  --type-body-lg-line: 29px;
+  --type-body-lg-weight: 400;
+  --type-body-lg-tracking: normal;
+  --type-body-family: var(--font-sans);
+  --type-body-size: 15px;
+  --type-body-line: 24px;
+  --type-body-weight: 400;
+  --type-body-tracking: normal;
+  --type-body-dense-family: var(--font-sans);
+  --type-body-dense-size: 14px;
+  --type-body-dense-line: 20px;
+  --type-body-dense-weight: 400;
+  --type-body-dense-tracking: normal;
+  --type-label-family: var(--font-sans);
+  --type-label-size: 13px;
+  --type-label-line: 18px;
+  --type-label-weight: 500;
+  --type-label-tracking: normal;
+  --type-caption-family: var(--font-sans);
+  --type-caption-size: 12px;
+  --type-caption-line: 16px;
+  --type-caption-weight: 400;
+  --type-caption-tracking: normal;
+  --type-metric-family: var(--font-mono);
+  --type-metric-size: 26px;
+  --type-metric-line: 32px;
+  --type-metric-weight: 400;
+  --type-metric-tracking: normal;
+  --type-data-family: var(--font-mono);
+  --type-data-size: 14px;
+  --type-data-line: 20px;
+  --type-data-weight: 400;
+  --type-data-tracking: normal;
+  --type-data-id-family: var(--font-mono);
+  --type-data-id-size: 12px;
+  --type-data-id-line: 16px;
+  --type-data-id-weight: 400;
+  --type-data-id-tracking: normal;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --control-md: 36px;
+  --control-lg: 44px;
+  --row-min: 44px;
+  --sidebar-width: 232px;
+  --content-max: 720px;
+  --color-surface-page: #f4f3f0;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f7f6f3;
+  --color-surface-selected: #f1efea;
+  --color-border: #e4e2dd;
+  --color-border-subtle: #ecebe6;
+  --color-border-control: #8a867e;
+  --color-ink: #1d1c1a;
+  --color-ink-muted: #5e5b55;
+  --color-ink-subtle: #6b675f;
+  --color-action: #1d1c1a;
+  --color-on-action: #ffffff;
+  --color-focus-ring: #2459c8;
+  --color-brand-red: #ea292b;
+  --color-brand-lime: #bed630;
+  --color-brand-gray: #787878;
+  --color-count-bg: #d42427;
+  --color-sidebar-bg: #1d1c1a;
+  --color-sidebar-ink: #e9e6e0;
+  --color-sidebar-muted: #a8a49c;
+  --color-sidebar-active: #34322e;
+  --color-sev-kritis: #b42318;
+  --color-sev-kritis-bg: #fde8e6;
+  --color-sev-kritis-ink: #8f1d12;
+  --color-sev-tinggi: #c4520f;
+  --color-sev-tinggi-bg: #fdebdd;
+  --color-sev-tinggi-ink: #8f3510;
+  --color-sev-sedang: #b07d00;
+  --color-sev-sedang-bg: #faf0d2;
+  --color-sev-sedang-ink: #6b4a00;
+  --color-sev-rendah: #2f6b3f;
+  --color-sev-rendah-bg: #e3f1e6;
+  --color-sev-rendah-ink: #1f5230;
+  --color-caution: #9a6a00;
+  --color-caution-bg: #fbf3dc;
+  --color-caution-ink: #6b4600;
+  --color-error-ink: var(--color-sev-kritis-ink);
+  --shadow-overlay: 0 8px 24px rgba(29,28,26,0.16), 0 1px 3px rgba(29,28,26,0.12);
+}
+[data-theme="ruang-kendali"] {
+  color-scheme: dark;
+  --color-surface-page: #141412;
+  --color-surface: #1d1c1a;
+  --color-surface-sunken: #26241f;
+  --color-surface-selected: #2e2c28;
+  --color-border: #3a3833;
+  --color-border-subtle: #2e2c28;
+  --color-border-control: #7a766e;
+  --color-ink: #f1eee8;
+  --color-ink-muted: #b5b0a6;
+  --color-ink-subtle: #a09b91;
+  --color-action: #f1eee8;
+  --color-on-action: #1d1c1a;
+  --color-focus-ring: #8fb0f5;
+  --color-brand-red: #ea292b;
+  --color-brand-lime: #bed630;
+  --color-brand-gray: #787878;
+  --color-count-bg: #d42427;
+  --color-sidebar-bg: #0f0f0e;
+  --color-sidebar-ink: #e9e6e0;
+  --color-sidebar-muted: #a8a49c;
+  --color-sidebar-active: #2a2926;
+  --color-sev-kritis: #f0584a;
+  --color-sev-kritis-bg: #3a1512;
+  --color-sev-kritis-ink: #ff9c8f;
+  --color-sev-tinggi: #f08a3c;
+  --color-sev-tinggi-bg: #3a2210;
+  --color-sev-tinggi-ink: #ffb27a;
+  --color-sev-sedang: #e0ae2e;
+  --color-sev-sedang-bg: #332a0c;
+  --color-sev-sedang-ink: #f2c65a;
+  --color-sev-rendah: #5bb573;
+  --color-sev-rendah-bg: #142b1b;
+  --color-sev-rendah-ink: #8fd3a2;
+  --color-caution: #e0ae2e;
+  --color-caution-bg: #332a0c;
+  --color-caution-ink: #f2c65a;
+  --color-error-ink: var(--color-sev-kritis-ink);
+  --shadow-overlay: 0 8px 24px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.4);
+}
+.type-display { font-family: var(--type-display-family); font-size: var(--type-display-size); line-height: var(--type-display-line); font-weight: var(--type-display-weight); letter-spacing: var(--type-display-tracking); }
+.type-heading-1 { font-family: var(--type-heading-1-family); font-size: var(--type-heading-1-size); line-height: var(--type-heading-1-line); font-weight: var(--type-heading-1-weight); letter-spacing: var(--type-heading-1-tracking); }
+.type-heading-2 { font-family: var(--type-heading-2-family); font-size: var(--type-heading-2-size); line-height: var(--type-heading-2-line); font-weight: var(--type-heading-2-weight); letter-spacing: var(--type-heading-2-tracking); }
+.type-heading-3 { font-family: var(--type-heading-3-family); font-size: var(--type-heading-3-size); line-height: var(--type-heading-3-line); font-weight: var(--type-heading-3-weight); letter-spacing: var(--type-heading-3-tracking); }
+.type-body-lg { font-family: var(--type-body-lg-family); font-size: var(--type-body-lg-size); line-height: var(--type-body-lg-line); font-weight: var(--type-body-lg-weight); letter-spacing: var(--type-body-lg-tracking); }
+.type-body { font-family: var(--type-body-family); font-size: var(--type-body-size); line-height: var(--type-body-line); font-weight: var(--type-body-weight); letter-spacing: var(--type-body-tracking); }
+.type-body-dense { font-family: var(--type-body-dense-family); font-size: var(--type-body-dense-size); line-height: var(--type-body-dense-line); font-weight: var(--type-body-dense-weight); letter-spacing: var(--type-body-dense-tracking); }
+.type-label { font-family: var(--type-label-family); font-size: var(--type-label-size); line-height: var(--type-label-line); font-weight: var(--type-label-weight); letter-spacing: var(--type-label-tracking); }
+.type-caption { font-family: var(--type-caption-family); font-size: var(--type-caption-size); line-height: var(--type-caption-line); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-tracking); }
+.type-metric { font-family: var(--type-metric-family); font-size: var(--type-metric-size); line-height: var(--type-metric-line); font-weight: var(--type-metric-weight); letter-spacing: var(--type-metric-tracking); }
+.type-data { font-family: var(--type-data-family); font-size: var(--type-data-size); line-height: var(--type-data-line); font-weight: var(--type-data-weight); letter-spacing: var(--type-data-tracking); }
+.type-data-id { font-family: var(--type-data-id-family); font-size: var(--type-data-id-size); line-height: var(--type-data-id-line); font-weight: var(--type-data-id-weight); letter-spacing: var(--type-data-id-tracking); }
