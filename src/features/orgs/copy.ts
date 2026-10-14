@@ -21,7 +21,7 @@ export const orgCopy = {
   gagalMuat: 'Daftar organisasi gagal dimuat.',
   cobaLagi: 'Coba lagi',
   memuat: 'Memuat…',
-  tabelJudul: (n: number) => `Organisasi · ${n}`,
+  tabelJudul: 'Organisasi', // tanpa jumlah (arahan PM 14 Okt 2026); total ada di paginasi
   tabel: 'Daftar organisasi',
   kolom: { nama: 'Nama', jenis: 'Jenis', domain: 'Domain email', email: 'Email', pengguna: 'Pengguna aktif', pic: 'PIC', status: 'Status' },
   tambahLainnya: (n: number) => `+${n}`,

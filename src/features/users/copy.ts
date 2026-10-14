@@ -7,7 +7,8 @@
 export const usersCopy = {
   judul: 'Manajemen pengguna',
   ringkasan: 'Kelola akun, organisasi, status, dan izin efektif pengguna.', // Figma 66:3139
-  tabelJudul: (n: number) => `Manajemen pengguna · ${n}`, // Figma 66:3139
+  // Figma 66:3139 menampilkan "Manajemen pengguna · n"; jumlah dihapus dari judul (arahan PM 14 Okt 2026), total ada di paginasi.
+  tabelJudul: 'Manajemen pengguna',
   undang: 'Undang pengguna',
   cari: 'Cari nama atau email', // Figma 66:3139
   cariLabel: 'Cari pengguna',

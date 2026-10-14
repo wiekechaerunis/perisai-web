@@ -272,3 +272,5 @@ keputusan #5 Organisasi). Variabel di `src/styles/status.css`, nada di `AccountS
   tampil di ringkasan paginasi ("1–25 dari 132").
 - ASSUMPTION (masukan PM 14 Okt 2026): paginasi punya pilihan "Baris per halaman" 10/25/50/100, bawaan 25 untuk semua
   tabel (Log Akses dan Jejak Audit sebelumnya 20). PRD tidak menetapkan ukuran halaman. Pilihan disimpan di URL (`baris`).
+- Judul tabel Pengguna ("Manajemen pengguna") dan Organisasi juga tanpa jumlah (arahan PM 14 Okt 2026; Figma 66:3139 memakai
+  "Manajemen pengguna · n"). Total tampil di ringkasan paginasi.

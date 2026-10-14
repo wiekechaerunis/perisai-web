@@ -197,7 +197,7 @@ export function PenggunaPage() {
             {filtered && <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
           </div>
         </Section>
-        <Section className="border border-border" title={c.tabelJudul(list.data?.length ?? 0)}>
+        <Section className="border border-border" title={c.tabelJudul}>
           <DataTable
             caption={c.tabelLabel}
             columns={columns}

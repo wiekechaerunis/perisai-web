@@ -167,7 +167,7 @@ function OrgListPage({ level }: { level: OrgLevel }) {
             {filtered && <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
           </div>
         </Section>
-        <Section className="border border-border" title={c.tabelJudul(rows.length)}>
+        <Section className="border border-border" title={c.tabelJudul}>
           <DataTable
             caption={c.tabel}
             columns={columns}
