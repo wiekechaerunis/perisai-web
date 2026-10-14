@@ -37,14 +37,12 @@ export function ResultTag({ ok, children }: { ok: boolean; children: string }) {
   return <AccountStatusBadge label={children} tone={ok ? 'success' : 'danger'} />;
 }
 
-/** Judul kartu tabel: nama tabel + jumlah entri (FR-LA-07) sebagai keterangan kecil. */
-export function TableTitle({ title, count }: { title: string; count?: number }) {
-  return (
-    <span className="flex items-baseline gap-2">
-      {title}
-      {count !== undefined && <span className="font-mono text-caption font-normal text-ink-subtle">{c.jumlah(count)}</span>}
-    </span>
-  );
+/**
+ * Judul kartu tabel = nama tabel (masukan PM 14 Okt 2026: tanpa jumlah entri di judul). Jumlah hasil (FR-LA-07) tampil di
+ * ringkasan paginasi ("1–25 dari 132").
+ */
+export function TableTitle({ title }: { title: string }) {
+  return <>{title}</>;
 }
 
 export function ArchiveTag() {

@@ -9,6 +9,7 @@
  * Paginasi 25 baris (contoh US-ED-04 Ekspor; ASSUMPTION, Daftar Pengguna tidak menyebut ukuran halaman).
  */
 import type { ColumnDef } from '@tanstack/react-table';
+import { PAGE_SIZE_OPTIONS, PAGE_SIZE_PARAM, parsePageSize } from '@/lib/page-size';
 import { Download, Search, UserPlus } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -82,7 +83,7 @@ export function PenggunaPage() {
   // FR-AR-06: role Tidak Aktif tidak muncul di filter.
   const roleOptions: RoleId[] = (isPic ? rolesByOrgType('KKKS') : allRoleIds()).filter(isRoleActive);
   const rows = list.data ?? [];
-  const PAGE = 25;
+  const PAGE = parsePageSize(params.get(PAGE_SIZE_PARAM));
   const pageRows = rows.slice((page - 1) * PAGE, page * PAGE);
   const openUser = (uid: string) => navigate({ pathname: `/pengguna/${uid}`, search: location.search });
 
@@ -214,7 +215,7 @@ export function PenggunaPage() {
               />
             }
           />
-          <Pagination page={page} pageSize={PAGE} total={rows.length} onPageChange={(n) => setParam('hal', String(n))} labels={logsCopy.halaman} />
+          <Pagination page={page} pageSize={PAGE} total={rows.length} onPageChange={(n) => setParam('hal', String(n))} pageSizeOptions={PAGE_SIZE_OPTIONS} onPageSizeChange={(n) => setParam(PAGE_SIZE_PARAM, String(n))} labels={logsCopy.halaman} />
         </Section>
       </PageBody>
       <UserDetailPanel userId={id} session={session} onClose={() => navigate({ pathname: '/pengguna', search: location.search })} />

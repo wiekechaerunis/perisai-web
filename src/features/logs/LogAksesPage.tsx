@@ -6,6 +6,7 @@
  * FR-LA-16 (ekspor CSV R-03), FR-LA-18 (penanda arsip). Tab Sesi aktif: FR-LA-13..15, FR-LO-14..16.
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { PAGE_SIZE_OPTIONS, PAGE_SIZE_PARAM, parsePageSize } from '@/lib/page-size';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Download, Search } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -36,7 +37,6 @@ import { logsCopy as c } from './copy';
 import { ArchiveTag, PeriodFields, ResultTag, TableTitle, downloadCsv, wibDay } from './shared';
 import { FilterBar } from '@/components/patterns/FilterBar';
 
-const PAGE_SIZE = 20;
 const SEMUA = 'semua';
 
 function EntryPanel({ id, onClose, onSession }: { id: string; onClose: () => void; onSession: (sid: string) => void }) {
@@ -102,7 +102,7 @@ function AccessLogTab() {
       sesiId: params.get('sesi') ?? undefined,
       gagalBeruntun: params.get('beruntun') === '1',
       page: Number(params.get('hal') ?? 1),
-      pageSize: PAGE_SIZE,
+      pageSize: parsePageSize(params.get(PAGE_SIZE_PARAM)),
     }),
     [params],
   );
@@ -230,7 +230,7 @@ function AccessLogTab() {
       </Section>
       <Section
         className="border border-border"
-        title={<TableTitle title={c.log.tabel} count={list.data?.total ?? 0} />}
+        title={<TableTitle title={c.log.tabel} />}
         action={
           isR03 && (
             <Button icon={<Download aria-hidden size={14} strokeWidth={1.8} />} onClick={() => exp.mutate()} loading={exp.isPending} loadingLabel={c.mengekspor}>
@@ -251,7 +251,7 @@ function AccessLogTab() {
           selectedRowId={entryId ?? undefined}
           empty={<EmptyState title={c.log.kosong} />}
         />
-        {list.data && <Pagination page={list.data.page} pageSize={list.data.pageSize} total={list.data.total} onPageChange={(p) => set({ hal: String(p), entri: undefined })} labels={c.halaman} />}
+        {list.data && <Pagination page={list.data.page} pageSize={list.data.pageSize} total={list.data.total} onPageChange={(p) => set({ hal: String(p), entri: undefined })} pageSizeOptions={PAGE_SIZE_OPTIONS} onPageSizeChange={(n) => set({ [PAGE_SIZE_PARAM]: String(n), entri: undefined })} labels={c.halaman} />}
       </Section>
       {entryId && <EntryPanel id={entryId} onClose={() => set({ entri: undefined })} onSession={(sid) => set({ sesi: sid, entri: undefined, dari: wibDay(-365) })} />}
     </div>
@@ -292,7 +292,7 @@ function ActiveSessionsTab() {
     },
   ];
   return (
-    <Section className="border border-border" title={<TableTitle title={c.sesi.tabel} count={list.data?.length ?? 0} />}>
+    <Section className="border border-border" title={<TableTitle title={c.sesi.tabel} />}>
       <DataTable
         caption={c.sesi.tabel}
         columns={columns}

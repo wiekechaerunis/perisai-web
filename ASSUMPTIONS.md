@@ -268,4 +268,7 @@ keputusan #5 Organisasi). Variabel di `src/styles/status.css`, nada di `AccountS
 - Riwayat masuk (FR-LA-15, tidak ada di Figma) tetap di bawah Sesi aktif.
 - Perbaikan tab: garis bawah tab aktif sebelumnya tidak tampil (bentrok kelas `border-transparent`/`border-action`).
 - Hasil log (Log Akses, Jejak Audit, Riwayat masuk): Berhasil `success` (hijau), Gagal/Ditolak `danger` (merah) — arahan PM
-  14 Okt 2026. Judul kartu tabel log memakai nama tabel ("Daftar log akses", dst.); jumlah entri (FR-LA-07) kecil di sampingnya.
+  14 Okt 2026. Judul kartu tabel log memakai nama tabel ("Daftar log akses", dst.) tanpa jumlah entri; jumlah hasil (FR-LA-07)
+  tampil di ringkasan paginasi ("1–25 dari 132").
+- ASSUMPTION (masukan PM 14 Okt 2026): paginasi punya pilihan "Baris per halaman" 10/25/50/100, bawaan 25 untuk semua
+  tabel (Log Akses dan Jejak Audit sebelumnya 20). PRD tidak menetapkan ukuran halaman. Pilihan disimpan di URL (`baris`).

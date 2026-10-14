@@ -6,6 +6,7 @@
  * FR-JA-20 (ekspor besar di latar belakang) belum dibangun — data mock kecil.
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { PAGE_SIZE_OPTIONS, PAGE_SIZE_PARAM, parsePageSize } from '@/lib/page-size';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Download, Search } from 'lucide-react';
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
@@ -32,7 +33,6 @@ import { useOrganisasiFilter } from './hooks';
 import { ArchiveTag, PeriodFields, ResultTag, TableTitle, downloadCsv, wibDay } from './shared';
 import { FilterBar } from '@/components/patterns/FilterBar';
 
-const PAGE_SIZE = 20;
 const SEMUA = 'semua';
 const a = c.audit;
 
@@ -212,7 +212,7 @@ export function JejakAuditPage() {
   const [draft, setDraft] = useState(fromUrl);
   useEffect(() => setDraft(fromUrl), [fromUrl]);
   const page = Number(params.get('hal') ?? 1);
-  const query: AuditQuery = { ...fromUrl, page, pageSize: PAGE_SIZE };
+  const query: AuditQuery = { ...fromUrl, page, pageSize: parsePageSize(params.get(PAGE_SIZE_PARAM)) };
   const list = useQuery({ queryKey: ['audit', query], queryFn: () => services.logs.audit(query), enabled: applied });
   const exp = useMutation({
     mutationFn: () => services.logs.exportAudit({ ...query, page: 1, pageSize: 100_000 }),
@@ -328,7 +328,7 @@ export function JejakAuditPage() {
         </Section>
         <Section
           className="border border-border"
-          title={<TableTitle title={a.tabel} count={applied ? (list.data?.total ?? 0) : undefined} />}
+          title={<TableTitle title={a.tabel} />}
           action={
             applied &&
             isR03 && (
@@ -354,7 +354,16 @@ export function JejakAuditPage() {
                 selectedRowId={entryId ?? undefined}
                 empty={<EmptyState title={a.kosong} />}
               />
-              {list.data && <Pagination page={list.data.page} pageSize={list.data.pageSize} total={list.data.total} onPageChange={(p) => setParam('hal', String(p))} labels={c.halaman} />}
+              {list.data && <Pagination page={list.data.page} pageSize={list.data.pageSize} total={list.data.total} onPageChange={(p) => setParam('hal', String(p))}
+                  pageSizeOptions={PAGE_SIZE_OPTIONS}
+                  onPageSizeChange={(n) => {
+                    const next = new URLSearchParams(params);
+                    next.set(PAGE_SIZE_PARAM, String(n));
+                    next.delete('hal');
+                    setParams(next, { replace: true });
+                  }}
+                  labels={c.halaman}
+                />}
             </>
           )}
         </Section>

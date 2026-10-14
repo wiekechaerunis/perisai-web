@@ -5,6 +5,7 @@
  * detail organisasinya dalam mode baca (FR-ORG-20). Filter Status bawaan Aktif (FR-ORG-03); 25 baris per halaman.
  */
 import type { ColumnDef } from '@tanstack/react-table';
+import { PAGE_SIZE_OPTIONS, PAGE_SIZE_PARAM, parsePageSize } from '@/lib/page-size';
 import { Plus, Search } from 'lucide-react';
 import { useState } from 'react';
 import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -30,7 +31,6 @@ import { orgCopy as c } from './copy';
 import { useOrgDetail, useOrgList } from './hooks';
 
 const SEMUA = 'semua';
-const PAGE = 25;
 const JENIS: OrgType[] = ['SKK Migas', 'KKKS', 'Kontraktor'];
 
 export function OrganisasiPage() {
@@ -81,6 +81,7 @@ function OrgListPage({ level }: { level: OrgLevel }) {
   const jenis = params.get('jenis') ?? SEMUA;
   const status = params.get('status') ?? 'Aktif';
   const page = Math.max(1, Number(params.get('hal') ?? '1') || 1);
+  const PAGE = parsePageSize(params.get(PAGE_SIZE_PARAM));
   const list = useOrgList({ search: search || undefined, jenis: jenis !== SEMUA ? (jenis as OrgType) : undefined, status: status !== SEMUA ? (status as 'Aktif' | 'Nonaktif') : undefined });
   const rows = list.data ?? [];
   const filtered = !!search || jenis !== SEMUA || status !== 'Aktif';
@@ -179,7 +180,7 @@ function OrgListPage({ level }: { level: OrgLevel }) {
             selectedRowId={kode}
             empty={<EmptyState title={c.kosongFilter} action={filtered ? <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button> : undefined} />}
           />
-          <Pagination page={page} pageSize={PAGE} total={rows.length} onPageChange={(n) => setParam('hal', String(n))} labels={logsCopy.halaman} />
+          <Pagination page={page} pageSize={PAGE} total={rows.length} onPageChange={(n) => setParam('hal', String(n))} pageSizeOptions={PAGE_SIZE_OPTIONS} onPageSizeChange={(n) => setParam(PAGE_SIZE_PARAM, String(n))} labels={logsCopy.halaman} />
         </Section>
       </PageBody>
       {kode && <OrgPanel kode={kode} level={level} onClose={() => navigate({ pathname: '/organisasi', search: location.search })} onInvitePic={(o) => setInvite(o)} />}

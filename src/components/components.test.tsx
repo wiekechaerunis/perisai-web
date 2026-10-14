@@ -9,6 +9,7 @@ import { Callout } from './patterns/Callout';
 import { Combobox, MultiSelect } from './patterns/Combobox';
 import { DataTable } from './patterns/DataTable';
 import { ConfirmDialog } from './patterns/Dialog';
+import { Pagination } from './patterns/Pagination';
 import { PasswordChecklist } from './patterns/PasswordChecklist';
 import { PasswordStrengthMeter } from './patterns/PasswordStrengthMeter';
 import { ResendCountdown } from './patterns/ResendCountdown';
@@ -234,5 +235,20 @@ describe('Sidebar dan StatePanel', () => {
   it('StatePanel memakai heading halaman', () => {
     render(<StatePanel title="Tautan tidak valid" description="Tautan ini tidak dapat digunakan." />);
     expect(screen.getByRole('heading', { level: 1, name: 'Tautan tidak valid' })).toBeInTheDocument();
+  });
+});
+
+describe('Pagination', () => {
+  const labels = { sebelumnya: 'Sebelumnya', berikutnya: 'Berikutnya', label: 'Navigasi halaman', barisPerHalaman: 'Baris per halaman', ringkasan: (a: number, b: number, n: number) => `${a}–${b} dari ${n}` };
+
+  it('menampilkan pemilih baris per halaman dan ringkasan', () => {
+    render(<Pagination page={2} pageSize={25} total={132} onPageChange={() => {}} pageSizeOptions={[10, 25, 50, 100]} onPageSizeChange={() => {}} labels={labels} />);
+    expect(screen.getByRole('combobox', { name: 'Baris per halaman' })).toHaveTextContent('25');
+    expect(screen.getByText('26–50 dari 132')).toBeInTheDocument();
+  });
+
+  it('tanpa onPageSizeChange tidak menampilkan pemilih', () => {
+    render(<Pagination page={1} pageSize={25} total={30} onPageChange={() => {}} labels={labels} />);
+    expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
   });
 });

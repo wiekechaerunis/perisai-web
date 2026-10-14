@@ -18,13 +18,12 @@ export const logsCopy = {
   ekspor: 'Ekspor CSV', // FR-LA-16, FR-JA-18
   mengekspor: 'Mengekspor…',
   eksporSukses: (n: number) => `${n} baris diekspor.`, // usulan
-  jumlah: (n: number) => `${n} entri`, // FR-LA-07 (ditampilkan kecil di samping judul tabel)
   arsip: 'Arsip', // FR-LA-18, FR-JA-22 (penanda)
   arsipKeterangan: 'Sebagian hasil berasal dari arsip (lebih dari masa aktif).', // usulan
   memuat: 'Memuat…',
   gagal: 'Data gagal dimuat. Muat ulang halaman untuk mencoba lagi.',
   tutupPanel: 'Tutup panel',
-  halaman: { sebelumnya: 'Sebelumnya', berikutnya: 'Berikutnya', label: 'Navigasi halaman', ringkasan: (a: number, b: number, n: number) => `${a}–${b} dari ${n}` },
+  halaman: { sebelumnya: 'Sebelumnya', berikutnya: 'Berikutnya', label: 'Navigasi halaman', barisPerHalaman: 'Baris per halaman', ringkasan: (a: number, b: number, n: number) => `${a}–${b} dari ${n}` },
 
   log: {
     judul: 'Log akses',

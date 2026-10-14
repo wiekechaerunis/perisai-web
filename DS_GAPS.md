@@ -22,8 +22,8 @@ dan masing-masing punya story di Storybook (kedua tema). Artifact DS tidak diuba
 | AppHeader | Header 56px dengan menu pengguna | Figma 66:3139; FR-AS-001 | DS/Tata letak › AppShell |
 | FilterBar | Kartu filter: baris utama (pencarian + periode) + filter tambahan yang dapat dibuka/ditutup dengan penanda jumlah aktif | Filter Log Akses dan Jejak Audit terlalu ramai (masukan PM 14 Okt 2026) | Belum (dipakai di `/log-akses`, `/jejak-audit`) |
 | ChipInput | Isian banyak nilai sebagai chip yang divalidasi satu per satu (normal, error, peringatan); Enter/koma menambah | PRD Kelola Organisasi Design Brief B3 (domain email) | Belum (dipakai di dialog Tambah organisasi) |
-| Pagination | Navigasi halaman server (ringkasan "1–25 dari 132", Sebelumnya/Berikutnya) | FR-LA-09, FR-JA-16; DS DataTable tidak punya paginasi | DS/Pola gelombang 3 › Paginasi |
-| ResultTag / ArchiveTag | Penanda hasil Berhasil/Gagal (netral, Gagal pakai `caution`) dan penanda Arsip | FR-LA-02, FR-LA-18, FR-JA-22; status hasil log bukan WorkflowStatus | Belum (di `features/logs/shared.tsx`, diusulkan pindah ke `patterns/`) |
+| Pagination | Navigasi halaman server: pemilih "Baris per halaman" (10/25/50/100), ringkasan "1–25 dari 132", Sebelumnya/Berikutnya | FR-LA-09, FR-JA-16; DS DataTable tidak punya paginasi | DS/Pola gelombang 3 › Paginasi |
+| ResultTag / ArchiveTag | Penanda hasil: Berhasil `success` (hijau), Gagal/Ditolak `danger` (merah), memakai AccountStatusBadge; penanda Arsip netral | FR-LA-02, FR-LA-18, FR-JA-22; status hasil log bukan WorkflowStatus | Belum (di `features/logs/shared.tsx`, diusulkan pindah ke `patterns/`) |
 | EffectiveAccessView / ScopeList | Tabel modul × aksi × cakupan + role asal; daftar cakupan bertingkat | FR-HE-14..16, FR-CD-13/14 | Belum (fitur; pola bisa jadi KeyValueList/DataTable) |
 
 ## Varian / perluasan komponen DS
