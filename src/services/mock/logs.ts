@@ -72,7 +72,7 @@ function toAccess(e: LogEntry, viewer: DbUser, r: Reach): AccessLogEntry | null 
   const d = db();
   const u = d.users.find((x) => x.id === e.userId);
   const org = d.orgs.find((o) => o.id === e.orgId);
-  // FR-LA-06a: PIC tidak melihat IP pelaku dari organisasi lain.
+  // FR-LA-06a: Admin KKKS tidak melihat IP pelaku dari organisasi lain.
   const showIp = r.all || e.orgId === viewer.orgId;
   return {
     id: e.id,
@@ -168,7 +168,7 @@ function queryAudit(q: AuditQuery, viewer: DbUser): AuditEntry[] {
   const objek = q.objek?.trim().toLowerCase();
   return db()
     .audit.filter((e) => (q.korelasi ? e.korelasi === q.korelasi : e.at >= from && e.at <= to))
-    // FR-MX-07d: PIC melihat peristiwa yang menyentuh organisasinya.
+    // FR-MX-07d: Admin KKKS melihat peristiwa yang menyentuh organisasinya.
     .filter((e) => r.all || e.orgObjekId === r.orgId || e.pelakuOrganisasi === viewerOrgName)
     .filter((e) => !q.organisasiId || e.orgObjekId === q.organisasiId)
     .filter((e) => !q.modul || e.modul === q.modul)

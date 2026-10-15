@@ -17,7 +17,7 @@ async function code<T>(p: Promise<T>): Promise<string> {
 const base = { nama: 'Calon Pengguna', jabatan: 'Staf', roles: ['R-06' as const] };
 
 describe('Undang Pengguna (FR-UP)', () => {
-  it('PIC KKKS hanya melihat organisasinya dan mengundang role KKKS ke organisasinya (FR-UP-11, -24, R-1)', async () => {
+  it('Admin KKKS hanya melihat organisasinya dan mengundang role KKKS ke organisasinya (FR-UP-11, -24, R-1)', async () => {
     await s.dev!.signInAs('u-04');
     const list = await s.users.listUsers();
     expect(list.every((u) => u.organisasi.id === 'org-andalas')).toBe(true);
@@ -102,7 +102,7 @@ describe('Kelola Status Akun (FR-SA)', () => {
     expect(detail.riwayat.map((e) => e.peristiwa).slice(0, 2)).toEqual(['Akun diaktifkan kembali', 'Akun ditangguhkan']);
   });
 
-  it('PIC terakhir ditandai; Nonaktif yang belum pernah aktif tidak bisa diaktifkan kembali (FR-SA-07, -20a)', async () => {
+  it('Admin KKKS terakhir ditandai; Nonaktif yang belum pernah aktif tidak bisa diaktifkan kembali (FR-SA-07, -20a)', async () => {
     await s.dev!.signInAs('u-03');
     expect((await s.users.getUser('u-04')).picTerakhir).toBe(true);
     expect(await code(s.users.reactivate('u-17'))).toBe('NOT_ELIGIBLE');
@@ -121,7 +121,7 @@ describe('Kelola Status Akun (FR-SA)', () => {
     expect(u.riwayat[0]).toMatchObject({ peristiwa: 'Masa berlaku akses berakhir', pelaku: 'Sistem' });
   });
 
-  it('cabut sesi oleh admin; PIC tidak bisa lintas organisasi (FR-LO-14, -15)', async () => {
+  it('cabut sesi oleh admin; Admin KKKS tidak bisa lintas organisasi (FR-LO-14, -15)', async () => {
     await s.dev!.signInAs('u-05');
     await s.dev!.signInAs('u-04');
     expect((await s.users.revokeSessions('u-05', { alasan: 'Dugaan akses tidak sah' })).revoked).toBeGreaterThan(0);
@@ -130,7 +130,7 @@ describe('Kelola Status Akun (FR-SA)', () => {
 });
 
 describe('Akun Saya (FR-AS)', () => {
-  it('ubah nama/jabatan; ubah email Pelapor menunggu persetujuan PIC (FR-AS-003, -009)', async () => {
+  it('ubah nama/jabatan; ubah email Pelapor menunggu persetujuan Admin KKKS (FR-AS-003, -009)', async () => {
     await s.dev!.signInAs('u-05');
     expect(await code(s.account.updateProfile({ nama: 'Di' }))).toBe('VALIDATION');
     expect((await s.account.updateProfile({ nama: 'Dimas Pratama S.', jabatan: 'Koordinator' })).jabatan).toBe('Koordinator');

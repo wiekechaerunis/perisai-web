@@ -1,10 +1,10 @@
 /**
- * Manajemen Pengguna (M-15) — Figma 66:3139 (Admin KKKS), 238:3000 (Admin Platform), 246:6340 (setelah batal).
- * FR-UP-01 (tombol Undang hanya R-03/R-04/R-07), FR-UP-22..24 (lima status, Kedaluwarsa otomatis, PIC hanya
+ * Manajemen Pengguna (M-15) — Figma 66:3139 (Admin KKKS), 238:3000 (Admin SKK), 246:6340 (setelah batal).
+ * FR-UP-01 (tombol Undang hanya R-03/R-04/R-07), FR-UP-22..24 (lima status, Kedaluwarsa otomatis, Admin KKKS hanya
  * organisasinya tanpa filter Organisasi), FR-KU-19a (penanda + filter "Minta undangan baru"), FR-SA-24b (penanda
  * organisasi nonaktif). Klik baris membuka halaman detail /pengguna/:id (arahan PM 15 Okt 2026; Figma 106:14009 memakai panel kanan).
  * PRD Daftar Pengguna (ClickUp z8pmx9n8nv): kolom Role (FR-DP-03), filter Role (FR-DP-14, -15), tombol Hapus filter,
- * "Belum pernah login" (FR-DP-05), PIC tanpa filter Organisasi (FR-DP-09). Email tampil di bawah nama (Figma 66:3139).
+ * "Belum pernah login" (FR-DP-05), Admin KKKS tanpa filter Organisasi (FR-DP-09). Email tampil di bawah nama (Figma 66:3139).
  * PRD Ekspor Daftar Pengguna (ClickUp z8pmx9n8nz): tombol Ekspor untuk R-03/R-04 (keputusan PM 14 Okt 2026).
  * Paginasi 25 baris (contoh US-ED-04 Ekspor; ASSUMPTION, Daftar Pengguna tidak menyebut ukuran halaman).
  */
@@ -78,7 +78,7 @@ export function PenggunaPage() {
   };
   const filtered = !!(search || status !== SEMUA || org !== SEMUA || role !== SEMUA);
   const canExport = !!session?.user.roles.some((r) => r === 'R-03' || r === 'R-04');
-  // FR-DP-15: PIC hanya memfilter role organisasinya (role KKKS).
+  // FR-DP-15: Admin KKKS hanya memfilter role organisasinya (role KKKS).
   // FR-AR-06: role Tidak Aktif tidak muncul di filter.
   const roleOptions: RoleId[] = (isPic ? rolesByOrgType('KKKS') : allRoleIds()).filter(isRoleActive);
   const rows = list.data ?? [];

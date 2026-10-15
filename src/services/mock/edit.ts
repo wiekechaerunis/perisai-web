@@ -255,14 +255,14 @@ export const userEditService: Pick<UserService, 'previewUpdate' | 'updateUser' |
 
     audit({ pelakuId: a.id, modul: 'M-15', aksi: 'edit', objek: objekPengguna(u), orgObjekId: u.orgId, sebelum, sesudah, hasil: 'Berhasil', kelompok: 'Identitas & akses', korelasi });
 
-    // FR-UDR-01: perubahan oleh Administrator Teknis diberitahukan ke Administrator Bisnis.
+    // FR-UDR-01: perubahan oleh Admin Teknis diberitahukan ke Admin SKK.
     const admins = activeAdmins('R-03').filter((x) => x.id !== a.id);
     if (a.roles.includes('R-07') && !a.roles.includes('R-03')) {
-      admins.forEach((x) => sendEmail(x.email, 'Perubahan pengguna oleh Administrator Teknis', `${a.nama} mengubah data pengguna ${u.nama}: ${Object.keys(sesudah).join(', ')}.`));
+      admins.forEach((x) => sendEmail(x.email, 'Perubahan pengguna oleh Admin Teknis', `${a.nama} mengubah data pengguna ${u.nama}: ${Object.keys(sesudah).join(', ')}.`));
     }
-    // FR-UDR-01 / FR-UP-11b: pemberian role Administrator Bisnis diberitahukan ke seluruh Administrator Bisnis aktif.
+    // FR-UDR-01 / FR-UP-11b: pemberian role Admin SKK diberitahukan ke seluruh Admin SKK aktif.
     if (!hadR03 && n.roles.includes('R-03')) {
-      admins.forEach((x) => sendEmail(x.email, 'Role Administrator Bisnis diberikan', `${a.nama} memberikan role Administrator Bisnis kepada ${u.nama}.`));
+      admins.forEach((x) => sendEmail(x.email, 'Role Admin SKK diberikan', `${a.nama} memberikan role Admin SKK kepada ${u.nama}.`));
     }
     commit();
     return toDetail(u);
@@ -387,7 +387,7 @@ export const emailLinkService: EmailLinkService = {
     l.used = true;
     // FR-UDR-13, -14: batalkan permintaan yang belum berlaku dan cabut seluruh sesi akun.
     if (u.emailRequest && u.emailRequest.status !== 'Ditolak') u.emailRequest = undefined;
-    // Pesan Login umum (K-14), bukan 'diakhiri oleh administrator'.
+    // Pesan Login umum (K-14), bukan 'diakhiri oleh admin organisasi'.
     liveSessions(u).forEach((s) => sessionEnd(s, 'password_changed'));
     event(u, 'Tautan "Bukan saya" dibuka', 'Pengguna', 'Permintaan ubah email dibatalkan dan seluruh sesi dicabut.');
     audit({ pelakuId: u.id, modul: 'M-15', aksi: 'edit', objek: objekPengguna(u), orgObjekId: u.orgId, sesudah: { 'Permintaan ubah email': 'Dibatalkan lewat "Bukan saya"' }, hasil: 'Berhasil', kelompok: 'Identitas & akses' });

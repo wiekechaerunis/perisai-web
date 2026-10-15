@@ -1,7 +1,7 @@
 /**
  * AccountStatusBadge — PERISAI Design System `Perisai.AccountStatusBadge`. Bentuk badge status DS: tinggi 20px,
  * padding 8px, radius `radius-sm`, border 1px, 12px medium, tanpa titik; ikon 12px opsional. Nada DS: success (Aktif),
- * strong (Diundang, Ditangguhkan), warning (Kedaluwarsa, Tanpa PIC), danger (Nonaktif akun), neutral, muted (entitas
+ * strong (Diundang, Ditangguhkan), warning (Kedaluwarsa, Belum ada admin), danger (Nonaktif akun), neutral, muted (entitas
  * nonaktif yang bukan akun, mis. role Tidak aktif), caution. Warna dari token `status-*` DS.
  * Nilai, ikon, dan nada diberikan pemakai (lib/status.ts), komponen tidak tahu modul.
  */

@@ -106,7 +106,7 @@ export const userProfileService: Pick<UserService, 'exportUsers' | 'resetPasswor
     sendEmail(
       u.email,
       'Atur ulang kata sandi PERISAI',
-      `Halo ${u.nama}, administrator meminta Anda mengatur ulang kata sandi. Tautan berlaku sampai ${formatTanggalJam(now() + P.resetLinkValidityMs)}. PERISAI tidak pernah meminta password atau kode OTP lewat email.`,
+      `Halo ${u.nama}, admin organisasi Anda meminta Anda mengatur ulang kata sandi. Tautan berlaku sampai ${formatTanggalJam(now() + P.resetLinkValidityMs)}. PERISAI tidak pernah meminta password atau kode OTP lewat email.`,
       `/atur-ulang-kata-sandi/${token}`,
     );
     log({ log: 'akses', event: 'reset_diminta', email: u.email, userId: u.id, result: 'berhasil', reason: 'OLEH_ADMIN' });

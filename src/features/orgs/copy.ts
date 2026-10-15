@@ -15,7 +15,7 @@ export const orgCopy = {
   semuaStatus: 'Semua status',
   aktif: 'Aktif',
   nonaktif: 'Nonaktif',
-  tanpaPic: 'Tanpa PIC',
+  tanpaPic: 'Belum ada admin',
   kosong: 'Belum ada organisasi.', // usulan
   kosongFilter: 'Tidak ada organisasi yang cocok dengan filter.', // DS pola Filter daftar
   hapusFilter: 'Hapus filter',
@@ -24,7 +24,7 @@ export const orgCopy = {
   memuat: 'Memuat…',
   tabelJudul: 'Organisasi', // tanpa jumlah (arahan PM 14 Okt 2026); total ada di paginasi
   tabel: 'Daftar organisasi',
-  kolom: { nama: 'Nama', jenis: 'Jenis', domain: 'Domain email', email: 'Email', pengguna: 'Pengguna aktif', pic: 'PIC', status: 'Status' },
+  kolom: { nama: 'Nama', jenis: 'Jenis', domain: 'Domain email', email: 'Email', pengguna: 'Pengguna aktif', pic: 'Admin KKKS', status: 'Status' },
   tambahLainnya: (n: number) => `+${n}`,
 
   tambahDialog: {
@@ -47,7 +47,7 @@ export const orgCopy = {
     simpan: 'Tambah organisasi',
     menyimpan: 'Menyimpan…',
     sukses: 'Organisasi ditambahkan.',
-    undangPic: 'Undang PIC KKKS',
+    undangPic: 'Undang admin',
   },
 
   panel: {
@@ -62,17 +62,17 @@ export const orgCopy = {
     nonaktifkan: 'Nonaktifkan organisasi',
     aktifkan: 'Aktifkan kembali',
     bannerNonaktif: (tgl: string, alasan: string) => `Organisasi ini nonaktif sejak ${tgl} · ${alasan}`,
-    bannerTanpaPic: 'Belum ada PIC KKKS aktif di organisasi ini.',
-    undangPic: 'Undang PIC',
+    bannerTanpaPic: 'Belum ada Admin KKKS aktif.',
+    undangPic: 'Undang admin',
     field: { nama: 'Nama organisasi', kode: 'Kode', jenis: 'Jenis organisasi', badanHukum: 'Nama badan hukum', skema: 'Skema kontrak', status: 'Status' },
     kodeTerkunci: 'Kode dipakai di nomor dokumen dan tidak dapat diubah.',
     ubah: 'Ubah',
     simpan: 'Simpan',
     batal: 'Batal',
     toastUbah: 'Perubahan disimpan.',
-    ringkasan: { pengguna: 'Pengguna aktif', pic: 'PIC KKKS', undangan: 'Undangan tertunda', sesi: 'Sesi aktif' },
-    picAktif: 'PIC KKKS aktif',
-    konflik: 'Organisasi ini baru saja diubah administrator lain. Kami memuat data terbaru; periksa lalu simpan lagi.',
+    ringkasan: { pengguna: 'Pengguna aktif', pic: 'Admin KKKS', undangan: 'Undangan tertunda', sesi: 'Sesi aktif' },
+    picAktif: 'Admin KKKS aktif',
+    konflik: 'Organisasi ini baru saja diubah admin lain. Kami memuat data terbaru; periksa lalu simpan lagi.',
     gagalUbah: 'Perubahan gagal disimpan. Silakan coba lagi.',
     tidakDitemukan: 'Organisasi tidak ditemukan',
     tidakDitemukanIsi: 'Halaman atau data yang Anda cari tidak tersedia.',

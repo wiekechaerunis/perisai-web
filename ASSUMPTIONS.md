@@ -300,13 +300,13 @@ keputusan #5 Organisasi). Variabel di `src/styles/status.css`, nada di `AccountS
 - Detail role (`/role/:kode`) juga halaman penuh: kartu "Informasi role" dan "Hak akses"; jejak lokasi "Role › {nama}".
 - Gaya tombol di ketiga halaman detail (masukan PM 15 Okt 2026, aturan DS Button): satu aksi utama primer berikon sesuai
   status, aksi pendamping sekunder berikon, sisanya di menu "Aksi lainnya" (···).
-  - Pengguna Aktif: **Ubah data** (primer), Reset kata sandi, ···(Tangguhkan, Nonaktifkan, Akhiri semua sesi).
-  - Pengguna Diundang/Kedaluwarsa: **Kirim ulang undangan** (primer), Ubah data, Batalkan undangan.
-  - Pengguna Ditangguhkan/Nonaktif: **Aktifkan kembali** (primer), Ubah data (bila boleh), ···.
+  - Pengguna Aktif: Reset kata sandi, ···(Tangguhkan, Nonaktifkan, Akhiri semua sesi).
+  - Pengguna Diundang/Kedaluwarsa: **Kirim ulang undangan** (primer), Batalkan undangan.
+  - Pengguna Ditangguhkan/Nonaktif: **Aktifkan kembali** (primer), ···.
   - Organisasi: Nonaktifkan organisasi (sekunder; destructive hanya di ConfirmDialog); bila nonaktif **Aktifkan kembali** (primer).
   - Role Aktif: **Ubah hak akses** (primer), ···(Ubah nama dan deskripsi, Nonaktifkan, Hapus); Tidak aktif: **Aktifkan kembali** (primer).
-  - ASSUMPTION: tombol "Ubah data" di header ditambahkan (sebelumnya hanya tautan "Ubah" per field) agar aksi utama
-    pengguna Aktif terlihat; tautan per field tetap ada.
+  - Tombol "Ubah data" di header sempat ditambahkan lalu dihapus (masukan PM 15 Okt 2026): pengubahan cukup lewat tautan
+    "Ubah" per field.
 - Detail role diubah langsung di halaman (masukan PM 15 Okt 2026), menggantikan dialog "Ubah nama dan deskripsi" dan
   "Ubah hak akses":
   - Kartu "Informasi role": nama dan deskripsi berupa isian; jenis organisasi, cakupan, status, jumlah pengguna baca saja.
@@ -315,3 +315,15 @@ keputusan #5 Organisasi). Variabel di `src/styles/status.css`, nada di `AccountS
     meminta konfirmasi jumlah pengguna terdampak (FR-KR-09f). Meninggalkan halaman dengan perubahan → "Tinggalkan halaman?".
   - Header: "Aktifkan kembali" (primer) bila Tidak aktif; menu "Aksi lainnya" berisi Nonaktifkan, Pindahkan pengguna,
     Hapus (menu tidak tampil bila kosong, mis. R-03).
+
+## Nama role dan "admin organisasi" (BRD/PRD 15 Okt 2026)
+
+- Label role (peta tunggal `ROLES` di `lib/rbac.ts`, dibaca lewat `roleName`): R-01 Pimpinan SKK, R-02 Pengawas SKK,
+  R-03 Admin SKK, R-04 Admin KKKS, R-05 Pelapor KKKS, R-06 Pejabat Berwenang KKKS, R-07 Admin Teknis. Slot label EN
+  `ROLE_LABELS_EN` disiapkan (TODO NFR-07). Mock DB v8 → v9 hanya mengganti nama role sistem yang tersimpan.
+- Copy untuk pengguna akhir memakai "admin organisasi (Anda)", bukan "administrator" atau nama role.
+- Diputuskan PM: header kolom ditulis sentence case "Admin KKKS" (bukan "ADMIN KKKS"); filter status organisasi hanya
+  diganti nama (opsi baru Belum ada admin/Pribadi/Kedaluwarsa/Pengecualian IP tidak ditambah); ringkasan Profil tetap
+  "Sesi aktif" (Grup ditahan KD-03); error domain saat ubah email juga "Hubungi Admin SKK."; "Cakupan Pengawas SKK".
+- Belum disesuaikan (di luar cakupan wording): Admin SKK hanya dapat mengundang R-04 ke organisasi KKKS
+  (`lib/user-rules.ts`); email "Role Admin SKK diberikan" masih dikirim (`services/mock/edit.ts`).

@@ -13,7 +13,7 @@ async function code<T>(p: Promise<T>): Promise<string> {
 }
 
 describe('Daftar & tambah organisasi (FR-ORG-01..09)', () => {
-  it('daftar, cari, penanda Tanpa PIC; PIC hanya organisasinya; role lain ditolak', async () => {
+  it('daftar, cari, penanda Belum ada admin; Admin KKKS hanya organisasinya; role lain ditolak', async () => {
     await s.dev!.signInAs('u-03');
     const all = await s.orgs.list({ status: 'Aktif' });
     expect(all.map((o) => o.kode)).toContain('KKKS-001');
@@ -38,11 +38,11 @@ describe('Daftar & tambah organisasi (FR-ORG-01..09)', () => {
     expect(await s.orgs.domainUsedElsewhere('andalas-energi.example')).toBe(true);
     const o = await s.orgs.create({ nama: 'Contoh Energi Nusantara', kode, domains: ['contoh-energi.co.id'] });
     expect(o).toMatchObject({ status: 'Aktif', jenis: 'KKKS', tanpaPic: true });
-    const u = await s.users.invite({ nama: 'Calon PIC', email: 'pic@hq.contoh-energi.co.id', roles: ['R-04'], organisasiId: o.id });
+    const u = await s.users.invite({ nama: 'Calon Admin KKKS', email: 'pic@hq.contoh-energi.co.id', roles: ['R-04'], organisasiId: o.id });
     expect(u.status).toBe('Diundang');
   });
 
-  it('Administrator Teknis boleh menambah organisasi, tidak boleh mengubah profil (FR-ORG-40)', async () => {
+  it('Admin Teknis boleh menambah organisasi, tidak boleh mengubah profil (FR-ORG-40)', async () => {
     await s.dev!.signInAs('u-07');
     await s.dev!.clearInbox();
     const o = await s.orgs.create({ nama: 'Contoh Teknis', kode: 'KKKS-090', domains: ['teknis.co.id'] });
@@ -102,7 +102,7 @@ describe('Email diizinkan & wilayah kerja (FR-ORG-24..30, 41..45)', () => {
     expect(u.aksesBerakhir?.slice(0, 10)).toBe('2027-06-30');
   });
 
-  it('PIC melihat email diizinkan tanpa alasan dan tidak dapat mengubah (FR-ORG-20)', async () => {
+  it('Admin KKKS melihat email diizinkan tanpa alasan dan tidak dapat mengubah (FR-ORG-20)', async () => {
     await s.dev!.signInAs('u-04');
     const o = await s.orgs.get('KKKS-001');
     expect(o.emailDiizinkanDaftar.length).toBeGreaterThan(0);

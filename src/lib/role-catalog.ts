@@ -62,7 +62,7 @@ export function roleStatus(r: RoleId): RoleStatus {
   return status[r] ?? 'Aktif';
 }
 
-/** FR-AR-03: R-03 Administrator Bisnis tidak dapat dinonaktifkan. */
+/** FR-AR-03: R-03 Admin SKK tidak dapat dinonaktifkan. */
 export const ROLE_NOT_DEACTIVATABLE: readonly RoleId[] = ['R-03'];
 
 /** FR-KR-04, FR-UP-12: role bercakupan wilayah kerja mewajibkan field Wilayah Kerja. */

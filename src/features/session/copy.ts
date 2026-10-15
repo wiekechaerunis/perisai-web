@@ -6,7 +6,7 @@ export const sessionCopy = {
   pesanAkhir: {
     logout: 'Anda telah keluar.',
     timeout: 'Sesi Anda telah berakhir. Silakan masuk kembali.',
-    revoked: 'Sesi Anda diakhiri oleh administrator. Silakan masuk kembali.',
+    revoked: 'Sesi Anda diakhiri oleh admin organisasi Anda. Silakan masuk kembali.',
     password_changed: 'Sesi Anda telah berakhir. Silakan masuk kembali.',
     password_reset: 'Sesi Anda telah berakhir. Silakan masuk kembali.',
     // Tabel E-ORG (PRD Kelola Organisasi KKKS)

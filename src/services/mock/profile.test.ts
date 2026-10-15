@@ -31,7 +31,7 @@ describe('Daftar Pengguna (FR-DP-14, -15)', () => {
 });
 
 describe('Ekspor Daftar Pengguna (US-ED-01..09)', () => {
-  it('PIC: hanya organisasinya, mengikuti filter, tanpa data sensitif, tercatat di Jejak Audit', async () => {
+  it('Admin KKKS: hanya organisasinya, mengikuti filter, tanpa data sensitif, tercatat di Jejak Audit', async () => {
     await s.dev!.signInAs('u-04');
     const r = await s.users.exportUsers({ status: 'Aktif' }, 'csv');
     const text = await blobText(r.blob);
@@ -57,7 +57,7 @@ describe('Ekspor Daftar Pengguna (US-ED-01..09)', () => {
 });
 
 describe('Profil Pengguna — reset kata sandi & sesi', () => {
-  it('reset kata sandi oleh PIC: tautan dikirim, hanya akun Aktif, organisasi lain 404', async () => {
+  it('reset kata sandi oleh Admin KKKS: tautan dikirim, hanya akun Aktif, organisasi lain 404', async () => {
     await s.dev!.signInAs('u-04');
     await s.users.resetPassword('u-05');
     expect((await s.dev!.inbox())[0]).toMatchObject({ to: 'd.pratama@andalas-energi.example' });

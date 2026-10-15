@@ -31,7 +31,7 @@ const sidebar = (
       <RoleSwitcher
         label="Masuk sebagai (uji)"
         placeholder="Pilih role"
-        users={[{ id: 'u-04', label: 'R-04 PIC KKKS' }]}
+        users={[{ id: 'u-04', label: 'R-04 Admin KKKS' }]}
         onSelect={() => undefined}
       />
     }

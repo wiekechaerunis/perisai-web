@@ -13,7 +13,7 @@
  * Tab Profil: tautan "Ubah" per field → halaman /pengguna/:id/ubah (PRD Ubah Data & Role, keputusan PM 14 Okt 2026);
  * Masa berlaku → dialog Perpanjang (FR-SA-22). Riwayat akun: Diundang, Diaktifkan, Login terakhir.
  */
-import { KeyRound, Lock, MoreHorizontal, Pencil, RotateCcw, Send, XCircle } from 'lucide-react';
+import { KeyRound, Lock, MoreHorizontal, RotateCcw, Send, XCircle } from 'lucide-react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -137,14 +137,8 @@ export function UserDetailPage() {
   ) : null;
 
   // Gaya tombol (masukan PM 15 Okt 2026): satu aksi utama primer sesuai status, aksi pendamping sekunder berikon, sisanya
-  // di menu "Aksi lainnya". Aktif → Ubah data; Diundang/Kedaluwarsa → Kirim ulang undangan; Ditangguhkan/Nonaktif →
-  // Aktifkan kembali.
-  const ubahData = (primary: boolean) =>
-    goEdit ? (
-      <Button variant={primary ? 'primary' : 'secondary'} icon={<Pencil aria-hidden size={16} strokeWidth={1.8} />} onClick={goEdit}>
-        {c.ubah.tombol}
-      </Button>
-    ) : null;
+  // di menu "Aksi lainnya". Diundang/Kedaluwarsa → Kirim ulang undangan; Ditangguhkan/Nonaktif → Aktifkan kembali.
+  // Tanpa tombol "Ubah data" di header: pengubahan lewat tautan "Ubah" per field (masukan PM 15 Okt 2026).
   const statusMenu =
     manage && (u.status === 'Aktif' || u.status === 'Ditangguhkan') ? (
       <Menu
@@ -173,10 +167,9 @@ export function UserDetailPage() {
         : null
     : null;
   const headerActions =
-    primaryStatus || goEdit || statusMenu ? (
+    primaryStatus || (manage && u.status === 'Aktif') || (manage && a.batalkan) || statusMenu ? (
       <div className="flex flex-wrap items-center gap-2">
-        {primaryStatus ?? ubahData(true)}
-        {primaryStatus && ubahData(false)}
+        {primaryStatus}
         {manage && u.status === 'Aktif' && (
           <Button icon={<KeyRound aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setResetOpen(true)}>
             {p.resetSandi}

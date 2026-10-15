@@ -32,7 +32,7 @@ export function DevRoleSwitcher({ inverse = true }: { inverse?: boolean }) {
   if (!dev) return null;
   const options = (users.data ?? [])
     .filter((u) => u.status === 'Aktif' && !u.catatan)
-    // Satu role bisa dipegang beberapa akun uji (mis. PIC KKKS dua organisasi) → sertakan nama dan organisasi.
+    // Satu role bisa dipegang beberapa akun uji (mis. Admin KKKS dua organisasi) → sertakan nama dan organisasi.
     .map((u) => ({ id: u.id, label: `${u.roles.join(', ')} ${u.roles.map((r) => roleName(r)).join(', ')} · ${u.nama}, ${u.organisasi}` }));
   return (
     <div>

@@ -2,8 +2,8 @@
  * Tab Akses panel organisasi — PRD Kelola Organisasi KKKS 4.3 (FR-ORG-12), 4.7 (FR-ORG-24..30), Design Brief B2/B5.
  * Domain email: satu baris per domain (mono, jumlah pengguna, Hapus), penghitung n/20, tambah domain; domain terakhir
  * KKKS tidak dapat dihapus. Email diizinkan: badge Aktif/Kedaluwarsa/Pribadi/Tidak diperlukan lagi, tanggal berlaku,
- * alasan (tidak tampil untuk PIC), jumlah akun, Ubah tanggal dan Hapus. Pembatasan IP tidak dibangun (Q-9).
- * Mode baca untuk PIC KKKS (FR-ORG-20).
+ * alasan (tidak tampil untuk Admin KKKS), jumlah akun, Ubah tanggal dan Hapus. Pembatasan IP tidak dibangun (Q-9).
+ * Mode baca untuk Admin KKKS (FR-ORG-20).
  */
 import { Plus } from 'lucide-react';
 import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';

@@ -27,7 +27,7 @@ export const roleCopy = {
     nonaktifkan: 'Nonaktifkan role',
     aktifkan: 'Aktifkan kembali',
     pindahkan: 'Pindahkan pengguna', // FR-AR-13
-    tidakDapatNonaktif: 'Administrator Bisnis tidak dapat dinonaktifkan.', // FR-AR-03 (usulan)
+    tidakDapatNonaktif: 'Admin SKK tidak dapat dinonaktifkan.', // FR-AR-03 (usulan)
     menu: 'Aksi lainnya',
     crumb: 'Role',
     kembali: 'Kembali ke Role', // usulan

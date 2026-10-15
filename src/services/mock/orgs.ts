@@ -56,7 +56,7 @@ function levelOf(a: DbUser): Level | null {
   return null;
 }
 
-/** Organisasi berdasarkan kode; PIC hanya organisasinya (lainnya 404, FR-ORG-20). */
+/** Organisasi berdasarkan kode; Admin KKKS hanya organisasinya (lainnya 404, FR-ORG-20). */
 function orgFor(a: DbUser, kode: string): { o: SeedOrg; level: Level } {
   const level = levelOf(a);
   const o = db().orgs.find((x) => x.kode === kode);
@@ -73,10 +73,10 @@ function bump(o: SeedOrg): void {
   o.versi = (o.versi ?? 1) + 1;
 }
 
-/** FR-ORG-40: perubahan oleh Administrator Teknis diberitahukan ke Administrator Bisnis. */
+/** FR-ORG-40: perubahan oleh Admin Teknis diberitahukan ke Admin SKK. */
 function notifyIfTeknis(a: DbUser, o: SeedOrg, apa: string): void {
   if (levelOf(a) !== 'teknis') return;
-  activeAdmins('R-03').forEach((x) => sendEmail(x.email, 'Perubahan organisasi oleh Administrator Teknis', `${a.nama} ${apa} pada ${o.nama} (${o.kode}).`));
+  activeAdmins('R-03').forEach((x) => sendEmail(x.email, 'Perubahan organisasi oleh Admin Teknis', `${a.nama} ${apa} pada ${o.nama} (${o.kode}).`));
 }
 
 function usersOf(o: SeedOrg): DbUser[] {
@@ -362,7 +362,7 @@ export const orgService: OrgService = {
       cancelPendingEmail(u, 'Organisasi dinonaktifkan.');
     });
     audit({ pelakuId: a.id, modul: 'M-15', aksi: 'manage', objek: objekOrg(o), orgObjekId: o.id, sebelum: { Status: 'Aktif' }, sesudah: { Status: 'Nonaktif', 'Pengguna terdampak': String(before.pengguna) }, alasan, hasil: 'Berhasil', kelompok: 'Identitas & akses' });
-    // FR-ORG-19: email ke Administrator Bisnis lain dan PIC KKKS organisasi itu.
+    // FR-ORG-19: email ke Admin SKK lain dan Admin KKKS organisasi itu.
     const waktu = formatTanggalJam(now());
     activeAdmins('R-03').filter((x) => x.id !== a.id).forEach((x) => sendEmail(x.email, `Organisasi ${o.nama} dinonaktifkan`, `${o.nama} (${o.kode}) dinonaktifkan oleh ${a.nama} pada ${waktu}. Alasan: ${alasan}.`));
     usersOf(o).filter((u) => u.roles.includes('R-04') && u.status === 'Aktif').forEach((x) => sendEmail(x.email, `Organisasi ${o.nama} dinonaktifkan`, `${o.nama} dinonaktifkan di PERISAI pada ${waktu}. Alasan: ${alasan}. Hubungi SKK Migas untuk pertanyaan.`));

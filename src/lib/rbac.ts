@@ -28,14 +28,20 @@ export interface RoleDef {
   cakupan?: CakupanBawaan;
 }
 
+/**
+ * Peta label role per ID (BRD 6.2, nama baru 15 Okt 2026). Satu-satunya sumber label role di UI (lewat `roleName`).
+ * TODO (NFR-07): isi label bahasa Inggris setelah glosarium EN disahkan.
+ */
+export const ROLE_LABELS_EN: Partial<Record<SystemRoleId, string>> = {};
+
 export const ROLES: Record<string, RoleDef> = {
-  'R-01': { id: 'R-01', name: 'Pimpinan', orgType: 'SKK Migas', scope: 'Seluruh KKKS atau wilayah yang ditetapkan' },
-  'R-02': { id: 'R-02', name: 'Pengawas', orgType: 'SKK Migas', scope: 'Seluruh KKKS atau KKKS/wilayah yang ditugaskan' },
-  'R-03': { id: 'R-03', name: 'Administrator Bisnis', orgType: 'SKK Migas', scope: 'Administrasi seluruh organisasi' },
-  'R-04': { id: 'R-04', name: 'PIC KKKS', orgType: 'KKKS', scope: 'Organisasi sendiri' },
+  'R-01': { id: 'R-01', name: 'Pimpinan SKK', orgType: 'SKK Migas', scope: 'Seluruh KKKS atau wilayah yang ditetapkan' },
+  'R-02': { id: 'R-02', name: 'Pengawas SKK', orgType: 'SKK Migas', scope: 'Seluruh KKKS atau KKKS/wilayah yang ditugaskan' },
+  'R-03': { id: 'R-03', name: 'Admin SKK', orgType: 'SKK Migas', scope: 'Administrasi seluruh organisasi' },
+  'R-04': { id: 'R-04', name: 'Admin KKKS', orgType: 'KKKS', scope: 'Organisasi sendiri' },
   'R-05': { id: 'R-05', name: 'Pelapor KKKS', orgType: 'KKKS', scope: 'Organisasi sendiri atau wilayah kerja yang diberikan' },
   'R-06': { id: 'R-06', name: 'Pejabat Berwenang KKKS', orgType: 'KKKS', scope: 'Organisasi sendiri' },
-  'R-07': { id: 'R-07', name: 'Administrator Teknis', orgType: 'Kontraktor', scope: 'Konfigurasi dan log teknis' },
+  'R-07': { id: 'R-07', name: 'Admin Teknis', orgType: 'Kontraktor', scope: 'Konfigurasi dan log teknis' },
 };
 
 /** Urutan role di katalog (sistem lalu buatan). */

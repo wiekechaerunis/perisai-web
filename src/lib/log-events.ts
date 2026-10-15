@@ -34,7 +34,7 @@ export const REASON_LABEL: Record<string, string> = {
   CURRENT_PASSWORD_WRONG: 'Kata sandi saat ini salah',
   logout: 'Logout oleh pengguna',
   timeout: 'Batas waktu sesi',
-  revoked: 'Dicabut administrator atau status akun berubah',
+  revoked: 'Dicabut admin atau status akun berubah',
   password_reset: 'Kata sandi diatur ulang',
   password_changed: 'Kata sandi diubah',
 };

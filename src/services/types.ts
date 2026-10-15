@@ -251,7 +251,7 @@ export interface UserSummary {
   diundangPada?: string;
   /** Jumlah sesi aktif (modal Tangguhkan, FR-SA-10; cabut sesi FR-LO-16). */
   sesiAktif: number;
-  /** PIC KKKS aktif terakhir di organisasinya (FR-SA-07). */
+  /** Admin KKKS aktif terakhir di organisasinya (FR-SA-07). */
   picTerakhir: boolean;
   /** Cakupan data bertipe (FR-CD-04a). */
   cakupan: import('@/lib/access').ScopeEntry[];
@@ -334,7 +334,7 @@ export interface InviteInput {
   nama: string;
   email: string;
   jabatan?: string;
-  /** Kosong untuk PIC KKKS (otomatis organisasinya, Tabel F-1). */
+  /** Kosong untuk Admin KKKS (otomatis organisasinya, Tabel F-1). */
   organisasiId?: string;
   roles: RoleId[];
   wilayahKerjaIds?: string[];
@@ -611,7 +611,7 @@ export interface OrgDomain {
   undanganTertunda: number;
 }
 
-/** 4.7 Email diizinkan. Alasan tidak dikirim ke PIC KKKS (FR-ORG-20). */
+/** 4.7 Email diizinkan. Alasan tidak dikirim ke Admin KKKS (FR-ORG-20). */
 export interface AllowedEmail {
   id: string;
   email: string;

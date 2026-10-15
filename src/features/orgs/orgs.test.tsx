@@ -1,4 +1,4 @@
-/** Test UI PRD Kelola Organisasi KKKS: daftar, tambah (chip domain), panel, nonaktifkan, mode baca PIC. */
+/** Test UI PRD Kelola Organisasi KKKS: daftar, tambah (chip domain), panel, nonaktifkan, mode baca Admin KKKS. */
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
@@ -29,14 +29,14 @@ function renderAt(route: string) {
   );
 }
 
-describe('Organisasi — Administrator Bisnis', () => {
-  it('daftar aktif + penanda Tanpa PIC; tambah organisasi dengan chip domain (FR-ORG-02, -04, -05, -08)', async () => {
+describe('Organisasi — Admin SKK', () => {
+  it('daftar aktif + penanda Belum ada admin; tambah organisasi dengan chip domain (FR-ORG-02, -04, -05, -08)', async () => {
     await services.dev!.signInAs('u-03');
     renderAt('/organisasi');
     const table = await screen.findByRole('table', { name: 'Daftar organisasi' });
     await waitFor(() => expect(within(table).getByText('PT Natuna Lepas Pantai')).toBeInTheDocument());
     expect(within(table).queryByText('PT Seram Timur Energi')).toBeNull();
-    expect(within(table).getAllByText('Tanpa PIC').length).toBeGreaterThan(0);
+    expect(within(table).getAllByText('Belum ada admin').length).toBeGreaterThan(0);
 
     await userEvent.click(screen.getByRole('button', { name: 'Tambah organisasi' }));
     const dialog = await screen.findByRole('dialog', { name: 'Tambah organisasi' });
@@ -49,7 +49,7 @@ describe('Organisasi — Administrator Bisnis', () => {
     await userEvent.type(domain, 'contoh-energi.co.id{Enter}');
     await userEvent.click(within(dialog).getByRole('button', { name: 'Tambah organisasi' }));
     expect(await screen.findByText('Organisasi ditambahkan.')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Undang PIC KKKS' })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Undang admin' }).length).toBeGreaterThan(0); // aksi Toast + tombol banner Profil
     expect(await screen.findByRole('heading', { level: 1, name: 'Contoh Energi Nusantara' })).toBeInTheDocument();
   });
 
@@ -69,7 +69,7 @@ describe('Organisasi — Administrator Bisnis', () => {
   });
 });
 
-describe('Organisasi — PIC KKKS (FR-ORG-20)', () => {
+describe('Organisasi — Admin KKKS (FR-ORG-20)', () => {
   it('langsung detail organisasinya, mode baca', async () => {
     await services.dev!.signInAs('u-04');
     renderAt('/organisasi');

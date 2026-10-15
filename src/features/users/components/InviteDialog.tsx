@@ -1,5 +1,5 @@
 /**
- * Undang Pengguna — PRD tab a7315f64-20f0, ClickUp z8pmx9n515. Figma 49:220 (kosong), 66:3502 (PIC KKKS, tanpa
+ * Undang Pengguna — PRD tab a7315f64-20f0, ClickUp z8pmx9n515. Figma 49:220 (kosong), 66:3502 (Admin KKKS, tanpa
  * Organisasi), 51:827 (Organisasi bisa dicari), 51:828 (Role per organisasi), 213:402/478/554/625 (Wilayah Kerja,
  * peringatan > 2 tahun, galat SoD, galat WK), 66:3994 (loading), 66:3553 (gagal kirim).
  * FR-UP-02..21: field per Tabel F-1, Role per Tabel R-1 (dinonaktifkan sampai Organisasi dipilih, reset saat
@@ -50,7 +50,7 @@ export interface InviteDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   inviter: InviterRole;
-  /** Organisasi PIC KKKS (Tabel F-1: otomatis, field tidak tampil). */
+  /** Organisasi Admin KKKS (Tabel F-1: otomatis, field tidak tampil). */
   ownOrg: Organisasi;
   /** Untuk "Kirim Undangan Baru" pada undangan yang dibatalkan (FR-BU-14). */
   prefill?: InvitePrefill;

@@ -146,7 +146,7 @@ export function evaluate(s: DbSession): void {
     return;
   }
   // ASSUMPTION (K-15): sesi yang diakhiri karena status akun/organisasi berubah memakai pesan
-  // "diakhiri oleh administrator" (FR-LO-17); PRD tidak menetapkan pesan khusus.
+  // "diakhiri oleh admin organisasi" (FR-LO-17); PRD tidak menetapkan pesan khusus.
   // FR-ORG-15 / EC-ORG-03: organisasi nonaktif → pesan "Organisasi tidak aktif".
   if (orgOf(user).status !== 'Aktif') sessionEnd(s, 'org_inactive');
   else if (user.status !== 'Aktif' || aksesLewat(user)) sessionEnd(s, 'revoked');

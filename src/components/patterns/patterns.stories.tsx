@@ -24,7 +24,7 @@ export const CalloutVarian: S = {
     <div className="flex max-w-[480px] flex-col gap-3">
       <Callout variant="info">Anda telah keluar.</Callout>
       <Callout variant="peringatan" title="Akun ditangguhkan">
-        Akses akun Anda ditangguhkan sementara. Hubungi administrator organisasi Anda untuk informasi lebih lanjut.
+        Akses akun Anda ditangguhkan sementara. Hubungi admin organisasi Anda untuk informasi lebih lanjut.
       </Callout>
       <Callout variant="error" title="Kredensial tidak valid">
         Email atau password yang Anda masukkan salah.
@@ -46,7 +46,7 @@ export const KeyValue: S = {
   render: () => (
     <KeyValueList
       items={[
-        { key: 'r', label: 'Role', value: 'R-04 PIC KKKS' },
+        { key: 'r', label: 'Role', value: 'R-04 Admin KKKS' },
         { key: 'o', label: 'Organisasi', value: 'PT Andalas Energi Hulu' },
         { key: 'l', label: 'Login terakhir', value: '14 Okt 2026, 15:51 WIB', mono: true, action: <Button variant="quiet">Ubah</Button> },
       ]}

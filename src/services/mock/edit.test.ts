@@ -29,7 +29,7 @@ async function linkFor(email: string, prefix: string): Promise<string> {
 }
 
 describe('Ubah pengguna lain (FR-UDR-01..09)', () => {
-  it('PIC KKKS: ringkasan sebelum/sesudah + perbedaan hak akses, lalu simpan (FR-UDR-08, -09, FR-HE-17)', async () => {
+  it('Admin KKKS: ringkasan sebelum/sesudah + perbedaan hak akses, lalu simpan (FR-UDR-08, -09, FR-HE-17)', async () => {
     await s.dev!.signInAs('u-04');
     const input = { nama: 'Sri Lestari Wulandari', jabatan: 'VP Security', roles: ['R-06' as const, 'R-04' as const] };
     const p = await s.users.previewUpdate('u-06', input);
@@ -49,7 +49,7 @@ describe('Ubah pengguna lain (FR-UDR-01..09)', () => {
     expect(await code(s.users.previewUpdate('u-06', { nama: 'Sr', roles: ['R-06'] }))).toBe('VALIDATION');
   });
 
-  it('PIC organisasi lain → 404; PIC tidak dapat memberi role di atas kewenangannya (FR-UDR-02, -08)', async () => {
+  it('Admin KKKS organisasi lain → 404; Admin KKKS tidak dapat memberi role di atas kewenangannya (FR-UDR-02, -08)', async () => {
     await s.dev!.signInAs('u-19');
     expect(await code(s.users.previewUpdate('u-06', { nama: 'Sri Lestari', roles: ['R-04'] }))).toBe('NOT_FOUND');
     await s.dev!.signInAs('u-04');
@@ -65,11 +65,11 @@ describe('Ubah pengguna lain (FR-UDR-01..09)', () => {
     expect(audit.items.find((e) => e.kelompok === 'Penolakan akses' && e.objek === 'pengguna #u-04')).toBeTruthy();
   });
 
-  it('Administrator Teknis mengubah → Administrator Bisnis diberi tahu (FR-UDR-01, D-7)', async () => {
+  it('Admin Teknis mengubah → Admin SKK diberi tahu (FR-UDR-01, D-7)', async () => {
     await s.dev!.signInAs('u-07');
     await s.dev!.clearInbox();
     await s.users.updateUser('u-05', { nama: 'Dimas Pratama', jabatan: 'Koordinator Lapangan', roles: ['R-05'] });
-    expect((await s.dev!.inbox()).some((m) => m.to === 'b.santoso@skkmigas.example' && /Administrator Teknis/.test(m.subject))).toBe(true);
+    expect((await s.dev!.inbox()).some((m) => m.to === 'b.santoso@skkmigas.example' && /Admin Teknis/.test(m.subject))).toBe(true);
   });
 
   it('ubah email oleh admin: berlaku setelah tautan diverifikasi, seluruh sesi dicabut (FR-UDR-05, -06)', async () => {
@@ -87,7 +87,7 @@ describe('Ubah pengguna lain (FR-UDR-01..09)', () => {
 });
 
 describe('Ubah email sendiri + persetujuan (FR-UDR-12..16, FR-AS-009..011)', () => {
-  it('anggota KKKS → disetujui PIC organisasinya; tolak wajib alasan; alasan tampil sampai ditutup', async () => {
+  it('anggota KKKS → disetujui Admin KKKS organisasinya; tolak wajib alasan; alasan tampil sampai ditutup', async () => {
     await s.dev!.signInAs('u-05');
     expect(await code(s.account.requestEmailChange({ password: MOCK_PASSWORD, emailBaru: 'd.pratama@andalas-energi.example' }))).toBe('EMAIL_SAME');
     await s.account.requestEmailChange({ password: MOCK_PASSWORD, emailBaru: 'dimas.baru@andalas-energi.example' });
@@ -112,7 +112,7 @@ describe('Ubah email sendiri + persetujuan (FR-UDR-12..16, FR-AS-009..011)', () 
     expect((await s.account.dismissEmailRejection()).permintaanEmail).toBeUndefined();
   });
 
-  it('PIC KKKS → disetujui Administrator Bisnis; pengaju tidak menyetujui sendiri (FR-UDR-14, -16, EC-UDR-04)', async () => {
+  it('Admin KKKS → disetujui Admin SKK; pengaju tidak menyetujui sendiri (FR-UDR-14, -16, EC-UDR-04)', async () => {
     await s.dev!.signInAs('u-04');
     await s.account.requestEmailChange({ password: MOCK_PASSWORD, emailBaru: 'rina.w@andalas-energi.example' });
     await s.account.verifyEmailChange(await otpFor('rina.w@andalas-energi.example'));

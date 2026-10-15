@@ -32,7 +32,7 @@ import { useOrgDetail, useOrgList } from './hooks';
 const SEMUA = 'semua';
 const JENIS: OrgType[] = ['SKK Migas', 'KKKS', 'Kontraktor'];
 
-/** /organisasi/:kode — R-03/R-07: halaman detail; PIC KKKS (mode baca) tetap melihat organisasinya sendiri. */
+/** /organisasi/:kode — R-03/R-07: halaman detail; Admin KKKS (mode baca) tetap melihat organisasinya sendiri. */
 export function OrganisasiDetailRoute() {
   const { session } = useSession();
   const roles = session?.user.roles ?? [];
@@ -49,7 +49,7 @@ export function OrganisasiPage() {
   return level === 'baca' ? <OwnOrgPage kode={session.user.organisasi.id} /> : <OrgListPage />;
 }
 
-/** FR-ORG-20: PIC KKKS membuka langsung detail organisasinya (mode baca). */
+/** FR-ORG-20: Admin KKKS membuka langsung detail organisasinya (mode baca). */
 function OwnOrgPage({ kode: orgId }: { kode: string }) {
   const list = useOrgList({});
   const own = list.data?.find((o) => o.id === orgId);
@@ -138,7 +138,7 @@ function OrgListPage() {
   function created(o: OrgDetail) {
     setAddOpen(false);
     open(o.kode);
-    // FR-ORG-08: toast dengan aksi Undang PIC KKKS.
+    // FR-ORG-08: toast dengan aksi Undang Admin KKKS.
     toast.show({ title: c.tambahDialog.sukses, action: inviter ? { label: c.tambahDialog.undangPic, onClick: () => open(o.kode, { undangPic: Date.now() }) } : undefined });
   }
 

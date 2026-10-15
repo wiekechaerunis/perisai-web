@@ -63,7 +63,7 @@ export const akunSayaCopy = {
     memproses: 'Memproses…',
     kirimUlang: 'Kirim ulang kode',
     batalkanPermintaan: 'Batalkan permintaan',
-    menungguPersetujuan: 'Email baru menunggu persetujuan administrator.',
+    menungguPersetujuan: 'Email baru menunggu persetujuan admin organisasi Anda.',
     langsungBerlaku: 'Email berhasil diubah.',
     statusLabel: (status: string, email: string) => `${status}: ${email}`,
     kodeTerkirim: 'Kode baru telah dikirim.',
@@ -80,7 +80,7 @@ export const akunSayaCopy = {
     emailKosong: 'Email wajib diisi.',
     emailFormat: 'Masukkan alamat email lengkap, contoh: nama@perusahaan.co.id.', // Tabel E-UDR
     emailPribadi: 'Email pribadi tidak dapat digunakan. Gunakan email kantor.',
-    emailDomain: 'Email ini belum diizinkan untuk organisasi Anda. Hubungi Administrator Bisnis SKK Migas.', // Tabel E-UDR
+    emailDomain: 'Email ini belum diizinkan untuk organisasi Anda. Hubungi Admin SKK.', // Tabel E-UDR
     emailDipakai: 'Email ini sudah terdaftar di akun lain.', // Tabel E-UDR
   },
 
@@ -94,7 +94,7 @@ export const akunSayaCopy = {
     riwayatKeterangan: 'Aktivitas masuk ke akun Anda dalam 30 hari terakhir (minimal 20 aktivitas terakhir).', // usulan (FR-LA-15a)
     riwayatKosong: 'Belum ada aktivitas masuk.', // usulan
     riwayatGagal: 'Riwayat masuk gagal dimuat. Muat ulang halaman untuk mencoba lagi.',
-    tidakMengenali: 'Tidak mengenali aktivitas ini? Ubah kata sandi Anda dan hubungi administrator organisasi Anda.', // FR-LA-15c
+    tidakMengenali: 'Tidak mengenali aktivitas ini? Ubah kata sandi Anda dan hubungi admin organisasi Anda.', // FR-LA-15c
     kolom: { waktu: 'Waktu', peristiwa: 'Peristiwa', hasil: 'Hasil', perangkat: 'Perangkat', lokasi: 'Perkiraan lokasi' },
     // Figma 341:6507 "Metode verifikasi masuk". Autentikator & passkey menunggu PRD Verifikasi Dua Langkah (KD-02, F-36).
     metode: {

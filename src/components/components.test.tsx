@@ -198,7 +198,7 @@ describe('Combobox dan MultiSelect', () => {
           emptyText="—"
           removeLabel="Hapus"
           options={[
-            { value: 'R-04', label: 'R-04 PIC KKKS' },
+            { value: 'R-04', label: 'R-04 Admin KKKS' },
             { value: 'R-05', label: 'R-05 Pelapor KKKS' },
           ]}
           value={v}

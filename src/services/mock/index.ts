@@ -274,7 +274,7 @@ const password: PasswordService = {
     // Seluruh sesi aktif pengguna dicabut (FR-LP-14).
     const live = db().sessions.filter((s) => s.userId === user.id && isLive(s));
     live.forEach((s) => sessionEnd(s, 'password_reset'));
-    sendEmail(user.email, 'Kata sandi PERISAI telah diubah', `Kata sandi Anda diubah pada ${formatTanggalJam(now())}. Bila bukan Anda, hubungi administrator organisasi Anda.`);
+    sendEmail(user.email, 'Kata sandi PERISAI telah diubah', `Kata sandi Anda diubah pada ${formatTanggalJam(now())}. Bila bukan Anda, hubungi admin organisasi Anda.`);
     log({ log: 'audit', event: 'reset_berhasil', email: user.email, userId: user.id, result: 'berhasil', detail: { sesiDicabut: live.length } });
     commit();
   },
@@ -310,7 +310,7 @@ const password: PasswordService = {
     const others = db().sessions.filter((x) => x.userId === user.id && x.id !== s.id && isLive(x));
     others.forEach((x) => sessionEnd(x, 'password_changed'));
     db().resets.filter((r) => r.userId === user.id && !r.usedAt).forEach((r) => (r.superseded = true));
-    sendEmail(user.email, 'Kata sandi PERISAI telah diubah', `Kata sandi Anda diubah pada ${formatTanggalJam(t)}. Bila bukan Anda, hubungi administrator organisasi Anda.`);
+    sendEmail(user.email, 'Kata sandi PERISAI telah diubah', `Kata sandi Anda diubah pada ${formatTanggalJam(t)}. Bila bukan Anda, hubungi admin organisasi Anda.`);
     log({ log: 'audit', event: 'ubah_sandi_berhasil', userId: user.id, result: 'berhasil', detail: { sesiDicabut: others.length } });
     commit();
     return { revokedSessions: others.length };
@@ -432,7 +432,7 @@ const activation: ActivationService = {
       const user = userById(inv.userId);
       // FR-KU-19a: penanda "Minta undangan baru" + tanggal di tabel pengguna.
       user.newInviteRequestedAt = t;
-      // ASSUMPTION (FR-AK-16 TBD): notifikasi dikirim ke semua PIC KKKS (R-04) organisasi pengguna.
+      // ASSUMPTION (FR-AK-16 TBD): notifikasi dikirim ke semua Admin KKKS (R-04) organisasi pengguna.
       db()
         .users.filter((u) => u.orgId === user.orgId && u.roles.includes('R-04') && u.status === 'Aktif')
         .forEach((admin) => sendEmail(admin.email, 'Permintaan undangan baru', `${user.nama} (${user.email}) meminta undangan baru karena undangannya kedaluwarsa.`));

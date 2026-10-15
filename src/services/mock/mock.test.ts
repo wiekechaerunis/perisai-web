@@ -152,6 +152,6 @@ describe('Aktivasi (PRD Aktivasi Akun)', () => {
     await s.activation.requestNewInvite('undangan-maya-kedaluwarsa');
     await s.activation.requestNewInvite('undangan-maya-kedaluwarsa');
     const notif = (await s.dev!.inbox()).filter((m) => m.subject === 'Permintaan undangan baru');
-    expect(notif).toHaveLength(1); // satu PIC KKKS aktif di organisasi, satu kali
+    expect(notif).toHaveLength(1); // satu Admin KKKS aktif di organisasi, satu kali
   });
 });

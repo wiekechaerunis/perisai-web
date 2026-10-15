@@ -59,7 +59,7 @@ describe('Ubah data pengguna (FR-UDR-03, -09, FR-HE-17)', () => {
 
     await userEvent.type(nama, 'i Lestari W.');
     await userEvent.click(screen.getByRole('combobox', { name: /Role/ }));
-    await userEvent.click(await screen.findByRole('option', { name: 'R-04 PIC KKKS' }));
+    await userEvent.click(await screen.findByRole('option', { name: 'R-04 Admin KKKS' }));
     await userEvent.click(screen.getByRole('button', { name: 'Tinjau perubahan' }));
 
     const table = await screen.findByRole('table', { name: 'Ringkasan perubahan' });
@@ -80,14 +80,14 @@ describe('Ubah data pengguna (FR-UDR-03, -09, FR-HE-17)', () => {
 });
 
 describe('Panel pengguna — tombol Ubah data (FR-UDR-01, D-7)', () => {
-  it('Administrator Teknis melihat tautan Ubah, tanpa aksi status dan reset kata sandi (Figma 109:16236)', async () => {
+  it('Admin Teknis melihat tautan Ubah, tanpa aksi status dan reset kata sandi (Figma 109:16236)', async () => {
     await services.dev!.signInAs('u-07');
     renderPage('/pengguna/u-05');
     expect((await screen.findAllByRole('button', { name: 'Ubah' })).length).toBeGreaterThanOrEqual(2);
     expect(screen.queryByRole('button', { name: 'Reset kata sandi' })).toBeNull();
   });
 
-  it('PIC: Reset kata sandi mengirim tautan; Aktivitas menampilkan sesi + riwayat (PRD Profil Pengguna)', async () => {
+  it('Admin KKKS: Reset kata sandi mengirim tautan; Aktivitas menampilkan sesi + riwayat (PRD Profil Pengguna)', async () => {
     await services.dev!.signInAs('u-05');
     await services.dev!.signInAs('u-04');
     renderPage('/pengguna/u-05');
@@ -107,7 +107,7 @@ describe('Panel pengguna — tombol Ubah data (FR-UDR-01, D-7)', () => {
 });
 
 describe('Permintaan ubah email (FR-UDR-15, -16)', () => {
-  it('PIC melihat permintaan anggotanya; tolak wajib alasan', async () => {
+  it('Admin KKKS melihat permintaan anggotanya; tolak wajib alasan', async () => {
     await services.dev!.signInAs('u-05');
     await services.account.requestEmailChange({ password: MOCK_PASSWORD, emailBaru: 'dimas.baru@andalas-energi.example' });
     const otp = /(\d{6})/.exec((await services.dev!.inbox()).find((m) => m.to === 'dimas.baru@andalas-energi.example')!.body)![1]!;

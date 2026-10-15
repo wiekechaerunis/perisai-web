@@ -56,8 +56,8 @@ export function editableRoles(editor: InviterRole, orgType: OrgType): RoleId[] {
 
 /**
  * Penyetuju ubah email sendiri (FR-UDR-13, -14, EC-UDR-04, D-10). null = langsung berlaku setelah verifikasi.
- * PIC KKKS (termasuk yang juga punya role anggota), Pimpinan, Pengawas → Administrator Bisnis;
- * anggota KKKS (Pelapor, Pejabat Berwenang) → PIC KKKS organisasinya.
+ * Admin KKKS (termasuk yang juga punya role anggota), Pimpinan, Pengawas → Admin SKK;
+ * anggota KKKS (Pelapor, Pejabat Berwenang) → Admin KKKS organisasinya.
  */
 export function emailApproverRole(roles: readonly RoleId[]): 'R-03' | 'R-04' | null {
   if (roles.includes('R-03') || roles.includes('R-07')) return null;
@@ -131,11 +131,11 @@ export const ALASAN_BATAL = [
 
 /** Tabel A-3: label audit → teks untuk pengguna. */
 export const ALASAN_TANGGUH: Record<string, string> = {
-  'Dugaan penyalahgunaan akses': 'Akses Anda ditangguhkan sementara atas keputusan administrator organisasi.',
-  'Investigasi internal': 'Akses Anda ditangguhkan sementara atas keputusan administrator organisasi.',
+  'Dugaan penyalahgunaan akses': 'Akses Anda ditangguhkan sementara atas keputusan admin organisasi.',
+  'Investigasi internal': 'Akses Anda ditangguhkan sementara atas keputusan admin organisasi.',
   'Cuti panjang atau penugasan sementara': 'Akses Anda ditangguhkan sementara karena Anda sedang tidak bertugas.',
   'Permintaan organisasi': 'Akses Anda ditangguhkan sementara atas permintaan organisasi Anda.',
-  Lainnya: 'Akses Anda ditangguhkan sementara atas keputusan administrator organisasi.',
+  Lainnya: 'Akses Anda ditangguhkan sementara atas keputusan admin organisasi.',
 };
 
 /** Tabel A-4: label audit → teks untuk pengguna. */
@@ -144,8 +144,8 @@ export const ALASAN_NONAKTIF: Record<string, string> = {
   'Pindah organisasi': 'Akses Anda dihentikan karena Anda tidak lagi terdaftar pada organisasi ini.',
   'Perubahan penugasan': 'Akses Anda dihentikan karena perubahan penugasan.',
   'Kontrak berakhir': 'Akses Anda dihentikan karena masa kerja sama telah berakhir.',
-  'Pelanggaran kebijakan': 'Akses Anda dihentikan atas keputusan administrator organisasi.',
-  Lainnya: 'Akses Anda dihentikan atas keputusan administrator organisasi.',
+  'Pelanggaran kebijakan': 'Akses Anda dihentikan atas keputusan admin organisasi.',
+  Lainnya: 'Akses Anda dihentikan atas keputusan admin organisasi.',
 };
 
 /* ---------- Masa berlaku akses (FR-SA-22..23a) ---------- */

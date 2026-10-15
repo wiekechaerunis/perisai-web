@@ -58,7 +58,7 @@ describe('Nonaktifkan role (FR-AR-04, keputusan PM 14 Okt 2026)', () => {
     const tombol = within(modal).getByRole('button', { name: 'Nonaktifkan role' });
     expect(tombol).toBeDisabled();
     await userEvent.click(within(modal).getByRole('combobox', { name: 'Role tujuan' }));
-    await userEvent.click(await screen.findByRole('option', { name: 'R-04 PIC KKKS' }));
+    await userEvent.click(await screen.findByRole('option', { name: 'R-04 Admin KKKS' }));
     expect(await within(modal).findByText('Perbedaan hak akses')).toBeInTheDocument();
     expect(tombol).toBeEnabled();
     await userEvent.click(within(modal).getByRole('radio', { name: /Lewati/ }));
@@ -68,9 +68,9 @@ describe('Nonaktifkan role (FR-AR-04, keputusan PM 14 Okt 2026)', () => {
   it('R-03 tidak menampilkan aksi nonaktifkan (FR-AR-03)', async () => {
     await services.dev!.signInAs('u-03');
     renderAt('/role/R-03');
-    await screen.findByRole('heading', { level: 1, name: 'Administrator Bisnis' });
+    await screen.findByRole('heading', { level: 1, name: 'Admin SKK' });
     const panel = document.body;
-    expect(within(panel).getByText('Administrator Bisnis tidak dapat dinonaktifkan.')).toBeInTheDocument();
+    expect(within(panel).getByText('Admin SKK tidak dapat dinonaktifkan.')).toBeInTheDocument();
     // Role sistem yang tidak dapat dinonaktifkan dan tidak dapat dihapus: menu "Aksi lainnya" kosong → tidak tampil.
     expect(within(panel).queryByRole('button', { name: 'Aksi lainnya' })).toBeNull();
   });

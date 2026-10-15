@@ -248,7 +248,7 @@ function SuspendDialog({ user, onClose }: BaseProps) {
 
 function DeactivateDialog({ user, onClose }: BaseProps) {
   const m = useDeactivate();
-  // FR-SA-07: peringatan PIC KKKS aktif terakhir sebelum dialog alasan.
+  // FR-SA-07: peringatan Admin KKKS aktif terakhir sebelum dialog alasan.
   const [ack, setAck] = useState(!user.picTerakhir);
   if (!ack)
     return (

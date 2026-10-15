@@ -34,7 +34,7 @@ export const t = {
     tidakDitemukanIsi: 'Halaman atau data yang Anda cari tidak tersedia.',
     tidakBerwenangJudul: 'Anda tidak memiliki akses',
     tidakBerwenangIsi: (modul: string) =>
-      `Anda tidak berwenang membuka ${modul}. Hubungi administrator organisasi Anda bila Anda merasa seharusnya berwenang.`,
+      `Anda tidak berwenang membuka ${modul}. Hubungi admin organisasi Anda bila Anda merasa seharusnya berwenang.`,
     kembaliKeRuangKerja: 'Kembali ke Ikhtisar',
   },
 } as const;

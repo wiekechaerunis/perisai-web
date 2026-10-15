@@ -68,7 +68,7 @@ export const usersCopy = {
     wk: 'Wilayah Kerja', // FR-CD-09a (PR-04)
     wkPlaceholder: 'Pilih wilayah kerja',
     // FR-CD-04b (copy usulan)
-    cakupanR02: 'Cakupan Pengawas',
+    cakupanR02: 'Cakupan Pengawas SKK',
     cakupanSemua: 'Seluruh KKKS',
     cakupanSebagian: 'Beberapa KKKS tertentu',
     cakupanKkks: 'KKKS yang ditugaskan',
@@ -94,7 +94,7 @@ export const usersCopy = {
     emailKosong: 'Email wajib diisi.',
     emailFormat: 'Masukkan email yang valid, contoh: nama@perusahaan.co.id.',
     emailDomain: (org: string) =>
-      `Email ini tidak memakai domain ${org} dan tidak ada di daftar email diizinkan. Hubungi Administrator Bisnis SKK Migas.`,
+      `Email ini tidak memakai domain ${org} dan tidak ada di daftar email diizinkan. Hubungi Admin SKK.`,
     emailPribadi: 'Email pribadi tidak dapat digunakan. Gunakan email kantor.',
     emailTerdaftar: 'Email ini sudah terdaftar. Buka profil pengguna untuk mengubah role atau status.',
     emailTerdaftarLink: 'Buka profil pengguna', // FR-UP-17
@@ -178,9 +178,9 @@ export const usersCopy = {
     aktifkan: 'Aktifkan kembali',
     memproses: 'Memproses…',
     batal: 'Batal',
-    picTerakhirJudul: 'Ini PIC KKKS aktif terakhir', // FR-SA-07 (judul usulan)
+    picTerakhirJudul: 'Ini Admin KKKS aktif terakhir', // FR-SA-07 (judul usulan)
     picTerakhirIsi: (org: string) =>
-      `Setelah dinonaktifkan, ${org} tidak lagi memiliki PIC KKKS aktif. Administrator Bisnis akan diberi tahu.`,
+      `Setelah dinonaktifkan, ${org} tidak lagi memiliki Admin KKKS aktif. Admin SKK akan diberi tahu.`,
     tetapNonaktifkan: 'Tetap Nonaktifkan', // FR-SA-07
     suksesTangguh: (nama: string) => `Akun ${nama} ditangguhkan.`,
     suksesNonaktif: (nama: string) => `Akun ${nama} dinonaktifkan.`,
@@ -343,7 +343,7 @@ export const usersCopy = {
     ringkasanJudul: 'Ringkasan perubahan', // FR-UDR-09
     ringkasanKeterangan: 'Periksa nilai sebelum dan sesudah. Perubahan belum tersimpan.', // usulan
     kolom: { field: 'Data', sebelum: 'Sebelum', sesudah: 'Sesudah' },
-    fieldLabel: { nama: 'Nama lengkap', jabatan: 'Jabatan', email: 'Email', roles: 'Role', wilayahKerja: 'Wilayah Kerja', cakupan: 'Cakupan Pengawas' },
+    fieldLabel: { nama: 'Nama lengkap', jabatan: 'Jabatan', email: 'Email', roles: 'Role', wilayahKerja: 'Wilayah Kerja', cakupan: 'Cakupan Pengawas SKK' },
     emailTertundaCatatan: 'Berlaku setelah pengguna memverifikasi email baru. Seluruh sesinya akan dicabut.', // FR-UDR-05 (copy usulan)
     aksesJudul: 'Perbedaan hak akses', // FR-HE-17
     aksesKeterangan: 'Hanya modul yang sudah tersedia. Role baru berlaku pada permintaan berikutnya tanpa mengakhiri sesi pengguna.', // FR-HE-14a, FR-UDR-07 (copy usulan)
@@ -369,7 +369,7 @@ export const usersCopy = {
     jabatanPanjang: 'Jabatan maksimal 100 karakter.',
     emailFormat: 'Masukkan alamat email lengkap, contoh: nama@perusahaan.co.id.',
     emailDipakai: 'Email ini sudah terdaftar di akun lain.',
-    emailDomain: 'Email ini belum diizinkan untuk organisasi Anda. Hubungi Administrator Bisnis SKK Migas.',
+    emailDomain: 'Email ini belum diizinkan untuk organisasi Anda. Hubungi Admin SKK.',
     emailDomainPengguna: 'Email ini belum diizinkan untuk organisasi pengguna.', // usulan (diubah admin)
     keburuDipakai: 'Email ini sudah dipakai akun lain. Permintaan tidak dapat disetujui.',
   },
@@ -401,5 +401,5 @@ export const usersCopy = {
   alasanKosong: 'Pilih alasan.', // usulan
   kendalaJudul: 'Terjadi kendala',
   kendalaIsi: 'Terjadi kendala. Silakan coba lagi.',
-  tidakDiizinkan: 'Anda tidak berwenang melakukan aksi ini. Hubungi administrator organisasi Anda bila Anda merasa seharusnya berwenang.', // Tabel P-1 (FR-PA-20)
+  tidakDiizinkan: 'Anda tidak berwenang melakukan aksi ini. Hubungi admin organisasi Anda bila Anda merasa seharusnya berwenang.', // Tabel P-1 (FR-PA-20)
 } as const;

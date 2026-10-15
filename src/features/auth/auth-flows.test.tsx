@@ -113,7 +113,7 @@ describe('Aktivasi (FR-AK-01..17)', () => {
     renderAuth('/aktivasi/undangan-maya-kedaluwarsa');
     expect(await screen.findByRole('heading', { name: 'Undangan tidak berlaku lagi' })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Minta undangan baru' }));
-    expect(await screen.findByText(/Permintaan terkirim\. Administrator organisasi Anda sudah diberi tahu\./)).toBeInTheDocument();
+    expect(await screen.findByText(/Permintaan terkirim\. Admin organisasi Anda sudah diberi tahu\./)).toBeInTheDocument();
   });
 
   it('buat password → verifikasi email → akun aktif dan masuk', async () => {

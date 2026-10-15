@@ -32,7 +32,7 @@ function renderAt(route: string) {
   );
 }
 
-describe('Manajemen pengguna — PIC KKKS (FR-UP-24, R-1)', () => {
+describe('Manajemen pengguna — Admin KKKS (FR-UP-24, R-1)', () => {
   it('hanya organisasinya, tanpa filter Organisasi; undang tanpa field Organisasi', async () => {
     await services.dev!.signInAs('u-04');
     renderAt('/pengguna');
@@ -55,7 +55,7 @@ describe('Manajemen pengguna — PIC KKKS (FR-UP-24, R-1)', () => {
     await userEvent.click(within(dialog).getByRole('combobox', { name: /Role/ }));
     const roleList = within(dialog).getByRole('listbox');
     expect(within(roleList).getAllByRole('option').map((o) => o.textContent)).toEqual([
-      'R-04 PIC KKKS',
+      'R-04 Admin KKKS',
       'R-05 Pelapor KKKS',
       'R-06 Pejabat Berwenang KKKS',
     ]);
@@ -112,7 +112,7 @@ describe('Manajemen pengguna — PIC KKKS (FR-UP-24, R-1)', () => {
     expect(await screen.findByText('Akun Dimas Pratama diaktifkan kembali.')).toBeInTheDocument();
   });
 
-  it('PIC tidak melihat aksi status pada akunnya sendiri (FR-SA-06)', async () => {
+  it('Admin KKKS tidak melihat aksi status pada akunnya sendiri (FR-SA-06)', async () => {
     await services.dev!.signInAs('u-04');
     renderAt('/pengguna/u-04');
     const panel = await detailPage(/Rina Wiyono/);

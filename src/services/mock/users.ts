@@ -308,7 +308,7 @@ export const userService: Omit<
     if (!orgId) throw new ServiceError('VALIDATION', { field: 'organisasi' });
     const org = d.orgs.find((o) => o.id === orgId);
     if (!org || org.status !== 'Aktif') throw new ServiceError('VALIDATION', { field: 'organisasi' });
-    // FR-UP-11: PIC KKKS hanya organisasinya sendiri.
+    // FR-UP-11: Admin KKKS hanya organisasinya sendiri.
     if (inv === 'R-04' && input.organisasiId && input.organisasiId !== a.orgId) throw new ServiceError('PERMISSION_DENIED');
 
     const nama = input.nama.trim();
@@ -508,10 +508,10 @@ export const userService: Omit<
     db().resets.filter((r) => r.userId === u.id && !r.usedAt).forEach((r) => (r.superseded = true));
     sendEmail(u.email, 'Akun PERISAI Anda dinonaktifkan', ALASAN_NONAKTIF[reason.alasan] ?? ALASAN_NONAKTIF.Lainnya!);
     event(u, 'Akun dinonaktifkan', a.nama, `Alasan: ${reasonText(reason)}`);
-    // FR-SA-07a: organisasi kehilangan PIC terakhir → beri tahu R-03.
+    // FR-SA-07a: organisasi kehilangan Admin KKKS terakhir → beri tahu R-03.
     if (u.roles.includes('R-04') && activeAdmins('R-04', u.orgId).length === 0) {
       activeAdmins('R-03').forEach((x) =>
-        sendEmail(x.email, 'Organisasi tanpa PIC KKKS aktif', `${orgOf(u).nama} tidak lagi memiliki PIC KKKS aktif setelah ${u.nama} dinonaktifkan.`),
+        sendEmail(x.email, 'Organisasi tanpa Admin KKKS aktif', `${orgOf(u).nama} tidak lagi memiliki Admin KKKS aktif setelah ${u.nama} dinonaktifkan.`),
       );
     }
     audit({ pelakuId: a.id, modul: 'M-15', aksi: 'edit', objek: objekPengguna(u), orgObjekId: u.orgId, sebelum: { Status: prevDeact }, sesudah: { Status: 'Nonaktif' }, alasan: reasonText(reason), hasil: 'Berhasil', kelompok: 'Identitas & akses' });
@@ -632,7 +632,7 @@ export function newestSessionId(u: DbUser): string | undefined {
 export function applyEmailChange(u: DbUser, keepSessionId?: string): void {
   const r = u.emailRequest!;
   const lama = u.email;
-  // FR-UDR-13: tautan "Bukan saya" setelah email berganti mencabut seluruh sesi dan memberi tahu Administrator Bisnis.
+  // FR-UDR-13: tautan "Bukan saya" setelah email berganti mencabut seluruh sesi dan memberi tahu Admin SKK.
   const t = newEmailLink(u, 'notme', true);
   sendEmail(lama, 'Email akun PERISAI Anda diubah', `Email akun Anda diubah menjadi ${maskEmail(r.emailBaru)} pada ${formatTanggalJam(now())}. Bukan Anda? Buka tautan "Bukan saya".`, `/bukan-saya/${t}`);
   sendEmail(r.emailBaru, 'Email akun PERISAI Anda sudah berlaku', 'Mulai sekarang, gunakan email ini untuk masuk ke PERISAI.');
@@ -796,7 +796,7 @@ export const devUserTools = {
     const pool = rolesByOrgType(orgOf(u).jenis).filter((r) => !u.roles.includes(r) && !violatesSod([...u.roles, r]) && r !== 'R-05');
     if (u.roles.length > 1) u.roles = u.roles.slice(0, -1);
     else if (pool[0]) u.roles = [...u.roles, pool[0]];
-    event(u, 'Role diubah', 'Administrator (uji)', `${before} → ${u.roles.join(', ')}`);
+    event(u, 'Role diubah', 'Admin (uji)', `${before} → ${u.roles.join(', ')}`);
     audit({ modul: 'M-15', aksi: 'edit', objek: objekPengguna(u), orgObjekId: u.orgId, sebelum: { Role: before }, sesudah: { Role: u.roles.join(', ') }, alasan: 'Simulasi alat uji', hasil: 'Berhasil', kelompok: 'Identitas & akses' });
     commit();
   },

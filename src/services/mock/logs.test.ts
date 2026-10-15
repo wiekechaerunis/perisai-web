@@ -70,7 +70,7 @@ describe('Jejak Audit (FR-JA)', () => {
     await s.users.suspend('u-05', { alasan: 'Investigasi internal' });
     await s.dev!.signInAs('u-03');
     const e = (await s.logs.audit({ ...last7, objek: 'pengguna #u-05' })).items[0]!;
-    expect(e).toMatchObject({ pelaku: 'Rina Wiyono', pelakuRole: 'R-04 PIC KKKS', aksi: 'edit', sebelum: { Status: 'Aktif' }, sesudah: { Status: 'Ditangguhkan' }, alasan: 'Investigasi internal' });
+    expect(e).toMatchObject({ pelaku: 'Rina Wiyono', pelakuRole: 'R-04 Admin KKKS', aksi: 'edit', sebelum: { Status: 'Aktif' }, sesudah: { Status: 'Ditangguhkan' }, alasan: 'Investigasi internal' });
   });
 
   it('kelompok aksi massal per id korelasi (FR-JA-15)', async () => {

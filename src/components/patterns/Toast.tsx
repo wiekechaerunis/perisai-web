@@ -2,7 +2,7 @@
  * Toast — PERISAI Design System `Perisai.Toast`. Lebar 480px, lingkaran ikon 24px, pesan 14px medium, tutup x-circle.
  * Varian berhasil: lingkaran `ink` + centang, diumumkan sopan (Radix `background`), hilang sendiri (~5 detik).
  * Varian gagal: lingkaran `status-danger-ink` + x, diumumkan langsung (Radix `foreground`), tidak hilang sendiri.
- * DS: Toast tanpa tombol aksi. Pengecualian PRD Kelola Organisasi FR-ORG-08 ("Undang PIC KKKS") dicatat di
+ * DS: Toast tanpa tombol aksi. Pengecualian PRD Kelola Organisasi FR-ORG-08 ("Undang Admin KKKS") dicatat di
  * ASSUMPTIONS.md (DS-04) sampai diputuskan PM.
  */
 import * as RadixToast from '@radix-ui/react-toast';
@@ -16,7 +16,7 @@ export interface ToastMessage {
   description?: ReactNode;
   /** `gagal`: lingkaran merah, diumumkan langsung, tidak hilang sendiri (DS). Bawaan `berhasil`. */
   variant?: 'berhasil' | 'gagal';
-  /** Aksi lanjutan, mis. "Undang PIC KKKS" setelah organisasi ditambahkan (PRD Kelola Organisasi FR-ORG-08). */
+  /** Aksi lanjutan, mis. "Undang Admin KKKS" setelah organisasi ditambahkan (PRD Kelola Organisasi FR-ORG-08). */
   action?: { label: string; onClick: () => void };
 }
 

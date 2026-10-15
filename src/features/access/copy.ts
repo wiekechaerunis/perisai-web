@@ -12,9 +12,9 @@ export const accessCopy = {
   gagal: 'Hak akses gagal dimuat. Muat ulang halaman untuk mencoba lagi.',
   wkNonaktif: (wk: string) => `Wilayah kerja ${wk} sudah dinonaktifkan di data induk. Tinjau cakupan pengguna ini.`, // FR-CD-13 (copy usulan)
   // FR-PA-18a
-  hakBerubah: 'Hak akses Anda telah diperbarui oleh administrator.',
+  hakBerubah: 'Hak akses Anda telah diperbarui oleh admin organisasi Anda.',
   // Tabel P-1 (alert aksi di dalam halaman, FR-PA-20)
   ditolakJudul: 'Anda tidak memiliki akses',
-  ditolakIsi: 'Anda tidak berwenang melakukan aksi ini. Hubungi administrator organisasi Anda bila Anda merasa seharusnya berwenang.',
+  ditolakIsi: 'Anda tidak berwenang melakukan aksi ini. Hubungi admin organisasi Anda bila Anda merasa seharusnya berwenang.',
   sodJudul: 'Tidak dapat diproses',
 } as const;

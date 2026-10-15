@@ -1,7 +1,7 @@
 /**
  * Tab Wilayah Kerja — PRD Kelola Organisasi KKKS 4.9 (FR-ORG-41..45, Tabel O-4). Tabel nama, kode (mono), status,
  * jumlah Pelapor; WK yang juga dioperasikan KKKS lain ditandai "Dioperasikan bersama" tanpa menyebut KKKS lain.
- * Tambah/ubah/nonaktifkan hanya Administrator Bisnis (FR-ORG-41); PIC KKKS mode baca (FR-ORG-45).
+ * Tambah/ubah/nonaktifkan hanya Admin SKK (FR-ORG-41); Admin KKKS mode baca (FR-ORG-45).
  * Disetujui PM 14 Okt 2026: KKKS operator bersama belum dapat dipilih dari layar ini (hanya operator = organisasi yang dibuka).
  */
 import { Plus } from 'lucide-react';

@@ -57,7 +57,7 @@ export const loginCopy = {
     ACCOUNT_DEACTIVATED: { judul: 'Akun dinonaktifkan', isi: 'Akun Anda sedang dinonaktifkan. Hubungi Support untuk bantuan.' },
     ACCOUNT_SUSPENDED: {
       judul: 'Akun ditangguhkan',
-      isi: 'Akses akun Anda ditangguhkan sementara. Hubungi administrator organisasi Anda untuk informasi lebih lanjut.',
+      isi: 'Akses akun Anda ditangguhkan sementara. Hubungi admin organisasi Anda untuk informasi lebih lanjut.',
     },
     ORG_INACTIVE: {
       judul: 'Organisasi tidak aktif',
@@ -65,7 +65,7 @@ export const loginCopy = {
     },
     IP_NOT_ALLOWED: {
       judul: 'Akses dari lokasi ini tidak diizinkan',
-      isi: 'Organisasi Anda membatasi akses ke jaringan tertentu. Hubungi PIC KKKS atau Administrator Bisnis SKK Migas.',
+      isi: 'Organisasi Anda membatasi akses ke jaringan tertentu. Hubungi admin organisasi Anda.',
     },
     RATE_LIMITED: { judul: 'Login dibatasi sementara', isi: 'Terlalu banyak percobaan login. Coba lagi dalam 30 menit.' },
     NETWORK: { judul: 'Terjadi kendala', isi: 'Terjadi kendala. Silakan coba lagi.' },
@@ -135,19 +135,19 @@ export const aktivasiCopy = {
   sukses: 'Akun berhasil diaktifkan.',
   // Tabel T-1 (copy PRD; Figma 66:2556 berbeda untuk "tidak valid", F-10)
   tidakValidJudul: 'Tautan tidak valid',
-  tidakValidIsi: 'Tautan ini tidak dapat digunakan. Hubungi administrator organisasi Anda untuk mendapatkan undangan baru.',
+  tidakValidIsi: 'Tautan ini tidak dapat digunakan. Hubungi admin organisasi Anda untuk mendapatkan undangan baru.',
   sudahAktifJudul: 'Akun sudah aktif',
   sudahAktifIsi: 'Undangan ini sudah dipakai untuk mengaktifkan akun.',
   masuk: 'Masuk ke PERISAI',
   kedaluwarsaJudul: 'Undangan tidak berlaku lagi',
   kedaluwarsaIsi: [
     'Masa berlaku undangan ini sudah habis.',
-    'Kami dapat memberi tahu administrator organisasi Anda untuk mengirim undangan baru.',
+    'Kami dapat memberi tahu admin organisasi Anda untuk mengirim undangan baru.',
   ],
   mintaUndangan: 'Minta undangan baru',
   mengirim: 'Mengirim…',
   // FR-AK-16
-  mintaTerkirim: 'Permintaan terkirim. Administrator organisasi Anda sudah diberi tahu. Undangan baru akan dikirim ke email Anda.',
+  mintaTerkirim: 'Permintaan terkirim. Admin organisasi Anda sudah diberi tahu. Undangan baru akan dikirim ke email Anda.',
   kendalaJudul: 'Terjadi kendala',
   kendalaIsi: 'Terjadi kendala. Silakan coba lagi.',
 } as const;

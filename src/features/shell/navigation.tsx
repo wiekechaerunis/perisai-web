@@ -24,12 +24,12 @@ interface NavEntry {
 }
 
 export const LOG_ROLES: readonly RoleId[] = ['R-02', 'R-03', 'R-04'];
-/** FR-UDR-15: penyetuju ubah email (Administrator Bisnis, PIC KKKS). */
+/** FR-UDR-15: penyetuju ubah email (Admin SKK, Admin KKKS). */
 export const EMAIL_APPROVER_ROLES: readonly RoleId[] = ['R-03', 'R-04'];
 /** PRD Kelola Organisasi KKKS (FR-ORG-01, -20, -40; keputusan PM 14 Okt 2026). Digerbangi M-15 karena PRD berada di
  * bawah User Management (BRD menaruh identitas KKKS di M-03 yang belum dirilis; disetujui PM 14 Okt 2026). */
 export const ORG_ROLES: readonly RoleId[] = ['R-03', 'R-07', 'R-04'];
-/** PRD Katalog Role FR-KR-06: halaman Role hanya Administrator Bisnis. */
+/** PRD Katalog Role FR-KR-06: halaman Role hanya Admin SKK. */
 export const ROLE_ADMIN_ROLES: readonly RoleId[] = ['R-03'];
 
 const ICON = { size: 18, strokeWidth: 1.8, 'aria-hidden': true } as const;

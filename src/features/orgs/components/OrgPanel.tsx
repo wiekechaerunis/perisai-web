@@ -3,7 +3,7 @@
  * Halaman penuh /organisasi/:kode (arahan PM 15 Okt 2026; sebelumnya panel samping).
  * Header: nama, badge status, kode mono, tombol Nonaktifkan / Aktifkan kembali (R-03; tidak untuk SKK Migas dan
  * Kontraktor). Tab Profil (ubah inline nama/badan hukum/skema untuk R-03; kode terkunci; ringkasan angka bertaut ke
- * Daftar Pengguna; PIC aktif atau banner Tanpa PIC + Undang PIC), Akses, Wilayah Kerja, Riwayat (Jejak Audit).
+ * Daftar Pengguna; Admin KKKS aktif atau banner Belum ada admin + Undang Admin KKKS), Akses, Wilayah Kerja, Riwayat (Jejak Audit).
  * Jumlah grup tidak ditampilkan (fitur Grup ditahan KD-03).
  */
 import { useQueryClient } from '@tanstack/react-query';
@@ -233,7 +233,7 @@ export function OrgHeaderNotes({ org }: { org: OrgDetail }) {
 }
 
 /** State navigasi ke halaman detail: query string daftar (tombol kembali memulihkan filter) dan permintaan membuka
- * dialog Undang PIC (dari Toast "Organisasi ditambahkan.", FR-ORG-08). */
+ * dialog Undang Admin KKKS (dari Toast "Organisasi ditambahkan.", FR-ORG-08). */
 export interface OrgDetailNavState {
   from?: string;
   undangPic?: number;

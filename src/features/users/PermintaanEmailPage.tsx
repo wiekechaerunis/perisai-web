@@ -1,7 +1,7 @@
 /**
  * Permintaan Ubah Email — PRD Ubah Data & Role Pengguna FR-UDR-15, -16, Tabel S-UDR, EC-UDR-07 (ClickUp z8pmx9n8ny).
  * Tidak ada Figma: pola tabel Manajemen Pengguna (PR-11).
- * Penyetuju: Administrator Bisnis (PIC KKKS, Pimpinan, Pengawas) atau PIC KKKS (anggota organisasinya).
+ * Penyetuju: Admin SKK (Admin KKKS, Pimpinan, Pengawas) atau Admin KKKS (anggota organisasinya).
  * Setujui: server memeriksa ulang keunikan & domain; gagal → ditolak otomatis (alert). Tolak: alasan wajib.
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';

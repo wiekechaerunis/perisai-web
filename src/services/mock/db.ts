@@ -76,7 +76,7 @@ export interface DbEmailLink {
   kind: 'verify' | 'notme';
   userId: string;
   used?: boolean;
-  /** notme setelah email berganti (FR-UDR-13): beri tahu seluruh Administrator Bisnis. */
+  /** notme setelah email berganti (FR-UDR-13): beri tahu seluruh Admin SKK. */
   afterChange?: boolean;
 }
 
@@ -173,7 +173,7 @@ export interface DbRole {
 }
 
 export interface DbState {
-  version: 8;
+  version: 9;
   roles: DbRole[];
   emailLinks: DbEmailLink[];
   audit: DbAudit[];
@@ -260,8 +260,8 @@ function seedLogs(now: number): LogEntry[] {
 function seedAudit(now: number): DbAudit[] {
   const A: DbAudit[] = [];
   const base = { ip: '10.20.30.40', userAgent: UA, hasil: 'Berhasil' as const };
-  const rina = { pelakuId: 'u-04', pelaku: 'Rina Wiyono', pelakuRole: 'R-04 PIC KKKS', pelakuOrganisasi: 'PT Andalas Energi Hulu' };
-  const bagus = { pelakuId: 'u-03', pelaku: 'Bagus Santoso', pelakuRole: 'R-03 Administrator Bisnis', pelakuOrganisasi: 'SKK Migas' };
+  const rina = { pelakuId: 'u-04', pelaku: 'Rina Wiyono', pelakuRole: 'R-04 Admin KKKS', pelakuOrganisasi: 'PT Andalas Energi Hulu' };
+  const bagus = { pelakuId: 'u-03', pelaku: 'Bagus Santoso', pelakuRole: 'R-03 Admin SKK', pelakuOrganisasi: 'SKK Migas' };
   const add = (daysAgo: number, e: Omit<DbAudit, 'id' | 'at' | 'ip' | 'userAgent' | 'hasil' | 'korelasi'> & Partial<Pick<DbAudit, 'hasil' | 'korelasi'>>) =>
     A.push({ ...base, id: `aud-seed-${A.length + 1}`, at: now - daysAgo * DAY, korelasi: e.korelasi ?? `kor-seed-${A.length + 1}`, ...e });
   // Aksi massal: tiga undangan dalam satu permintaan.
@@ -278,7 +278,7 @@ function seedAudit(now: number): DbAudit[] {
 function seed(): DbState {
   const now = Date.now();
   return {
-    version: 8,
+    version: 9,
     roles: ROLE_IDS.map((id) => ({
       id,
       nama: DEFAULT_ROLE_NAMES[id],
@@ -321,16 +321,26 @@ function storage(): Storage | null {
   }
 }
 
+/** Nama role sistem sebelum 15 Okt 2026 (migrasi data uji v8). */
+const LEGACY_ROLE_NAMES = ['Pimpinan', 'Pengawas', 'Administrator Bisnis', 'PIC KKKS', 'Administrator Teknis'];
+
 export function db(): DbState {
   if (state) return state;
   const raw = storage()?.getItem(KEY);
   if (raw) {
     try {
-      const parsed = JSON.parse(raw) as DbState;
+      const parsed = JSON.parse(raw) as Omit<DbState, "version"> & { version: number };
+      // v8 → v9 (15 Okt 2026): nama role sistem diganti (Admin SKK, Admin KKKS, ...); data uji lain dipertahankan.
       if (parsed.version === 8) {
-        state = parsed;
-        applyRoleCatalog(state.roles);
-        return state;
+        parsed.version = 9;
+        for (const r of parsed.roles) if (r.id in DEFAULT_ROLE_NAMES && LEGACY_ROLE_NAMES.includes(r.nama)) r.nama = DEFAULT_ROLE_NAMES[r.id as keyof typeof DEFAULT_ROLE_NAMES];
+        storage()?.setItem(KEY, JSON.stringify(parsed));
+      }
+      if (parsed.version === 9) {
+        const loaded = parsed as DbState;
+        state = loaded;
+        applyRoleCatalog(loaded.roles);
+        return loaded;
       }
     } catch {
       /* data rusak: tanam ulang */
