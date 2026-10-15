@@ -7,7 +7,7 @@ import { AppProviders, makeQueryClient } from '@/App';
 import { services } from '@/services';
 import { buildNav } from '../shell/navigation';
 import { BuatRolePage } from './BuatRolePage';
-import { RolePage } from './RolePage';
+import { RoleDetailPage, RolePage } from './RolePage';
 
 function renderAt(route: string) {
   const client = makeQueryClient();
@@ -17,7 +17,7 @@ function renderAt(route: string) {
       <MemoryRouter initialEntries={[route]} future={{ v7_relativeSplatPath: true }}>
         <Routes>
           <Route path="/role" element={<RolePage />} />
-          <Route path="/role/:kode" element={<RolePage />} />
+          <Route path="/role/:kode" element={<RoleDetailPage />} />
         </Routes>
       </MemoryRouter>
     </AppProviders>,
@@ -46,8 +46,9 @@ describe('Nonaktifkan role (FR-AR-04, keputusan PM 14 Okt 2026)', () => {
   it('pilih Pindahkan → wajib role tujuan dan tampil perbedaan hak akses', async () => {
     await services.dev!.signInAs('u-03');
     renderAt('/role/R-06');
-    const panel = await screen.findByRole('dialog', { name: 'Pejabat Berwenang KKKS' });
-    await userEvent.click(within(panel).getByRole('button', { name: 'Aksi role' }));
+    await screen.findByRole('heading', { level: 1, name: 'Pejabat Berwenang KKKS' });
+    const panel = document.body;
+    await userEvent.click(within(panel).getByRole('button', { name: 'Aksi lainnya' }));
     await userEvent.click(await screen.findByRole('menuitem', { name: 'Nonaktifkan role' }));
     const modal = await screen.findByRole('dialog', { name: 'Nonaktifkan R-06 Pejabat Berwenang KKKS?' });
     expect(within(modal).getByText(/pengguna masih memakai role ini/)).toBeInTheDocument();
@@ -64,9 +65,12 @@ describe('Nonaktifkan role (FR-AR-04, keputusan PM 14 Okt 2026)', () => {
   it('R-03 tidak menampilkan aksi nonaktifkan (FR-AR-03)', async () => {
     await services.dev!.signInAs('u-03');
     renderAt('/role/R-03');
-    const panel = await screen.findByRole('dialog', { name: 'Administrator Bisnis' });
-    expect(within(panel).queryByRole('button', { name: 'Aksi role' })).toBeNull();
+    await screen.findByRole('heading', { level: 1, name: 'Administrator Bisnis' });
+    const panel = document.body;
     expect(within(panel).getByText('Administrator Bisnis tidak dapat dinonaktifkan.')).toBeInTheDocument();
+    await userEvent.click(within(panel).getByRole('button', { name: 'Aksi lainnya' }));
+    expect(await screen.findByRole('menuitem', { name: 'Ubah nama dan deskripsi' })).toBeInTheDocument();
+    expect(screen.queryByRole('menuitem', { name: 'Nonaktifkan role' })).toBeNull();
   });
 });
 
@@ -128,7 +132,8 @@ describe('Buat role & ubah hak akses (FR-KR-09, -09f)', () => {
   it('ubah hak akses menampilkan jumlah pengguna terdampak sebelum disimpan', async () => {
     await services.dev!.signInAs('u-03');
     renderAt('/role/R-06');
-    const panel = await screen.findByRole('dialog', { name: 'Pejabat Berwenang KKKS' });
+    await screen.findByRole('heading', { level: 1, name: 'Pejabat Berwenang KKKS' });
+    const panel = document.body;
     await userEvent.click(within(panel).getByRole('button', { name: 'Ubah hak akses' }));
     const dlg = await screen.findByRole('dialog', { name: 'Ubah hak akses' });
     const row = within(dlg).getByRole('rowheader', { name: /M-15/ }).closest('tr')!;

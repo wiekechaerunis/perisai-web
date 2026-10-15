@@ -11,6 +11,7 @@ import { services } from '@/services';
 import { AkunSayaKeamananPage, AkunSayaLayout, AkunSayaProfilPage } from '../account/AkunSayaPages';
 import { buildNav } from '../shell/navigation';
 import { PenggunaPage } from '../users/PenggunaPage';
+import { UserDetailPage } from '../users/components/UserDetailPanel';
 import { JejakAuditPage } from './JejakAuditPage';
 import { LogAksesPage } from './LogAksesPage';
 
@@ -25,7 +26,7 @@ function renderPage(route: string) {
           <Route path="/log-akses" element={<LogAksesPage />} />
           <Route path="/jejak-audit" element={<JejakAuditPage />} />
           <Route path="/pengguna" element={<PenggunaPage />} />
-          <Route path="/pengguna/:id" element={<PenggunaPage />} />
+          <Route path="/pengguna/:id" element={<UserDetailPage />} />
         </Routes>
       </MemoryRouter>
     </AppProviders>,

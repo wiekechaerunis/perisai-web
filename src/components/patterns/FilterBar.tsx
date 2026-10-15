@@ -55,7 +55,8 @@ export function FilterBar({ primary, advanced, activeFilters = [], actions, quic
             aria-controls={id}
             icon={<SlidersHorizontal aria-hidden size={16} strokeWidth={1.8} />}
             onClick={() => setOpen((o) => !o)}
-            className="font-semibold"
+            // DS Button "Di area filter": quiet semibold, warna tetap ink-muted.
+            className="font-semibold text-ink-muted hover:text-ink-muted"
           >
             <span className="flex items-center gap-1">
               {open ? labels.less : labels.more(activeFilters.length)}

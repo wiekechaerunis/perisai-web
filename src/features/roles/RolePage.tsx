@@ -1,12 +1,12 @@
 /**
  * Role — PRD Katalog Role (ClickUp z8pmx9n8p0) FR-KR-01..08, 10, 11 dan Aktif & Nonaktif Role (ClickUp z8pmx9n8p1)
- * FR-AR-01..21. "Design belum ada": pola Manajemen Pengguna (tabel + panel kanan 480px, Figma 109:16236) — PR-11.
- * Rute /role dan /role/:kode, hanya R-03 (FR-KR-06). Role Tidak Aktif tetap tampil dengan penanda redup (FR-AR-19).
+ * FR-AR-01..21. "Design belum ada": pola Manajemen Pengguna — PR-11.
+ * Rute /role (daftar) dan /role/:kode (halaman detail, arahan PM 15 Okt 2026), hanya R-03 (FR-KR-06). Role Tidak Aktif tetap tampil dengan penanda redup (FR-AR-19).
  * Tahap C2: Buat role (FR-KR-09, -09a, -09b), Ubah hak akses (FR-KR-09c, -09f), Hapus role buatan (FR-KR-09d).
  */
 import { useQuery } from '@tanstack/react-query';
 import type { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { MoreHorizontal, Plus, RotateCcw, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
@@ -16,7 +16,6 @@ import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
 import { DataTable } from '@/components/patterns/DataTable';
 import { KeyValueList } from '@/components/patterns/KeyValueList';
 import { Menu } from '@/components/patterns/Menu';
-import { SidePanel } from '@/components/patterns/SidePanel';
 import { Button } from '@/components/ui/Button';
 import { effectiveAccess, scopeFor } from '@/lib/access';
 import type { RoleId } from '@/lib/rbac';
@@ -31,49 +30,73 @@ function StatusBadge({ status }: { status: RoleEntry['status'] }) {
   return <AccountStatusBadge label={status === 'Aktif' ? c.aktif : c.tidakAktif} tone={status === 'Aktif' ? 'success' : 'muted'} />;
 }
 
-function RolePanel({ id, onClose }: { id: RoleId; onClose: () => void }) {
+/**
+ * Halaman detail role /role/:kode (arahan PM 15 Okt 2026: halaman penuh, pola halaman turunan DS; sebelumnya panel
+ * samping). Gaya tombol: satu aksi utama (primer) sesuai status — Aktif: "Ubah hak akses"; Tidak aktif: "Aktifkan
+ * kembali" — aksi lain di menu "Aksi lainnya".
+ */
+export function RoleDetailPage() {
+  const { kode } = useParams();
+  const navigate = useNavigate();
+  const id = kode as RoleId;
   const q = useQuery({ queryKey: [...ROLES_KEY, 'detail', id], queryFn: () => services.roles.get(id) });
   const [dialog, setDialog] = useState<'ubah' | 'izin' | 'hapus' | 'nonaktifkan' | 'aktifkan' | 'pindah' | null>(null);
   const r = q.data;
+  const back = { to: '/role', label: c.panel.kembali };
+  const crumbs = (nama: string) => [{ label: c.panel.crumb, to: '/role' }, { label: nama }];
   if (!r) {
+    const judul = q.isError ? c.panel.tidakDitemukan : c.memuat;
     return (
-      <SidePanel open onOpenChange={(o) => !o && onClose()} title="…" closeLabel={c.panel.tutup}>
-        <p role="status" className="text-body-dense text-ink-muted">{c.memuat}</p>
-      </SidePanel>
+      <>
+        <PageHeader title={judul} breadcrumbs={crumbs(q.isError ? judul : '…')} back={back} />
+        <PageBody>
+          <p role="status" className="text-body-dense text-ink-muted">{q.isError ? c.panel.tidakDitemukanIsi : c.memuat}</p>
+        </PageBody>
+      </>
     );
   }
   // Hak akses role dari katalog (semua modul, termasuk yang belum dirilis — definisi role, bukan akses efektif pengguna).
   const modules = effectiveAccess('Aktif', [r.id], scopeFor({ roles: [r.id], organisasi: '—', wilayahKerja: [], kkksDitugaskan: [] }), [], false);
-  const items = [
-    ...(r.status === 'Aktif'
+  const aktif = r.status === 'Aktif';
+  const more = [
+    { key: 'u', label: c.panel.ubah, onSelect: () => setDialog('ubah') },
+    ...(aktif ? [] : [{ key: 'i', label: c.izin.ubah, onSelect: () => setDialog('izin') }]),
+    ...(aktif
       ? r.dapatDinonaktifkan
         ? [{ key: 'n', label: c.panel.nonaktifkan, onSelect: () => setDialog('nonaktifkan') }]
         : []
-      : [{ key: 'a', label: c.panel.aktifkan, onSelect: () => setDialog('aktifkan') }, ...(r.pengguna > 0 ? [{ key: 'p', label: c.panel.pindahkan, onSelect: () => setDialog('pindah') }] : [])]),
+      : r.pengguna > 0
+        ? [{ key: 'p', label: c.panel.pindahkan, onSelect: () => setDialog('pindah') }]
+        : []),
     // FR-KR-09c: role sistem tidak dapat dihapus (aksi tidak tampil).
     ...(r.sistem ? [] : [{ key: 'h', label: c.izin.hapus, onSelect: () => setDialog('hapus') }]),
   ];
   return (
     <>
-      <SidePanel
-        open
-        onOpenChange={(o) => !o && onClose()}
+      <PageHeader
         title={r.nama}
         titleAside={<StatusBadge status={r.status} />}
-        subtitle={<span className="font-mono">{r.id}</span>}
-        closeLabel={c.panel.tutup}
+        summary={<span className="font-mono">{r.id}</span>}
+        breadcrumbs={crumbs(r.nama)}
+        back={back}
         actions={
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-wrap items-center gap-2">
-              <Button onClick={() => setDialog('ubah')}>{c.panel.ubah}</Button>
-              <Button onClick={() => setDialog('izin')}>{c.izin.ubah}</Button>
-              {items.length > 0 && <Menu items={items} trigger={<Button aria-label={c.panel.menu} icon={<MoreHorizontal aria-hidden size={14} strokeWidth={1.8} />} className="px-2" />} />}
-            </div>
-            {!r.dapatDinonaktifkan && <p className="text-caption text-ink-subtle">{c.panel.tidakDapatNonaktif}</p>}
-          </div>
+          <>
+            {aktif ? (
+              <Button variant="primary" icon={<ShieldCheck aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setDialog('izin')}>
+                {c.izin.ubah}
+              </Button>
+            ) : (
+              <Button variant="primary" icon={<RotateCcw aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setDialog('aktifkan')}>
+                {c.panel.aktifkan}
+              </Button>
+            )}
+            <Menu align="end" items={more} trigger={<Button aria-label={c.panel.menu} icon={<MoreHorizontal aria-hidden size={16} strokeWidth={1.8} />} className="px-2" />} />
+          </>
         }
-      >
-        <div className="flex flex-col gap-6">
+      />
+      <PageBody>
+        {!r.dapatDinonaktifkan && <p className="text-caption text-ink-subtle">{c.panel.tidakDapatNonaktif}</p>}
+        <Section className="border border-border" title={c.panel.infoJudul}>
           <KeyValueList
             items={[
               { key: 'd', label: c.panel.deskripsi, value: r.deskripsi },
@@ -91,16 +114,14 @@ function RolePanel({ id, onClose }: { id: RoleId; onClose: () => void }) {
               },
             ]}
           />
-          <section className="flex flex-col gap-2">
-            <h3 className="text-heading-3 text-ink">{c.panel.hakAkses}</h3>
-            <p className="text-caption text-ink-subtle">{c.panel.hakAksesKet}</p>
-            <EffectiveAccessView modules={modules} showRoles={false} />
-          </section>
-        </div>
-      </SidePanel>
+        </Section>
+        <Section className="border border-border" title={c.panel.hakAkses} description={c.panel.hakAksesKet}>
+          <EffectiveAccessView modules={modules} showRoles={false} />
+        </Section>
+      </PageBody>
       {dialog === 'ubah' && <RenameRoleDialog role={r} onClose={() => setDialog(null)} />}
       {dialog === 'izin' && <EditPermissionsDialog role={r} onClose={() => setDialog(null)} />}
-      {dialog === 'hapus' && <DeleteRoleDialog role={r} onClose={() => setDialog(null)} onDeleted={onClose} />}
+      {dialog === 'hapus' && <DeleteRoleDialog role={r} onClose={() => setDialog(null)} onDeleted={() => navigate('/role')} />}
       {dialog === 'nonaktifkan' && <DeactivateRoleDialog role={r} onClose={() => setDialog(null)} />}
       {dialog === 'aktifkan' && <ReactivateRoleDialog role={r} onClose={() => setDialog(null)} />}
       {dialog === 'pindah' && <MoveUsersDialog role={r} onClose={() => setDialog(null)} />}
@@ -109,7 +130,6 @@ function RolePanel({ id, onClose }: { id: RoleId; onClose: () => void }) {
 }
 
 export function RolePage() {
-  const { kode } = useParams();
   const navigate = useNavigate();
   const list = useQuery({ queryKey: [...ROLES_KEY, 'list'], queryFn: () => services.roles.list() });
   const columns: ColumnDef<RoleEntry, unknown>[] = [
@@ -161,11 +181,9 @@ export function RolePage() {
             loadingContent={<p className="text-body-dense text-ink-muted">{c.memuat}</p>}
             error={list.isError ? c.gagal : undefined}
             onRowClick={(r) => navigate(`/role/${r.id}`)}
-            selectedRowId={kode}
           />
         </Section>
       </PageBody>
-      {kode && <RolePanel id={kode as RoleId} onClose={() => navigate('/role')} />}
     </>
   );
 }

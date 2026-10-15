@@ -19,7 +19,8 @@ sudah masuk DS dan tidak dicatat lagi di sini.
 | Toast | Varian `gagal` (lingkaran `status-danger-ink`, tidak hilang sendiri); durasi 5 detik. |
 | EmptyState, StatePanel, Menu, chip | EmptyState rata tengah `heading-2`; StatePanel `heading-panel`; item Menu 10×12px; chip pil 13px medium. |
 | Teks | "Log akses", "Jejak audit", "Akun saya", "Tidak aktif"; "© 2026 SKK Migas. Hak cipta dilindungi." Label menu "Ikhtisar" tetap (keputusan terbuka DS). |
-| Filter daftar | "Hapus filter" (`quiet`) di semua halaman daftar, hanya tampil bila ada filter aktif; daftar kosong karena filter menawarkan "Hapus filter". |
+| Button (aturan 15 Okt 2026) | Tombol "Filter lainnya" `quiet` semibold berwarna tetap `ink-muted`; "Hapus filter" di area filter Pengguna/Organisasi `link`; "Ekspor CSV" Log akses dan Jejak audit pindah ke aksi PageHeader; aksi PageHeader turun 24px bila ada jejak lokasi; "Tinggalkan" di ConfirmDialog tinggalkan halaman `destructive` + peringatan `beforeunload` (`lib/use-leave-guard.ts`); panel organisasi: satu aksi status jadi tombol sekunder langsung (bukan menu "⋯"). |
+| Filter daftar | "Hapus filter" (`link`) di semua halaman daftar, hanya tampil bila ada filter aktif; daftar kosong karena filter menawarkan "Hapus filter". |
 
 ## Masih berbeda dari DS (perlu keputusan)
 

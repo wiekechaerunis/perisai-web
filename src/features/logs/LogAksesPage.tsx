@@ -83,15 +83,9 @@ function EntryPanel({ id, onClose, onSession }: { id: string; onClose: () => voi
   );
 }
 
-function AccessLogTab() {
-  const { session } = useSession();
-  const toast = useToast();
-  const [params, setParams] = useSearchParams();
-  const isR03 = !!session?.user.roles.includes('R-03');
-  const isPicOnly = !!session && !session.user.roles.some((r) => r === 'R-02' || r === 'R-03');
-  const orgs = useOrganisasiFilter(!isPicOnly);
-
-  const query: AccessLogQuery = useMemo(
+/** Kueri Log akses dari URL (dipakai tabel dan tombol Ekspor di PageHeader). */
+function useAccessLogQuery(params: URLSearchParams): AccessLogQuery {
+  return useMemo(
     () => ({
       dari: params.get('dari') ?? wibDay(-7),
       sampai: params.get('sampai') ?? wibDay(0),
@@ -107,7 +101,13 @@ function AccessLogTab() {
     }),
     [params],
   );
-  const list = useQuery({ queryKey: ['access-log', query], queryFn: () => services.logs.accessLog(query) });
+}
+
+/** FR-LA-16: ekspor CSV hasil filter (R-03). DS Button: aksi halaman di PageHeader. */
+function ExportAccessLogButton() {
+  const toast = useToast();
+  const [params] = useSearchParams();
+  const query = useAccessLogQuery(params);
   const exp = useMutation({
     mutationFn: () => services.logs.exportAccessLog({ ...query, page: 1, pageSize: 100_000 }),
     onSuccess: (csv) => {
@@ -115,6 +115,20 @@ function AccessLogTab() {
       toast.show({ title: c.eksporSukses(csv.split('\n').length - 1) });
     },
   });
+  return (
+    <Button icon={<Download aria-hidden size={16} strokeWidth={1.8} />} onClick={() => exp.mutate()} loading={exp.isPending} loadingLabel={c.mengekspor}>
+      {c.ekspor}
+    </Button>
+  );
+}
+
+function AccessLogTab() {
+  const { session } = useSession();
+  const [params, setParams] = useSearchParams();
+  const isPicOnly = !!session && !session.user.roles.some((r) => r === 'R-02' || r === 'R-03');
+  const orgs = useOrganisasiFilter(!isPicOnly);
+  const query = useAccessLogQuery(params);
+  const list = useQuery({ queryKey: ['access-log', query], queryFn: () => services.logs.accessLog(query) });
 
   const set = (patch: Record<string, string | undefined>) => {
     const next = new URLSearchParams(params);
@@ -233,13 +247,6 @@ function AccessLogTab() {
       <Section
         className="border border-border"
         title={<TableTitle title={c.log.tabel} />}
-        action={
-          isR03 && (
-            <Button icon={<Download aria-hidden size={14} strokeWidth={1.8} />} onClick={() => exp.mutate()} loading={exp.isPending} loadingLabel={c.mengekspor}>
-              {c.ekspor}
-            </Button>
-          )
-        }
       >
         <DataTable
           caption={c.log.tabel}
@@ -333,10 +340,12 @@ function ActiveSessionsTab() {
 }
 
 export function LogAksesPage() {
+  const { session } = useSession();
+  const isR03 = !!session?.user.roles.includes('R-03');
   const [tab, setTab] = useState('log');
   return (
     <>
-      <PageHeader title={c.log.judul} summary={c.log.ringkasan} />
+      <PageHeader title={c.log.judul} summary={c.log.ringkasan} actions={isR03 && tab === 'log' ? <ExportAccessLogButton /> : undefined} />
       <PageBody>
         <Tabs
           label={c.log.tabLabel}

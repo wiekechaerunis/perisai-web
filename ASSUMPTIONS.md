@@ -286,3 +286,24 @@ keputusan #5 Organisasi). Variabel di `src/styles/status.css`, nada di `AccountS
 - Pemilih hak akses (Buat role, Ubah hak akses) berbentuk matriks modul × aksi (masukan PM 15 Okt 2026): kolom tetap =
   semua aksi yang dipakai minimal satu jenis organisasi; kotak centang hanya pada aksi yang diizinkan untuk jenis organisasi
   terpilih, sel lain bertanda titik "Tidak tersedia" (FR-KR-09b tetap berlaku). Modul tanpa aksi yang diizinkan tidak tampil.
+
+## Detail pengguna dan organisasi sebagai halaman penuh (diputuskan PM 15 Okt 2026)
+
+- `/pengguna/:id` dan `/organisasi/:kode` kini halaman penuh (pola halaman turunan DS), bukan panel samping 480px
+  (Figma 106:14009 / 109:16236 memakai panel). Tombol kembali dan jejak lokasi ("Pengguna › {nama}",
+  "Organisasi › {nama}") kembali ke daftar dengan filter yang sama (query string dibawa lewat state navigasi).
+- Badge status di samping judul; aksi (Reset kata sandi + menu ···, Kirim ulang/Batalkan undangan, Aktifkan kembali,
+  Nonaktifkan organisasi) di kanan PageHeader; catatan status (undangan kedaluwarsa, organisasi nonaktif) di atas kartu
+  bertab.
+- Toast "Organisasi ditambahkan." → aksi "Undang PIC KKKS" membuka halaman detail organisasi baru lalu dialog Undang
+  (FR-ORG-08).
+- Detail role (`/role/:kode`) juga halaman penuh: kartu "Informasi role" dan "Hak akses"; jejak lokasi "Role › {nama}".
+- Gaya tombol di ketiga halaman detail (masukan PM 15 Okt 2026, aturan DS Button): satu aksi utama primer berikon sesuai
+  status, aksi pendamping sekunder berikon, sisanya di menu "Aksi lainnya" (···).
+  - Pengguna Aktif: **Ubah data** (primer), Reset kata sandi, ···(Tangguhkan, Nonaktifkan, Akhiri semua sesi).
+  - Pengguna Diundang/Kedaluwarsa: **Kirim ulang undangan** (primer), Ubah data, Batalkan undangan.
+  - Pengguna Ditangguhkan/Nonaktif: **Aktifkan kembali** (primer), Ubah data (bila boleh), ···.
+  - Organisasi: Nonaktifkan organisasi (sekunder; destructive hanya di ConfirmDialog); bila nonaktif **Aktifkan kembali** (primer).
+  - Role Aktif: **Ubah hak akses** (primer), ···(Ubah nama dan deskripsi, Nonaktifkan, Hapus); Tidak aktif: **Aktifkan kembali** (primer).
+  - ASSUMPTION: tombol "Ubah data" di header ditambahkan (sebelumnya hanya tautan "Ubah" per field) agar aksi utama
+    pengguna Aktif terlihat; tautan per field tetap ada.

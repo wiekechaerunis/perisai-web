@@ -6,6 +6,13 @@ import { AppProviders, makeQueryClient } from '@/App';
 import { services } from '@/services';
 import { AkunSayaLayout, AkunSayaProfilPage } from '../account/AkunSayaPages';
 import { PenggunaPage } from './PenggunaPage';
+import { UserDetailPage } from './components/UserDetailPanel';
+
+/** Halaman detail (bukan panel samping lagi): tunggu judul h1, kembalikan seluruh dokumen sebagai wadah. */
+async function detailPage(name: string | RegExp): Promise<HTMLElement> {
+  await screen.findByRole('heading', { level: 1, name });
+  return document.body;
+}
 
 function renderAt(route: string) {
   const client = makeQueryClient();
@@ -13,7 +20,7 @@ function renderAt(route: string) {
   const router = createMemoryRouter(
     [
       { path: '/pengguna', element: <PenggunaPage /> },
-      { path: '/pengguna/:id', element: <PenggunaPage /> },
+      { path: '/pengguna/:id', element: <UserDetailPage /> },
       { path: '/akun-saya', element: <AkunSayaLayout />, children: [{ index: true, element: <AkunSayaProfilPage /> }] },
     ],
     { initialEntries: [route], future: { v7_relativeSplatPath: true } },
@@ -70,7 +77,7 @@ describe('Manajemen pengguna — PIC KKKS (FR-UP-24, R-1)', () => {
   it('panel Diundang: batalkan undangan dengan alasan wajib (FR-BU-06..09)', async () => {
     await services.dev!.signInAs('u-04');
     renderAt('/pengguna/u-10');
-    const panel = await screen.findByRole('dialog', { name: /Agus Pranoto/ });
+    const panel = await detailPage(/Agus Pranoto/);
     await userEvent.click(within(panel).getByRole('button', { name: 'Batalkan undangan' }));
     const dialog = await screen.findByRole('dialog', { name: 'Batalkan undangan?' });
     const confirm = within(dialog).getByRole('button', { name: 'Batalkan undangan' });
@@ -87,7 +94,7 @@ describe('Manajemen pengguna — PIC KKKS (FR-UP-24, R-1)', () => {
   it('panel Aktif: tangguhkan lewat menu, lalu aktifkan kembali (FR-SA-09..13)', async () => {
     await services.dev!.signInAs('u-04');
     renderAt('/pengguna/u-05');
-    const panel = await screen.findByRole('dialog', { name: /Dimas Pratama/ });
+    const panel = await detailPage(/Dimas Pratama/);
     await userEvent.click(within(panel).getByRole('button', { name: 'Aksi lainnya' }));
     await userEvent.click(await screen.findByRole('menuitem', { name: 'Tangguhkan akun' }));
     const dialog = await screen.findByRole('dialog', { name: 'Tangguhkan akun?' });
@@ -108,7 +115,7 @@ describe('Manajemen pengguna — PIC KKKS (FR-UP-24, R-1)', () => {
   it('PIC tidak melihat aksi status pada akunnya sendiri (FR-SA-06)', async () => {
     await services.dev!.signInAs('u-04');
     renderAt('/pengguna/u-04');
-    const panel = await screen.findByRole('dialog', { name: /Rina Wiyono/ });
+    const panel = await detailPage(/Rina Wiyono/);
     expect(within(panel).queryByRole('button', { name: 'Aksi lainnya' })).toBeNull();
   });
 });

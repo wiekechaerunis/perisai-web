@@ -52,12 +52,13 @@ export const orgCopy = {
 
   panel: {
     tutup: 'Tutup panel',
+    crumb: 'Organisasi',
+    kembali: 'Kembali ke Organisasi', // usulan
     tabLabel: 'Bagian detail organisasi',
     tabProfil: 'Profil',
     tabAkses: 'Akses',
     tabWk: 'Wilayah Kerja',
     tabRiwayat: 'Riwayat',
-    menu: 'Aksi organisasi',
     nonaktifkan: 'Nonaktifkan organisasi',
     aktifkan: 'Aktifkan kembali',
     bannerNonaktif: (tgl: string, alasan: string) => `Organisasi ini nonaktif sejak ${tgl} · ${alasan}`,

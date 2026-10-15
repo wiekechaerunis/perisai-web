@@ -282,8 +282,16 @@ export function JejakAuditPage() {
       <PageHeader
         title={a.judul}
         summary={a.ringkasan}
+        // DS Button: aksi halaman (Ekspor) di PageHeader, bukan di area filter/tabel.
         actions={
-          <Button onClick={() => setRetensi(true)}>{a.retensi.tombol}</Button>
+          <>
+            {applied && isR03 && (
+              <Button icon={<Download aria-hidden size={16} strokeWidth={1.8} />} onClick={() => exp.mutate()} loading={exp.isPending} loadingLabel={c.mengekspor}>
+                {c.ekspor}
+              </Button>
+            )}
+            <Button onClick={() => setRetensi(true)}>{a.retensi.tombol}</Button>
+          </>
         }
       />
       <PageBody>
@@ -338,14 +346,6 @@ export function JejakAuditPage() {
         <Section
           className="border border-border"
           title={<TableTitle title={a.tabel} />}
-          action={
-            applied &&
-            isR03 && (
-              <Button icon={<Download aria-hidden size={14} strokeWidth={1.8} />} onClick={() => exp.mutate()} loading={exp.isPending} loadingLabel={c.mengekspor}>
-                {c.ekspor}
-              </Button>
-            )
-          }
         >
           {!applied ? (
             <EmptyState title={a.awalJudul} description={a.awalIsi} />

@@ -10,7 +10,7 @@ import { AppProviders, makeQueryClient } from '@/App';
 import { services } from '@/services';
 import { MOCK_PASSWORD } from '@/services/mock/seed';
 import { VerifikasiEmailPage } from '../email-links/EmailLinkPages';
-import { PenggunaPage } from './PenggunaPage';
+import { UserDetailPage } from './components/UserDetailPanel';
 import { PermintaanEmailPage } from './PermintaanEmailPage';
 import { UbahPenggunaPage } from './UbahPenggunaPage';
 
@@ -38,7 +38,7 @@ function renderPage(route: string) {
     <AppProviders client={client()}>
       <MemoryRouter initialEntries={[route]} future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <Routes>
-          <Route path="/pengguna/:id" element={<PenggunaPage />} />
+          <Route path="/pengguna/:id" element={<UserDetailPage />} />
           <Route path="/permintaan-ubah-email" element={<PermintaanEmailPage />} />
           <Route path="/verifikasi-email/:token" element={<VerifikasiEmailPage />} />
         </Routes>

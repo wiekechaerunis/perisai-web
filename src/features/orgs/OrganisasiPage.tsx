@@ -1,14 +1,14 @@
 /**
  * Organisasi — PRD Kelola Organisasi KKKS (ClickUp z8pmx9pc63, status scoping), FR-ORG-01..04, 08, 20, Design Brief B1.
  * Tidak ada Figma: pola Manajemen Pengguna (kartu filter, tabel, panel kanan) — PR-11.
- * Rute /organisasi dan /organisasi/:kode (keputusan PM 14 Okt 2026). R-03 & R-07: daftar + panel; R-04: langsung
+ * Rute /organisasi (daftar) dan /organisasi/:kode (halaman detail, arahan PM 15 Okt 2026). R-03 & R-07: daftar → detail; R-04: langsung
  * detail organisasinya dalam mode baca (FR-ORG-20). Filter Status bawaan Aktif (FR-ORG-03); 25 baris per halaman.
  */
 import type { ColumnDef } from '@tanstack/react-table';
 import { PAGE_SIZE_OPTIONS, PAGE_SIZE_PARAM, parsePageSize } from '@/lib/page-size';
 import { Plus, Search } from 'lucide-react';
 import { useState } from 'react';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Section } from '@/components/layout/Section';
@@ -24,21 +24,29 @@ import { inviterRoleOf } from '@/lib/user-rules';
 import type { OrgDetail, OrgSummary, OrgType } from '@/services';
 import { logsCopy } from '../logs/copy';
 import { useSession } from '../session/SessionProvider';
-import { InviteDialog } from '../users/components/InviteDialog';
 import { AddOrgDialog } from './components/AddOrgDialog';
-import { OrgDetailContent, OrgHeaderNotes, OrgPanel, OrgStatusBadge, type OrgLevel } from './components/OrgPanel';
+import { OrgDetailContent, OrgDetailPage, OrgHeaderNotes, OrgStatusBadge, type OrgDetailNavState, type OrgLevel } from './components/OrgPanel';
 import { orgCopy as c } from './copy';
 import { useOrgDetail, useOrgList } from './hooks';
 
 const SEMUA = 'semua';
 const JENIS: OrgType[] = ['SKK Migas', 'KKKS', 'Kontraktor'];
 
+/** /organisasi/:kode — R-03/R-07: halaman detail; PIC KKKS (mode baca) tetap melihat organisasinya sendiri. */
+export function OrganisasiDetailRoute() {
+  const { session } = useSession();
+  const roles = session?.user.roles ?? [];
+  const level: OrgLevel = roles.includes('R-03') ? 'admin' : roles.includes('R-07') ? 'teknis' : 'baca';
+  if (!session) return null;
+  return level === 'baca' ? <OwnOrgPage kode={session.user.organisasi.id} /> : <OrgDetailPage level={level} />;
+}
+
 export function OrganisasiPage() {
   const { session } = useSession();
   const roles = session?.user.roles ?? [];
   const level: OrgLevel = roles.includes('R-03') ? 'admin' : roles.includes('R-07') ? 'teknis' : 'baca';
   if (!session) return null;
-  return level === 'baca' ? <OwnOrgPage kode={session.user.organisasi.id} /> : <OrgListPage level={level} />;
+  return level === 'baca' ? <OwnOrgPage kode={session.user.organisasi.id} /> : <OrgListPage />;
 }
 
 /** FR-ORG-20: PIC KKKS membuka langsung detail organisasinya (mode baca). */
@@ -66,15 +74,13 @@ function OwnOrgPage({ kode: orgId }: { kode: string }) {
   );
 }
 
-function OrgListPage({ level }: { level: OrgLevel }) {
+function OrgListPage() {
   const { session } = useSession();
-  const { kode } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToast();
   const [params, setParams] = useSearchParams();
   const [addOpen, setAddOpen] = useState(false);
-  const [invite, setInvite] = useState<OrgDetail | null>(null);
   const inviter = session ? inviterRoleOf(session.user.roles) : null;
 
   const search = params.get('cari') ?? '';
@@ -93,7 +99,7 @@ function OrgListPage({ level }: { level: OrgLevel }) {
     if (k !== 'hal') next.delete('hal');
     setParams(next, { replace: true });
   };
-  const open = (k: string) => navigate({ pathname: `/organisasi/${k}`, search: location.search });
+  const open = (k: string, extra?: OrgDetailNavState) => navigate(`/organisasi/${k}`, { state: { from: location.search, ...extra } satisfies OrgDetailNavState });
 
   const dim = (o: OrgSummary) => (o.status === 'Nonaktif' ? 'text-ink-subtle' : 'text-ink');
   const columns: ColumnDef<OrgSummary, unknown>[] = [
@@ -133,7 +139,7 @@ function OrgListPage({ level }: { level: OrgLevel }) {
     setAddOpen(false);
     open(o.kode);
     // FR-ORG-08: toast dengan aksi Undang PIC KKKS.
-    toast.show({ title: c.tambahDialog.sukses, action: inviter ? { label: c.tambahDialog.undangPic, onClick: () => setInvite(o) } : undefined });
+    toast.show({ title: c.tambahDialog.sukses, action: inviter ? { label: c.tambahDialog.undangPic, onClick: () => open(o.kode, { undangPic: Date.now() }) } : undefined });
   }
 
   return (
@@ -164,7 +170,7 @@ function OrgListPage({ level }: { level: OrgLevel }) {
               ]}
               className="w-[180px]"
             />
-            {filtered && <Button variant="quiet" onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
+            {filtered && <Button variant="link" onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
           </div>
         </Section>
         <Section className="border border-border" title={c.tabelJudul}>
@@ -177,23 +183,12 @@ function OrgListPage({ level }: { level: OrgLevel }) {
             loadingContent={<p className="text-body-dense text-ink-muted">{c.memuat}</p>}
             error={list.isError ? c.gagalMuat : undefined}
             onRowClick={(o) => open(o.kode)}
-            selectedRowId={kode}
             empty={<EmptyState title={filtered ? c.kosongFilter : c.kosong} action={filtered ? <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button> : undefined} />}
           />
           <Pagination page={page} pageSize={PAGE} total={rows.length} onPageChange={(n) => setParam('hal', String(n))} pageSizeOptions={PAGE_SIZE_OPTIONS} onPageSizeChange={(n) => setParam(PAGE_SIZE_PARAM, String(n))} labels={logsCopy.halaman} />
         </Section>
       </PageBody>
-      {kode && <OrgPanel kode={kode} level={level} onClose={() => navigate({ pathname: '/organisasi', search: location.search })} onInvitePic={(o) => setInvite(o)} />}
       <AddOrgDialog open={addOpen} onOpenChange={setAddOpen} onCreated={created} />
-      {inviter && session && invite && (
-        <InviteDialog
-          open
-          onOpenChange={(o) => !o && setInvite(null)}
-          inviter={inviter}
-          ownOrg={session.user.organisasi}
-          prefill={{ organisasiId: invite.id, roles: inviter === 'R-04' ? undefined : ['R-04'] }}
-        />
-      )}
     </>
   );
 }

@@ -1,20 +1,21 @@
 /**
- * Panel detail organisasi — PRD Kelola Organisasi KKKS FR-ORG-10..13, 20, 40, Design Brief B2. Tidak ada Figma:
- * pola panel samping Manajemen Pengguna (SidePanel 480px; Figma 109:16236) — PR-11.
- * Header: nama, badge status, kode mono, menu ··· Nonaktifkan / Aktifkan kembali (R-03; tidak untuk SKK Migas dan
+ * Detail organisasi — PRD Kelola Organisasi KKKS FR-ORG-10..13, 20, 40, Design Brief B2. Tidak ada Figma.
+ * Halaman penuh /organisasi/:kode (arahan PM 15 Okt 2026; sebelumnya panel samping).
+ * Header: nama, badge status, kode mono, tombol Nonaktifkan / Aktifkan kembali (R-03; tidak untuk SKK Migas dan
  * Kontraktor). Tab Profil (ubah inline nama/badan hukum/skema untuk R-03; kode terkunci; ringkasan angka bertaut ke
  * Daftar Pengguna; PIC aktif atau banner Tanpa PIC + Undang PIC), Akses, Wilayah Kerja, Riwayat (Jejak Audit).
  * Jumlah grup tidak ditampilkan (fitur Grup ditahan KD-03).
  */
 import { useQueryClient } from '@tanstack/react-query';
-import { Lock, MoreHorizontal } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Ban, Lock, RotateCcw } from 'lucide-react';
+import { useEffect, useState, type ReactNode } from 'react';
+import { Link, useLocation, useParams } from 'react-router-dom';
+import { PageBody } from '@/components/layout/AppShell';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Section } from '@/components/layout/Section';
 import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
 import { Callout } from '@/components/patterns/Callout';
 import { KeyValueList, type KeyValueItem } from '@/components/patterns/KeyValueList';
-import { Menu } from '@/components/patterns/Menu';
-import { SidePanel } from '@/components/patterns/SidePanel';
 import { useToast } from '@/components/patterns/Toast';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
@@ -22,7 +23,10 @@ import { Tabs } from '@/components/ui/Tabs';
 import { TextField } from '@/components/ui/TextField';
 import { formatTanggal, formatTanggalJam } from '@/lib/format';
 import { BADAN_HUKUM_MAX, ORG_NAMA_MAX, ORG_NAMA_MIN, SKEMA_KONTRAK, type SkemaKontrak } from '@/lib/org-rules';
+import { inviterRoleOf } from '@/lib/user-rules';
 import { isServiceError, services, type OrgDetail } from '@/services';
+import { useSession } from '../../session/SessionProvider';
+import { InviteDialog } from '../../users/components/InviteDialog';
 import { orgCopy } from '../copy';
 import { ORGS_KEY, useOrgDetail, useOrgHistory, useOrgMutation } from '../hooks';
 import { OrgAccessTab } from './OrgAccessTab';
@@ -228,48 +232,93 @@ export function OrgHeaderNotes({ org }: { org: OrgDetail }) {
   return <p className="rounded-md bg-surface-sunken p-3 text-body-dense text-ink">{p.bannerNonaktif(formatTanggal(org.nonaktif.sejak), org.nonaktif.alasan)}</p>;
 }
 
-export function OrgPanel({ kode, level, onClose, onInvitePic }: { kode: string; level: OrgLevel; onClose: () => void; onInvitePic: (org: OrgDetail) => void }) {
+/** State navigasi ke halaman detail: query string daftar (tombol kembali memulihkan filter) dan permintaan membuka
+ * dialog Undang PIC (dari Toast "Organisasi ditambahkan.", FR-ORG-08). */
+export interface OrgDetailNavState {
+  from?: string;
+  undangPic?: number;
+}
+
+/**
+ * Halaman detail organisasi /organisasi/:kode (R-03 admin, R-07 teknis). Arahan PM 15 Okt 2026: halaman penuh, bukan
+ * panel samping; pola halaman turunan DS (tombol kembali ke daftar, jejak lokasi "Organisasi › {nama}"). Aksi status
+ * satu tombol di kanan PageHeader.
+ */
+export function OrgDetailPage({ level }: { level: Exclude<OrgLevel, 'baca'> }) {
+  const { kode } = useParams();
+  const { session } = useSession();
+  const location = useLocation();
+  const state = (location.state as OrgDetailNavState | null) ?? {};
+  const backTo = `/organisasi${state.from ?? ''}`;
   const detail = useOrgDetail(kode);
   const [dialog, setDialog] = useState<'nonaktifkan' | 'aktifkan' | null>(null);
+  const [invite, setInvite] = useState(false);
+  const inviter = session ? inviterRoleOf(session.user.roles) : null;
+  useEffect(() => {
+    if (state.undangPic) setInvite(true);
+  }, [state.undangPic]);
   const org = detail.data;
+  const crumbs = (nama: string) => [{ label: p.crumb, to: backTo }, { label: nama }];
+  const back = { to: backTo, label: p.kembali };
   if (!org) {
+    const judul = detail.isError ? p.tidakDitemukan : orgCopy.memuat;
     return (
-      <SidePanel open onOpenChange={(o) => !o && onClose()} title={detail.isError ? p.tidakDitemukan : '…'} closeLabel={p.tutup}>
-        <p role="status" className="text-body-dense text-ink-muted">
-          {detail.isError ? p.tidakDitemukanIsi : orgCopy.memuat}
-        </p>
-      </SidePanel>
+      <>
+        <PageHeader title={judul} breadcrumbs={crumbs(detail.isError ? p.tidakDitemukan : '…')} back={back} />
+        <PageBody>
+          <p role="status" className="text-body-dense text-ink-muted">
+            {detail.isError ? p.tidakDitemukanIsi : orgCopy.memuat}
+          </p>
+        </PageBody>
+      </>
     );
   }
-  const menu =
-    level === 'admin' && org.dapatDinonaktifkan ? (
-      <Menu
-        items={[org.status === 'Aktif' ? { key: 'n', label: p.nonaktifkan, onSelect: () => setDialog('nonaktifkan') } : { key: 'a', label: p.aktifkan, onSelect: () => setDialog('aktifkan') }]}
-        trigger={<Button aria-label={p.menu} icon={<MoreHorizontal aria-hidden size={14} strokeWidth={1.8} />} className="px-2" />}
-      />
-    ) : null;
+  // Hanya satu aksi (Nonaktifkan / Aktifkan kembali) → tombol langsung, bukan menu "⋯" (masukan PM 15 Okt 2026).
+  const statusAction =
+    level === 'admin' && (org.dapatDinonaktifkan || org.status === 'Nonaktif') ? (
+      // Gaya tombol (masukan PM 15 Okt 2026): Aktifkan kembali = aksi utama (primer); Nonaktifkan = sekunder berikon
+      // (destructive hanya di ConfirmDialog, DS Button).
+      org.status === 'Aktif' ? (
+        <Button icon={<Ban aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setDialog('nonaktifkan')}>
+          {p.nonaktifkan}
+        </Button>
+      ) : (
+        <Button variant="primary" icon={<RotateCcw aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setDialog('aktifkan')}>
+          {p.aktifkan}
+        </Button>
+      )
+    ) : undefined;
   return (
     <>
-      <SidePanel
-        open
-        onOpenChange={(o) => !o && onClose()}
+      <PageHeader
         title={org.nama}
         titleAside={<OrgStatusBadge status={org.status} />}
-        subtitle={<span className="font-mono">{org.kode}</span>}
-        actions={
-          menu || org.nonaktif ? (
-            <div className="flex flex-col gap-3">
-              <OrgHeaderNotes org={org} />
-              {org.status === 'Nonaktif' && level === 'admin' ? <div><Button onClick={() => setDialog('aktifkan')}>{p.aktifkan}</Button></div> : menu}
-            </div>
-          ) : undefined
-        }
-        closeLabel={p.tutup}
-      >
-        <OrgDetailContent org={org} level={level} onInvitePic={() => onInvitePic(org)} />
-      </SidePanel>
+        summary={<span className="font-mono">{org.kode}</span>}
+        breadcrumbs={crumbs(org.nama)}
+        back={back}
+        actions={statusAction}
+      />
+      <PageBody>
+        {org.nonaktif && (
+          <div className="max-w-[720px]">
+            <OrgHeaderNotes org={org} />
+          </div>
+        )}
+        <Section className="border border-border">
+          <OrgDetailContent org={org} level={level} onInvitePic={() => setInvite(true)} />
+        </Section>
+      </PageBody>
       {dialog === 'nonaktifkan' && <DeactivateOrgDialog org={org} onClose={() => setDialog(null)} />}
       {dialog === 'aktifkan' && <ReactivateOrgDialog org={org} onClose={() => setDialog(null)} />}
+      {inviter && session && invite && (
+        <InviteDialog
+          open
+          onOpenChange={(o) => !o && setInvite(false)}
+          inviter={inviter}
+          ownOrg={session.user.organisasi}
+          prefill={{ organisasiId: org.id, roles: inviter === 'R-04' ? undefined : ['R-04'] }}
+        />
+      )}
     </>
   );
 }

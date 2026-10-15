@@ -28,7 +28,12 @@ export const roleCopy = {
     aktifkan: 'Aktifkan kembali',
     pindahkan: 'Pindahkan pengguna', // FR-AR-13
     tidakDapatNonaktif: 'Administrator Bisnis tidak dapat dinonaktifkan.', // FR-AR-03 (usulan)
-    menu: 'Aksi role',
+    menu: 'Aksi lainnya',
+    crumb: 'Role',
+    kembali: 'Kembali ke Role', // usulan
+    infoJudul: 'Informasi role', // usulan
+    tidakDitemukan: 'Role tidak ditemukan', // usulan
+    tidakDitemukanIsi: 'Halaman atau data yang Anda cari tidak tersedia.',
   },
   ubah: {
     judul: 'Ubah nama dan deskripsi', // usulan

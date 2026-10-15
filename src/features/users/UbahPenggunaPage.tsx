@@ -12,9 +12,10 @@
  * lalu "Role dan cakupan akses" (arahan PM 14 Okt 2026).
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useLeaveGuard } from '@/lib/use-leave-guard';
 import { Lock, Minus, Plus } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { Link, useBlocker, useNavigate, useParams } from 'react-router-dom';
+import { useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Section } from '@/components/layout/Section';
@@ -121,10 +122,7 @@ function UbahForm({ user: u }: { user: UserDetail }) {
 
   const dirty = JSON.stringify(f) !== JSON.stringify(start);
   // FR-UDR-10
-  const blocker = useBlocker(({ currentLocation, nextLocation }) => dirty && !saved.current && currentLocation.pathname !== nextLocation.pathname);
-  useEffect(() => {
-    if (!dirty && blocker.state === 'blocked') blocker.reset?.();
-  }, [dirty, blocker]);
+  const blocker = useLeaveGuard(dirty, saved);
 
   const set = <K extends keyof FormState>(k: K, val: FormState[K], err?: Field) => {
     setF((p) => ({ ...p, [k]: val }));
@@ -402,6 +400,7 @@ function UbahForm({ user: u }: { user: UserDetail }) {
         description={c.tinggalkanIsi}
         confirmLabel={c.tinggalkan}
         cancelLabel={c.tetap}
+        destructive
         onConfirm={() => blocker.proceed?.()}
       />
     </>

@@ -1,7 +1,10 @@
 /**
- * Panel detail pengguna — PRD Profil Pengguna (ClickUp z8pmx9n8nx), Figma 109:16236 (Profil), 109:16307 (Akses),
- * 109:16444 (Aktivitas); varian status Figma 106:14009, 246:5817, 251:6771, 257:8491; 480px.
- * Header: Reset kata sandi + menu ··· (Figma 109:16236). Aksi per status mengikuti PRD (Tabel K-1, B-1, A-2):
+ * Halaman detail pengguna /pengguna/:id — PRD Profil Pengguna (ClickUp z8pmx9n8nx), Figma 109:16236 (Profil), 109:16307
+ * (Akses), 109:16444 (Aktivitas); varian status Figma 106:14009, 246:5817, 251:6771, 257:8491.
+ * Arahan PM 15 Okt 2026: halaman penuh (bukan panel samping 480px Figma) dengan pola halaman turunan DS: tombol kembali ke
+ * daftar (filter daftar dipertahankan), jejak lokasi "Pengguna › {nama}", badge status di samping judul, aksi di kanan
+ * PageHeader, catatan status di atas kartu bertab.
+ * Aksi: Reset kata sandi + menu ··· (Figma 109:16236). Aksi per status mengikuti PRD (Tabel K-1, B-1, A-2):
  * - Aktif: Reset kata sandi; menu ··· → Tangguhkan akun, Nonaktifkan akun, Akhiri semua sesi (nonaktif bila 0 sesi)
  * - Ditangguhkan: Aktifkan kembali; menu ··· → Nonaktifkan akun
  * - Diundang / Kedaluwarsa: Kirim ulang undangan, Batalkan undangan (FR-KU-04, FR-BU-04)
@@ -10,8 +13,12 @@
  * Tab Profil: tautan "Ubah" per field → halaman /pengguna/:id/ubah (PRD Ubah Data & Role, keputusan PM 14 Okt 2026);
  * Masa berlaku → dialog Perpanjang (FR-SA-22). Riwayat akun: Diundang, Diaktifkan, Login terakhir.
  */
-import { KeyRound, Lock, MoreHorizontal } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { KeyRound, Lock, MoreHorizontal, Pencil, RotateCcw, Send, XCircle } from 'lucide-react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { PageBody } from '@/components/layout/AppShell';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { Section } from '@/components/layout/Section';
+import { useSession } from '../../session/SessionProvider';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ConfirmDialog } from '@/components/patterns/Dialog';
@@ -22,7 +29,6 @@ import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
 import { Callout } from '@/components/patterns/Callout';
 import { KeyValueList, type KeyValueItem } from '@/components/patterns/KeyValueList';
 import { Menu } from '@/components/patterns/Menu';
-import { SidePanel } from '@/components/patterns/SidePanel';
 import { Button } from '@/components/ui/Button';
 import { Tabs } from '@/components/ui/Tabs';
 import { formatTanggal, formatTanggalJam } from '@/lib/format';
@@ -56,29 +62,37 @@ function canManage(session: Session, u: UserDetail): boolean {
   return roles.includes('R-04') && session.user.organisasi.id === u.organisasi.id;
 }
 
-export interface UserDetailPanelProps {
-  userId: string | undefined;
-  session: Session;
-  onClose: () => void;
+/** State navigasi dari daftar: query string daftar agar tombol kembali memulihkan filter. */
+export interface FromListState {
+  from?: string;
 }
 
-export function UserDetailPanel({ userId, session, onClose }: UserDetailPanelProps) {
+export function UserDetailPage() {
+  const { id: userId } = useParams();
+  const { session } = useSession();
+  const location = useLocation();
+  const backTo = `/pengguna${(location.state as FromListState | null)?.from ?? ''}`;
   const detail = useUserDetail(userId);
   const [action, setAction] = useState<UserAction | null>(null);
   const [reinvite, setReinvite] = useState(false);
   const [resetOpen, setResetOpen] = useState(false);
   const u = detail.data;
-  const inviter = inviterRoleOf(session.user.roles);
+  const inviter = session ? inviterRoleOf(session.user.roles) : null;
   const navigate = useNavigate();
 
-  if (!userId) return null;
+  const crumbs = (nama: string) => [{ label: c.detail.crumb, to: backTo }, { label: nama }];
+  const back = { to: backTo, label: c.detail.kembali };
+  if (!userId || !session) return null;
   if (!u) {
     return (
-      <SidePanel open onOpenChange={(o) => !o && onClose()} title={detail.isError ? c.profil.tidakDitemukan : '…'} closeLabel={c.profil.tutup}>
-        <p role="status" className="text-body-dense text-ink-muted">
-          {detail.isError ? c.profil.tidakDitemukanIsi : c.profil.memuat}
-        </p>
-      </SidePanel>
+      <>
+        <PageHeader title={detail.isError ? c.profil.tidakDitemukan : c.profil.memuat} breadcrumbs={crumbs(detail.isError ? c.profil.tidakDitemukan : '…')} back={back} />
+        <PageBody>
+          <p role="status" className="text-body-dense text-ink-muted">
+            {detail.isError ? c.profil.tidakDitemukanIsi : c.profil.memuat}
+          </p>
+        </PageBody>
+      </>
     );
   }
 
@@ -90,7 +104,7 @@ export function UserDetailPanel({ userId, session, onClose }: UserDetailPanelPro
   const a = actionsForStatus(u.status, u.pernahAktif);
   const cancelled = u.status === 'Nonaktif' && !u.pernahAktif;
 
-  const actions = manage ? (
+  const notes = manage ? (
     <>
       {u.status === 'Kedaluwarsa' &&
         (u.mintaUndanganBaru ? (
@@ -112,26 +126,6 @@ export function UserDetailPanel({ userId, session, onClose }: UserDetailPanelPro
           </div>
         </div>
       )}
-      <div className="flex flex-wrap items-center gap-2">
-        {u.status === 'Aktif' && (
-          <Button icon={<KeyRound aria-hidden size={14} strokeWidth={1.8} />} onClick={() => setResetOpen(true)}>
-            {p.resetSandi}
-          </Button>
-        )}
-        {a.kirimUlang && <Button onClick={() => setAction('kirimUlang')}>{c.aksi.kirimUlang}</Button>}
-        {a.batalkan && <Button onClick={() => setAction('batalkan')}>{c.aksi.batalkan}</Button>}
-        {a.aktifkanKembali && <Button onClick={() => setAction('aktifkanKembali')}>{c.aksi.aktifkanKembali}</Button>}
-        {(u.status === 'Aktif' || u.status === 'Ditangguhkan') && (
-          <Menu
-            items={[
-              ...(u.status === 'Aktif' ? [{ key: 't', label: c.aksi.tangguhkanAkun, onSelect: () => setAction('tangguhkan') }] : []),
-              { key: 'n', label: c.aksi.nonaktifkanAkun, onSelect: () => setAction('nonaktifkan') },
-              ...(u.status === 'Aktif' ? [{ key: 's', label: c.aksi.cabutSesi, onSelect: () => setAction('cabutSesi'), disabled: u.sesiAktif === 0 }] : []),
-            ]}
-            trigger={<Button aria-label={c.aksi.lainnya} icon={<MoreHorizontal aria-hidden size={14} strokeWidth={1.8} />} className="px-2" />}
-          />
-        )}
-      </div>
       {u.status === 'Diundang' && u.undanganBerlakuSampai && (
         <p className="text-caption text-ink-subtle">{c.profil.berlakuSampai(formatTanggalJam(u.undanganBerlakuSampai))}</p>
       )}
@@ -140,6 +134,61 @@ export function UserDetailPanel({ userId, session, onClose }: UserDetailPanelPro
     <p role="status" className="rounded-md bg-surface-sunken p-3 text-body-dense text-ink">
       <strong className="font-semibold">{c.organisasiNonaktif}.</strong> {c.organisasiNonaktifTooltip}
     </p>
+  ) : null;
+
+  // Gaya tombol (masukan PM 15 Okt 2026): satu aksi utama primer sesuai status, aksi pendamping sekunder berikon, sisanya
+  // di menu "Aksi lainnya". Aktif → Ubah data; Diundang/Kedaluwarsa → Kirim ulang undangan; Ditangguhkan/Nonaktif →
+  // Aktifkan kembali.
+  const ubahData = (primary: boolean) =>
+    goEdit ? (
+      <Button variant={primary ? 'primary' : 'secondary'} icon={<Pencil aria-hidden size={16} strokeWidth={1.8} />} onClick={goEdit}>
+        {c.ubah.tombol}
+      </Button>
+    ) : null;
+  const statusMenu =
+    manage && (u.status === 'Aktif' || u.status === 'Ditangguhkan') ? (
+      <Menu
+        align="end"
+        items={[
+          ...(u.status === 'Aktif' ? [{ key: 't', label: c.aksi.tangguhkanAkun, onSelect: () => setAction('tangguhkan') }] : []),
+          { key: 'n', label: c.aksi.nonaktifkanAkun, onSelect: () => setAction('nonaktifkan') },
+          ...(u.status === 'Aktif' ? [{ key: 's', label: c.aksi.cabutSesi, onSelect: () => setAction('cabutSesi'), disabled: u.sesiAktif === 0 }] : []),
+        ]}
+        trigger={<Button aria-label={c.aksi.lainnya} icon={<MoreHorizontal aria-hidden size={16} strokeWidth={1.8} />} className="px-2" />}
+      />
+    ) : null;
+  const primaryStatus = manage
+    ? a.kirimUlang
+      ? (
+          <Button variant="primary" icon={<Send aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setAction('kirimUlang')}>
+            {c.aksi.kirimUlang}
+          </Button>
+        )
+      : a.aktifkanKembali
+        ? (
+            <Button variant="primary" icon={<RotateCcw aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setAction('aktifkanKembali')}>
+              {c.aksi.aktifkanKembali}
+            </Button>
+          )
+        : null
+    : null;
+  const headerActions =
+    primaryStatus || goEdit || statusMenu ? (
+      <div className="flex flex-wrap items-center gap-2">
+        {primaryStatus ?? ubahData(true)}
+        {primaryStatus && ubahData(false)}
+        {manage && u.status === 'Aktif' && (
+          <Button icon={<KeyRound aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setResetOpen(true)}>
+            {p.resetSandi}
+          </Button>
+        )}
+        {manage && a.batalkan && (
+          <Button icon={<XCircle aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setAction('batalkan')}>
+            {c.aksi.batalkan}
+          </Button>
+        )}
+        {statusMenu}
+      </div>
   ) : null;
 
   const lock = <Lock aria-label={p.tidakDapatDiubah} size={14} strokeWidth={1.8} className="text-ink-subtle" />;
@@ -201,15 +250,10 @@ export function UserDetailPanel({ userId, session, onClose }: UserDetailPanelPro
 
   return (
     <>
-      <SidePanel
-        open
-        onOpenChange={(o) => !o && onClose()}
-        title={u.nama}
-        titleAside={<StatusBadge user={u} />}
-        subtitle={u.email}
-        actions={actions}
-        closeLabel={c.profil.tutup}
-      >
+      <PageHeader title={u.nama} titleAside={<StatusBadge user={u} />} summary={u.email} breadcrumbs={crumbs(u.nama)} back={back} actions={headerActions} />
+      <PageBody>
+        {notes && <div className="flex max-w-[720px] flex-col gap-3">{notes}</div>}
+        <Section className="border border-border">
         <Tabs
           label={c.profil.tabLabel}
           items={[
@@ -234,7 +278,8 @@ export function UserDetailPanel({ userId, session, onClose }: UserDetailPanelPro
             },
           ]}
         />
-      </SidePanel>
+        </Section>
+      </PageBody>
       {action && <UserActionDialog action={action} user={u} onClose={() => setAction(null)} />}
       {resetOpen && <ResetPasswordDialog user={u} onClose={() => setResetOpen(false)} />}
       {inviter && (

@@ -13,13 +13,14 @@ import { useSession } from './features/session/SessionProvider';
 import { NotFoundPage } from './features/shell/ErrorPages';
 import { EMAIL_APPROVER_ROLES, landingPath, LOG_ROLES, ORG_ROLES, ROLE_ADMIN_ROLES } from './features/shell/navigation';
 import { BuatRolePage } from './features/roles/BuatRolePage';
-import { RolePage } from './features/roles/RolePage';
-import { OrganisasiPage } from './features/orgs/OrganisasiPage';
+import { RoleDetailPage, RolePage } from './features/roles/RolePage';
+import { OrganisasiDetailRoute, OrganisasiPage } from './features/orgs/OrganisasiPage';
 import { JejakAuditPage } from './features/logs/JejakAuditPage';
 import { LogAksesPage } from './features/logs/LogAksesPage';
 import { ProtectedLayout } from './features/shell/ProtectedLayout';
 import { RequireModule } from './features/shell/RequireModule';
 import { PenggunaPage } from './features/users/PenggunaPage';
+import { UserDetailPage } from './features/users/components/UserDetailPanel';
 import { PermintaanEmailPage } from './features/users/PermintaanEmailPage';
 import { UbahPenggunaPage } from './features/users/UbahPenggunaPage';
 import { BukanSayaPage, VerifikasiEmailPage } from './features/email-links/EmailLinkPages';
@@ -65,10 +66,11 @@ export const routes: RouteObject[] = [
         ),
       },
       {
+        // Detail pengguna sebagai halaman penuh (arahan PM 15 Okt 2026).
         path: '/pengguna/:id',
         element: (
           <RequireModule module="M-15">
-            <PenggunaPage />
+            <UserDetailPage />
           </RequireModule>
         ),
       },
@@ -91,10 +93,11 @@ export const routes: RouteObject[] = [
         ),
       },
       {
+        // Detail role sebagai halaman penuh (arahan PM 15 Okt 2026).
         path: '/role/:kode',
         element: (
           <RequireModule module="M-15" roles={ROLE_ADMIN_ROLES}>
-            <RolePage />
+            <RoleDetailPage />
           </RequireModule>
         ),
       },
@@ -108,10 +111,11 @@ export const routes: RouteObject[] = [
         ),
       },
       {
+        // Detail organisasi sebagai halaman penuh (arahan PM 15 Okt 2026).
         path: '/organisasi/:kode',
         element: (
           <RequireModule module="M-15" roles={ORG_ROLES}>
-            <OrganisasiPage />
+            <OrganisasiDetailRoute />
           </RequireModule>
         ),
       },

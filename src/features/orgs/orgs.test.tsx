@@ -10,7 +10,7 @@ function Probe() {
 import { describe, expect, it } from 'vitest';
 import { AppProviders, makeQueryClient } from '@/App';
 import { services } from '@/services';
-import { OrganisasiPage } from './OrganisasiPage';
+import { OrganisasiDetailRoute, OrganisasiPage } from './OrganisasiPage';
 
 /** Tanpa v7_startTransition: di jsdom navigasi dalam transisi tertahan oleh penutupan dialog + toast (di browser normal). */
 function renderAt(route: string) {
@@ -21,7 +21,7 @@ function renderAt(route: string) {
       <MemoryRouter initialEntries={[route]} future={{ v7_relativeSplatPath: true }}>
         <Routes>
           <Route path="/organisasi" element={<OrganisasiPage />} />
-          <Route path="/organisasi/:kode" element={<OrganisasiPage />} />
+          <Route path="/organisasi/:kode" element={<OrganisasiDetailRoute />} />
         </Routes>
         <Probe />
       </MemoryRouter>
@@ -50,15 +50,15 @@ describe('Organisasi — Administrator Bisnis', () => {
     await userEvent.click(within(dialog).getByRole('button', { name: 'Tambah organisasi' }));
     expect(await screen.findByText('Organisasi ditambahkan.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Undang PIC KKKS' })).toBeInTheDocument();
-    expect(await screen.findByRole('dialog', { name: 'Contoh Energi Nusantara' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 1, name: 'Contoh Energi Nusantara' })).toBeInTheDocument();
   });
 
   it('nonaktifkan: tombol aktif setelah alasan dipilih dan kode diketik (FR-ORG-14)', async () => {
     await services.dev!.signInAs('u-03');
     renderAt('/organisasi/KKKS-003');
-    const panel = await screen.findByRole('dialog', { name: 'PT Natuna Lepas Pantai' });
-    await userEvent.click(within(panel).getByRole('button', { name: 'Aksi organisasi' }));
-    await userEvent.click(await screen.findByRole('menuitem', { name: 'Nonaktifkan organisasi' }));
+    await screen.findByRole('heading', { level: 1, name: 'PT Natuna Lepas Pantai' });
+    const panel = document.body;
+    await userEvent.click(within(panel).getByRole('button', { name: 'Nonaktifkan organisasi' }));
     const modal = await screen.findByRole('dialog', { name: 'Nonaktifkan PT Natuna Lepas Pantai?' });
     const tombol = within(modal).getByRole('button', { name: 'Nonaktifkan organisasi' });
     expect(tombol).toBeDisabled();

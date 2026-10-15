@@ -2,7 +2,7 @@
  * Manajemen Pengguna (M-15) — Figma 66:3139 (Admin KKKS), 238:3000 (Admin Platform), 246:6340 (setelah batal).
  * FR-UP-01 (tombol Undang hanya R-03/R-04/R-07), FR-UP-22..24 (lima status, Kedaluwarsa otomatis, PIC hanya
  * organisasinya tanpa filter Organisasi), FR-KU-19a (penanda + filter "Minta undangan baru"), FR-SA-24b (penanda
- * organisasi nonaktif). Klik baris membuka panel detail di kanan (Figma 106:14009); URL /pengguna/:id.
+ * organisasi nonaktif). Klik baris membuka halaman detail /pengguna/:id (arahan PM 15 Okt 2026; Figma 106:14009 memakai panel kanan).
  * PRD Daftar Pengguna (ClickUp z8pmx9n8nv): kolom Role (FR-DP-03), filter Role (FR-DP-14, -15), tombol Hapus filter,
  * "Belum pernah login" (FR-DP-05), PIC tanpa filter Organisasi (FR-DP-09). Email tampil di bawah nama (Figma 66:3139).
  * PRD Ekspor Daftar Pengguna (ClickUp z8pmx9n8nz): tombol Ekspor untuk R-03/R-04 (keputusan PM 14 Okt 2026).
@@ -12,7 +12,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { PAGE_SIZE_OPTIONS, PAGE_SIZE_PARAM, parsePageSize } from '@/lib/page-size';
 import { Download, Search, UserPlus } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Section } from '@/components/layout/Section';
@@ -34,7 +34,7 @@ import { ExportDialog } from './components/ExportDialog';
 import type { UserSummary } from '@/services';
 import { useSession } from '../session/SessionProvider';
 import { InviteDialog } from './components/InviteDialog';
-import { StatusBadge, UserDetailPanel } from './components/UserDetailPanel';
+import { StatusBadge, type FromListState } from './components/UserDetailPanel';
 import { usersCopy as c } from './copy';
 import { useOrganisasi, useUserList } from './hooks';
 
@@ -43,7 +43,6 @@ const PERMINTAAN = 'permintaan';
 
 export function PenggunaPage() {
   const { session } = useSession();
-  const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const [params, setParams] = useSearchParams();
@@ -85,7 +84,7 @@ export function PenggunaPage() {
   const rows = list.data ?? [];
   const PAGE = parsePageSize(params.get(PAGE_SIZE_PARAM));
   const pageRows = rows.slice((page - 1) * PAGE, page * PAGE);
-  const openUser = (uid: string) => navigate({ pathname: `/pengguna/${uid}`, search: location.search });
+  const openUser = (uid: string) => navigate(`/pengguna/${uid}`, { state: { from: location.search } satisfies FromListState });
 
   const columns: ColumnDef<UserSummary, unknown>[] = [
     {
@@ -194,7 +193,7 @@ export function PenggunaPage() {
               options={[{ value: SEMUA, label: c.panel.semuaRole }, ...roleOptions.map((r) => ({ value: r, label: `${r} ${roleName(r)}` }))]}
               className="w-[220px]"
             />
-            {filtered && <Button variant="quiet" onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
+            {filtered && <Button variant="link" onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
           </div>
         </Section>
         <Section className="border border-border" title={c.tabelJudul}>
@@ -207,7 +206,6 @@ export function PenggunaPage() {
             loadingContent={<p className="text-body-dense text-ink-muted">{t.app.memuat}</p>}
             error={list.isError ? c.gagalMemuat : undefined}
             onRowClick={(u) => openUser(u.id)}
-            selectedRowId={id}
             empty={
               <EmptyState
                 title={filtered ? c.kosongFilter : c.kosong}
@@ -218,7 +216,6 @@ export function PenggunaPage() {
           <Pagination page={page} pageSize={PAGE} total={rows.length} onPageChange={(n) => setParam('hal', String(n))} pageSizeOptions={PAGE_SIZE_OPTIONS} onPageSizeChange={(n) => setParam(PAGE_SIZE_PARAM, String(n))} labels={logsCopy.halaman} />
         </Section>
       </PageBody>
-      <UserDetailPanel userId={id} session={session} onClose={() => navigate({ pathname: '/pengguna', search: location.search })} />
       {exportOpen && <ExportDialog query={query} count={rows.length} onClose={() => setExportOpen(false)} />}
       {inviter && <InviteDialog open={inviteOpen} onOpenChange={setInviteOpen} inviter={inviter} ownOrg={session.user.organisasi} />}
     </>

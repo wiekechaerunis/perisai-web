@@ -6,6 +6,8 @@
  */
 export const usersCopy = {
   judul: 'Manajemen pengguna',
+  // Halaman detail pengguna (arahan PM 15 Okt 2026: halaman penuh).
+  detail: { crumb: 'Pengguna', kembali: 'Kembali ke Pengguna' }, // usulan
   ringkasan: 'Kelola akun, organisasi, status, dan izin efektif pengguna.', // Figma 66:3139
   // Figma 66:3139 menampilkan "Manajemen pengguna · n"; jumlah dihapus dari judul (arahan PM 14 Okt 2026), total ada di paginasi.
   tabelJudul: 'Manajemen pengguna',

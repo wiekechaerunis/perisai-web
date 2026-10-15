@@ -17,6 +17,8 @@ export interface Crumb {
 
 export interface PageHeaderProps {
   title: ReactNode;
+  /** Di samping judul, di luar h1 (mis. badge status di halaman detail). */
+  titleAside?: ReactNode;
   breadcrumbs?: Crumb[];
   summary?: ReactNode;
   actions?: ReactNode;
@@ -27,7 +29,7 @@ export interface PageHeaderProps {
   className?: string;
 }
 
-export function PageHeader({ title, breadcrumbs, summary, actions, tabs, back, className }: PageHeaderProps) {
+export function PageHeader({ title, titleAside, breadcrumbs, summary, actions, tabs, back, className }: PageHeaderProps) {
   const crumbs = breadcrumbs && breadcrumbs.length > 0 && (
     <nav aria-label="Jejak lokasi" className="mb-2">
       <ol className="flex items-center gap-1 text-caption text-ink-subtle">
@@ -70,12 +72,15 @@ export function PageHeader({ title, breadcrumbs, summary, actions, tabs, back, c
           <div className="flex min-w-0 flex-col">
             {crumbs}
             <div className="flex flex-col gap-1">
-              <h1 className="text-heading-1 text-ink">{title}</h1>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-heading-1 text-ink">{title}</h1>
+                {titleAside}
+              </div>
               {summary && <p className="text-body-dense text-ink-muted">{summary}</p>}
             </div>
           </div>
         </div>
-        {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
+        {actions && <div className={cn('flex shrink-0 items-center gap-2', crumbs && 'mt-6')}>{actions}</div>}
       </div>
       {tabs && <div className="mt-6 border-b border-border">{tabs}</div>}
     </header>

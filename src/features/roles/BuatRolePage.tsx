@@ -5,8 +5,9 @@
  * (FR-KR-09a/09b). Meninggalkan halaman dengan isian belum disimpan minta konfirmasi (pola FR-UDR-10).
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { useBlocker, useNavigate } from 'react-router-dom';
+import { useLeaveGuard } from '@/lib/use-leave-guard';
+import { useRef, useState, type FormEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Section } from '@/components/layout/Section';
@@ -41,10 +42,7 @@ export function BuatRolePage() {
   const m = useMutation({ mutationFn: () => services.roles.create({ nama, deskripsi, orgType, cakupan, izin }) });
 
   const dirty = !!(nama.trim() || deskripsi.trim() || MODULE_IDS.some((mm) => izin[mm]?.length));
-  const blocker = useBlocker(({ currentLocation, nextLocation }) => dirty && !saved.current && currentLocation.pathname !== nextLocation.pathname);
-  useEffect(() => {
-    if (!dirty && blocker.state === 'blocked') blocker.reset?.();
-  }, [dirty, blocker]);
+  const blocker = useLeaveGuard(dirty, saved);
 
   const clear = (k: Field) => setErrors((p) => ({ ...p, [k]: undefined }));
 
@@ -118,6 +116,7 @@ export function BuatRolePage() {
         description={c.tinggalkanIsi}
         confirmLabel={c.tinggalkan}
         cancelLabel={c.tetap}
+        destructive
         onConfirm={() => blocker.proceed?.()}
       />
     </>
