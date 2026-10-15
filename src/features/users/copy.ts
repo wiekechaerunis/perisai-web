@@ -315,6 +315,7 @@ export const usersCopy = {
     judul: 'Ubah data pengguna', // usulan
     ringkasan: 'Perubahan baru tersimpan setelah Anda meninjau ringkasan dan mengonfirmasi.', // FR-UDR-09 (copy usulan)
     crumbPengguna: 'Pengguna',
+    kembaliKe: (nama: string) => `Kembali ke ${nama}`, // usulan
     // Tata letak & judul seksi mengikuti Figma 341:6300 (Akun Saya — Profil), atas arahan PM 14 Okt 2026.
     seksiData: 'Informasi profil',
     seksiDataKeterangan: 'Organisasi tidak dapat diubah. Email baru berlaku setelah diverifikasi pengguna.', // usulan
@@ -324,7 +325,7 @@ export const usersCopy = {
     cakupan: 'Cakupan akses', // Figma 341:6300
     masaBerlaku: 'Masa berlaku akses', // Figma 341:6300
     masaBerlakuSampai: (v: string) => `Berlaku sampai ${v}`, // Figma 341:6300
-    masaBerlakuHint: 'Ubah lewat panel pengguna (Masa berlaku akses › Ubah).', // FR-SA-22 (copy usulan)
+    masaBerlakuHint: 'Ubah lewat halaman detail pengguna (Masa berlaku › Ubah).', // FR-SA-22 (copy usulan)
     jabatan: 'Jabatan',
     jabatanHint: 'Maksimal 100 karakter. Tidak memengaruhi akses.', // FR-UDR-04
     email: 'Email',

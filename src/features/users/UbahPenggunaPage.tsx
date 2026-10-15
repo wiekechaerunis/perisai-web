@@ -215,6 +215,8 @@ function UbahForm({ user: u }: { user: UserDetail }) {
       title={c.judul}
       breadcrumbs={[{ label: c.crumbPengguna, to: '/pengguna' }, { label: u.nama, to: `/pengguna/${u.id}` }, { label: c.judul }]}
       summary={c.ringkasan}
+      // Halaman turunan dari detail pengguna: tombol kembali ke /pengguna/:id (masukan PM 15 Okt 2026).
+      back={{ to: `/pengguna/${u.id}`, label: c.kembaliKe(u.nama) }}
     />
   );
 
