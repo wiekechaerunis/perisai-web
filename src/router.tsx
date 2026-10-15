@@ -12,6 +12,7 @@ import { LoginPage } from './features/auth/pages/LoginPage';
 import { useSession } from './features/session/SessionProvider';
 import { NotFoundPage } from './features/shell/ErrorPages';
 import { EMAIL_APPROVER_ROLES, landingPath, LOG_ROLES, ORG_ROLES, ROLE_ADMIN_ROLES } from './features/shell/navigation';
+import { BuatRolePage } from './features/roles/BuatRolePage';
 import { RolePage } from './features/roles/RolePage';
 import { OrganisasiPage } from './features/orgs/OrganisasiPage';
 import { JejakAuditPage } from './features/logs/JejakAuditPage';
@@ -77,6 +78,15 @@ export const routes: RouteObject[] = [
         element: (
           <RequireModule module="M-15" roles={ROLE_ADMIN_ROLES}>
             <RolePage />
+          </RequireModule>
+        ),
+      },
+      {
+        // FR-KR-09: Buat role sebagai halaman penuh (arahan PM 15 Okt 2026).
+        path: '/role/baru',
+        element: (
+          <RequireModule module="M-15" roles={ROLE_ADMIN_ROLES}>
+            <BuatRolePage />
           </RequireModule>
         ),
       },

@@ -274,3 +274,15 @@ keputusan #5 Organisasi). Variabel di `src/styles/status.css`, nada di `AccountS
   tabel (Log Akses dan Jejak Audit sebelumnya 20). PRD tidak menetapkan ukuran halaman. Pilihan disimpan di URL (`baris`).
 - Judul tabel Pengguna ("Manajemen pengguna") dan Organisasi juga tanpa jumlah (arahan PM 14 Okt 2026; Figma 66:3139 memakai
   "Manajemen pengguna · n"). Total tampil di ringkasan paginasi.
+
+## Buat role sebagai halaman penuh (diputuskan PM 15 Okt 2026)
+
+- Buat role (FR-KR-09) pindah dari dialog ke halaman `/role/baru` karena isiannya berat: tombol kembali di kiri, lalu satu
+  kolom berisi jejak lokasi "Role › Buat role", judul, dan ringkasan (rata kiri sama, masukan PM 15 Okt 2026); dua kartu
+  (Informasi role, Hak akses tanpa batas tinggi); tombol Batal / Buat role di bawah.
+- ASSUMPTION: meninggalkan halaman dengan isian belum disimpan meminta konfirmasi (pola FR-UDR-10; PRD Katalog Role tidak
+  mengatur). Setelah berhasil, pengguna diarahkan ke panel role baru (`/role/:kode`) dengan toast "Role R-xx dibuat."
+- Ubah hak akses (FR-KR-09c) tetap dialog; dapat dipindah ke halaman dengan pola yang sama bila diminta.
+- Pemilih hak akses (Buat role, Ubah hak akses) berbentuk matriks modul × aksi (masukan PM 15 Okt 2026): kolom tetap =
+  semua aksi yang dipakai minimal satu jenis organisasi; kotak centang hanya pada aksi yang diizinkan untuk jenis organisasi
+  terpilih, sel lain bertanda titik "Tidak tersedia" (FR-KR-09b tetap berlaku). Modul tanpa aksi yang diizinkan tidak tampil.

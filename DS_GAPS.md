@@ -29,6 +29,7 @@ sudah masuk DS dan tidak dicatat lagi di sini.
 | DS-02 | Jejak audit | Filter disusun lalu diterapkan dengan tombol "Tampilkan"; halaman dibuka kosong | Filter berlaku langsung, tanpa tombol "Tampilkan" | PRD FR-JA-12 (halaman dibuka kosong dengan filter). DS perlu pengecualian, atau PRD diubah. |
 | DS-03 | Pola filter daftar | Mengikuti aturan "Filter daftar" yang diminta 15 Okt 2026 | README DS belum memuat pola "Filter daftar" (README FilterBar masih ringkas) | Bagian filter di prompt DS belum tertulis di artifact. |
 | DS-05 | Filter Log akses dan Jejak audit | Pil filter aktif, Checkbox filter cepat, tombol "Filter lainnya" `quiet`, periode berupa Select preset (Hari ini, 7 hari terakhir, 30 hari terakhir, Rentang khusus) | Belum ada di DS | Usulan desain 15 Okt 2026, diterapkan atas permintaan PM. Preset periode bukan dari PRD (FR-LA-07/FR-JA-12 hanya menyebut default 7 hari): perlu persetujuan PM. Teks DS di PROMPT_UPDATE_DS_FILTER.md. |
+| DS-06 | PageHeader | Prop `back`: tombol ikon kembali 36px (border `border-control`, ikon panah kiri 18px, `aria-label` "Kembali ke …") di kiri judul, dipakai halaman Buat role `/role/baru` bersama jejak lokasi | PageHeader tanpa tombol kembali (jejak lokasi saja) | Arahan PM 15 Okt 2026: Buat role jadi halaman penuh dengan tombol kembali dan breadcrumbs. Usulkan ke DS sebagai bagian PageHeader. |
 | DS-04 | EmptyState | Tanpa ilustrasi | Ilustrasi opsional | Aset ilustrasi resmi belum ada (DS: menyusul dari desainer). |
 
 ## Nilai Figma di luar DS (layar publik Login/OTP/Aktivasi)

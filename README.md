@@ -50,7 +50,7 @@ Mode data: `VITE_DATA_SOURCE=mock` (default) atau `api` (lihat `.env.example`).
 | `/pengguna/:id/ubah` | Ubah data & role pengguna: ringkasan sebelum/sesudah + perbedaan hak akses (R-03, R-07, R-04 organisasinya) | Dibangun (Ubah Data & Role) |
 | `/permintaan-ubah-email` | Daftar permintaan ubah email: Setujui / Tolak dengan alasan (R-03, R-04) | Dibangun (Ubah Data & Role) |
 | `/verifikasi-email/:token`, `/bukan-saya/:token` | Tautan publik dari email: verifikasi email baru, "Bukan saya" | Dibangun (Ubah Data & Role) |
-| `/role`, `/role/:kode` | Katalog role (R-03): ubah nama/deskripsi, buat role, ubah hak akses, nonaktifkan (pindahkan/lewati), aktifkan kembali, pindah massal, hapus role buatan | Dibangun (Role) |
+| `/role`, `/role/:kode`, `/role/baru` | Katalog role (R-03): ubah nama/deskripsi, buat role (halaman `/role/baru`), ubah hak akses, nonaktifkan (pindahkan/lewati), aktifkan kembali, pindah massal, hapus role buatan | Dibangun (Role) |
 | `/organisasi`, `/organisasi/:kode` | Kelola Organisasi KKKS: daftar, tambah, panel Profil/Akses/Wilayah Kerja/Riwayat, nonaktifkan (R-03; R-07 terbatas; R-04 baca organisasinya) | Dibangun (Organisasi) |
 | `/log-akses` | Log Akses (filter, detail entri, kegagalan beruntun, ekspor R-03) + tab Sesi aktif (cabut sesi); R-02/R-03/R-04 | Dibangun (gelombang 3) |
 | `/jejak-audit` | Jejak Audit (dibuka kosong, detail sebelum/sesudah, kelompok aksi massal, retensi R-03); R-02/R-03/R-04 | Dibangun (gelombang 3) |

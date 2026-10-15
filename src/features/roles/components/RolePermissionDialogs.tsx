@@ -1,6 +1,6 @@
 /**
- * Buat role, ubah hak akses role, hapus role — PRD Katalog Role FR-KR-09, -09a..09f. "Design belum ada": dialog lebar
- * (pola dialog Undang, ukuran lg) dengan pemilih hak akses per modul × aksi (daftar modul & aksi dari satu sumber,
+ * Ubah hak akses role dan hapus role — PRD Katalog Role FR-KR-09, -09a..09f (Buat role: halaman BuatRolePage). "Design belum
+ * ada": dialog lebar dengan pemilih hak akses per modul × aksi (daftar modul & aksi dari satu sumber,
  * FR-KR-09a; aksi dibatasi jenis organisasi, FR-KR-09b). Ubah hak akses menampilkan jumlah pengguna terdampak dan
  * berlaku pada permintaan berikutnya tanpa mencabut sesi (FR-KR-09f).
  */
@@ -9,11 +9,9 @@ import { useState } from 'react';
 import { ConfirmDialog, Dialog } from '@/components/patterns/Dialog';
 import { useToast } from '@/components/patterns/Toast';
 import { Button } from '@/components/ui/Button';
-import { Select } from '@/components/ui/Select';
-import { TextField } from '@/components/ui/TextField';
-import { Textarea } from '@/components/ui/Textarea';
-import { ACTION_LABEL, MODULE_IDS, MODULES, type Action, type CakupanBawaan, type ModuleId, type OrgType, type RoleId } from '@/lib/rbac';
-import { allowedActions, CAKUPAN_PILIHAN, JENIS_LABEL } from '@/lib/role-catalog';
+import { cn } from '@/lib/cn';
+import { ACTION_LABEL, ACTIONS, MODULE_IDS, MODULES, type Action, type ModuleId, type OrgType } from '@/lib/rbac';
+import { allowedActions, JENIS_LABEL } from '@/lib/role-catalog';
 import { isServiceError, services, type RoleEntry, type RolePermissionInput } from '@/services';
 import { roleCopy } from '../copy';
 import { ROLES_KEY } from './RoleDialogs';
@@ -35,10 +33,32 @@ export function toPermissionInput(izin: RoleEntry['izin']): RolePermissionInput 
   return out;
 }
 
-/** Pemilih hak akses: satu baris per modul, kotak centang per aksi yang diizinkan untuk jenis organisasi. */
-export function PermissionPicker({ orgType, value, onChange, error }: { orgType: OrgType; value: RolePermissionInput; onChange: (v: RolePermissionInput) => void; error?: string }) {
+/** Kolom tetap matriks: semua aksi yang dipakai minimal satu jenis organisasi (urutan ACTIONS), agar tata letak tidak
+ * berubah saat jenis organisasi diganti. */
+const PICKER_COLUMNS: Action[] = (() => {
+  const used = new Set<Action>();
+  for (const t of ['SKK Migas', 'KKKS', 'Kontraktor'] as OrgType[]) for (const acts of Object.values(allowedActions(t))) for (const x of acts ?? []) used.add(x);
+  return ACTIONS.filter((x) => used.has(x));
+})();
+
+/** Pemilih hak akses: matriks modul × aksi; kotak centang hanya untuk aksi yang diizinkan jenis organisasi (FR-KR-09b). */
+export function PermissionPicker({
+  orgType,
+  value,
+  onChange,
+  error,
+  scroll = true,
+}: {
+  orgType: OrgType;
+  value: RolePermissionInput;
+  onChange: (v: RolePermissionInput) => void;
+  error?: string;
+  /** Batasi tinggi daftar (dalam dialog). Di halaman penuh: false. */
+  scroll?: boolean;
+}) {
   const allowed = allowedActions(orgType);
   const modules = MODULE_IDS.filter((m) => (allowed[m] ?? []).length > 0);
+  const columns = PICKER_COLUMNS;
   const toggle = (m: ModuleId, a: Action) => {
     const cur = new Set(value[m] ?? []);
     if (cur.has(a)) cur.delete(a);
@@ -52,25 +72,47 @@ export function PermissionPicker({ orgType, value, onChange, error }: { orgType:
       <p id="izin-hint" className="text-caption text-ink-subtle">
         {c.hint(JENIS_LABEL[orgType])} · {c.terpilih(total)}
       </p>
-      <div className="max-h-[320px] overflow-y-auto rounded-md border border-border">
+      {/* Matriks modul × aksi (masukan PM 15 Okt 2026). Kolom tetap (PICKER_COLUMNS); sel tanpa kotak
+          centang (titik) = aksi tidak tersedia untuk modul itu (FR-KR-09b). */}
+      <div className={cn('overflow-x-auto rounded-md border border-border', scroll && 'max-h-[360px] overflow-y-auto')}>
         <table className="w-full border-collapse text-left text-body-dense">
           <caption className="sr-only">{c.legend}</caption>
+          <thead className={cn(scroll && 'sticky top-0 z-10')}>
+            <tr className="border-b border-border bg-surface">
+              <th scope="col" className="px-3 py-2 text-label font-medium text-ink-muted">
+                {c.kolomModul}
+              </th>
+              {columns.map((act) => (
+                <th key={act} scope="col" className="max-w-[112px] px-2 py-2 text-center align-bottom text-label font-medium leading-tight text-ink-muted">
+                  {ACTION_LABEL[act]}
+                </th>
+              ))}
+            </tr>
+          </thead>
           <tbody>
             {modules.map((m) => (
-              <tr key={m} className="border-b border-border-subtle align-top last:border-b-0">
-                <th scope="row" className="w-[45%] px-3 py-2 font-medium text-ink">
+              <tr key={m} className="border-b border-border-subtle last:border-b-0 hover:bg-surface-sunken">
+                <th scope="row" className="whitespace-nowrap px-3 py-2 font-normal text-ink">
                   <span className="font-mono text-caption text-ink-subtle">{m}</span> {MODULES[m].name}
                 </th>
-                <td className="px-3 py-2">
-                  <div className="flex flex-wrap gap-x-4 gap-y-1">
-                    {(allowed[m] ?? []).map((a) => (
-                      <label key={a} className="flex items-center gap-[6px] text-body-dense text-ink">
-                        <input type="checkbox" checked={(value[m] ?? []).includes(a)} onChange={() => toggle(m, a)} className="h-4 w-4 accent-[var(--color-action)]" />
-                        {ACTION_LABEL[a]}
-                      </label>
-                    ))}
-                  </div>
-                </td>
+                {columns.map((act) =>
+                  (allowed[m] ?? []).includes(act) ? (
+                    <td key={act} className="px-3 py-2 text-center">
+                      <input
+                        type="checkbox"
+                        aria-label={`${ACTION_LABEL[act]} — ${m} ${MODULES[m].name}`}
+                        checked={(value[m] ?? []).includes(act)}
+                        onChange={() => toggle(m, act)}
+                        className="h-4 w-4 align-middle accent-[var(--color-action)]"
+                      />
+                    </td>
+                  ) : (
+                    <td key={act} className="px-3 py-2 text-center text-ink-subtle">
+                      <span aria-hidden>·</span>
+                      <span className="sr-only">{c.tidakTersedia}</span>
+                    </td>
+                  ),
+                )}
               </tr>
             ))}
           </tbody>
@@ -78,73 +120,6 @@ export function PermissionPicker({ orgType, value, onChange, error }: { orgType:
       </div>
       {error && <p className="text-caption text-error-ink">{error}</p>}
     </fieldset>
-  );
-}
-
-export function CreateRoleDialog({ onClose, onCreated }: { onClose: () => void; onCreated: (id: RoleId) => void }) {
-  const toast = useToast();
-  const invalidate = useInvalidate();
-  const [nama, setNama] = useState('');
-  const [deskripsi, setDeskripsi] = useState('');
-  const [orgType, setOrgType] = useState<OrgType>('KKKS');
-  const [cakupan, setCakupan] = useState<CakupanBawaan>('Organisasi sendiri');
-  const [izin, setIzin] = useState<RolePermissionInput>({});
-  const [errors, setErrors] = useState<Partial<Record<'nama' | 'deskripsi' | 'izin', string>>>({});
-  const m = useMutation({ mutationFn: () => services.roles.create({ nama, deskripsi, orgType, cakupan, izin }) });
-  function submit() {
-    const x: typeof errors = {};
-    if (nama.trim().length < 3 || nama.trim().length > 60) x.nama = roleCopy.ubah.namaSalah;
-    if (!deskripsi.trim()) x.deskripsi = roleCopy.ubah.deskripsiKosong;
-    if (!MODULE_IDS.some((mm) => izin[mm]?.length)) x.izin = c.minimal;
-    setErrors(x);
-    if (Object.keys(x).length) return;
-    m.mutate(undefined, {
-      onSuccess: (r) => {
-        invalidate();
-        toast.show({ title: c.dibuat(r.id) });
-        onCreated(r.id);
-      },
-      onError: (err) => {
-        if (isServiceError(err, 'ORG_NAME_TAKEN')) setErrors({ nama: roleCopy.ubah.namaDipakai });
-        else setErrors({ izin: c.gagal });
-      },
-    });
-  }
-  return (
-    <Dialog
-      open
-      size="lg"
-      onOpenChange={(o) => !o && !m.isPending && onClose()}
-      title={c.buatJudul}
-      description={c.buatDeskripsi}
-      closeLabel={roleCopy.ubah.batal}
-      footer={
-        <>
-          <Button onClick={onClose} disabled={m.isPending}>
-            {roleCopy.ubah.batal}
-          </Button>
-          <Button variant="primary" onClick={submit} loading={m.isPending} loadingLabel={roleCopy.ubah.menyimpan}>
-            {c.buat}
-          </Button>
-        </>
-      }
-    >
-      <div className="flex flex-col gap-4">
-        <TextField label={roleCopy.ubah.nama} required showRequired value={nama} onChange={(e) => (setNama(e.target.value), setErrors((p) => ({ ...p, nama: undefined })))} error={errors.nama} />
-        <Textarea label={roleCopy.ubah.deskripsi} required maxLength={300} showCount value={deskripsi} onChange={(e) => (setDeskripsi(e.target.value), setErrors((p) => ({ ...p, deskripsi: undefined })))} error={errors.deskripsi} />
-        <div className="grid gap-4 md:grid-cols-2">
-          <Select
-            label={roleCopy.panel.jenis}
-            value={orgType}
-            onValueChange={(v) => (setOrgType(v as OrgType), setIzin({}))}
-            options={(['SKK Migas', 'KKKS', 'Kontraktor'] as OrgType[]).map((t) => ({ value: t, label: JENIS_LABEL[t] }))}
-            hint={c.jenisHint}
-          />
-          <Select label={roleCopy.panel.cakupan} value={cakupan} onValueChange={(v) => setCakupan(v as CakupanBawaan)} options={CAKUPAN_PILIHAN.map((x) => ({ value: x, label: x }))} />
-        </div>
-        <PermissionPicker orgType={orgType} value={izin} onChange={(v) => (setIzin(v), setErrors((p) => ({ ...p, izin: undefined })))} error={errors.izin} />
-      </div>
-    </Dialog>
   );
 }
 

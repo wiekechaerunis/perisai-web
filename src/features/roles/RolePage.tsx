@@ -23,7 +23,7 @@ import type { RoleId } from '@/lib/rbac';
 import { services, type RoleEntry } from '@/services';
 import { EffectiveAccessView } from '../access/EffectiveAccessView';
 import { DeactivateRoleDialog, MoveUsersDialog, ReactivateRoleDialog, RenameRoleDialog, ROLES_KEY } from './components/RoleDialogs';
-import { CreateRoleDialog, DeleteRoleDialog, EditPermissionsDialog } from './components/RolePermissionDialogs';
+import { DeleteRoleDialog, EditPermissionsDialog } from './components/RolePermissionDialogs';
 import { roleCopy as c } from './copy';
 
 function StatusBadge({ status }: { status: RoleEntry['status'] }) {
@@ -112,7 +112,6 @@ export function RolePage() {
   const { kode } = useParams();
   const navigate = useNavigate();
   const list = useQuery({ queryKey: [...ROLES_KEY, 'list'], queryFn: () => services.roles.list() });
-  const [createOpen, setCreateOpen] = useState(false);
   const columns: ColumnDef<RoleEntry, unknown>[] = [
     { id: 'kode', header: c.kolom.kode, cell: ({ row }) => <span className="font-mono text-caption">{row.original.id}</span> },
     {
@@ -146,7 +145,7 @@ export function RolePage() {
         title={c.judul}
         summary={c.ringkasan}
         actions={
-          <Button variant="primary" icon={<Plus aria-hidden size={14} strokeWidth={1.8} />} onClick={() => setCreateOpen(true)}>
+          <Button variant="primary" icon={<Plus aria-hidden size={14} strokeWidth={1.8} />} onClick={() => navigate('/role/baru')}>
             {c.buatRole}
           </Button>
         }
@@ -167,15 +166,6 @@ export function RolePage() {
         </Section>
       </PageBody>
       {kode && <RolePanel id={kode as RoleId} onClose={() => navigate('/role')} />}
-      {createOpen && (
-        <CreateRoleDialog
-          onClose={() => setCreateOpen(false)}
-          onCreated={(id) => {
-            setCreateOpen(false);
-            navigate(`/role/${id}`);
-          }}
-        />
-      )}
     </>
   );
 }

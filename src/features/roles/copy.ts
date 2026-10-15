@@ -83,12 +83,22 @@ export const roleCopy = {
   buatan: 'Role buatan', // usulan
   izin: {
     legend: 'Hak akses', // FR-KR-09
+    kolomModul: 'Modul',
+    tidakTersedia: 'Tidak tersedia untuk jenis organisasi ini', // usulan (FR-KR-09b)
     hint: (jenis: string) => `Hanya modul dan aksi yang boleh untuk jenis organisasi ${jenis}.`, // FR-KR-09b (usulan)
     terpilih: (n: number) => `${n} hak akses dipilih`, // usulan
     minimal: 'Pilih minimal satu hak akses.', // FR-KR-09 (usulan)
     gagal: 'Role gagal disimpan. Silakan coba lagi.', // usulan
     buatJudul: 'Buat role', // usulan
     buatDeskripsi: 'Role baru langsung tersedia di pilihan role sesuai jenis organisasinya.', // FR-KR-09 (usulan)
+    crumbRole: 'Role',
+    kembaliKe: 'Kembali ke Role', // usulan
+    infoJudul: 'Informasi role', // usulan
+    batal: 'Batal',
+    tinggalkanJudul: 'Tinggalkan halaman?', // usulan (pola FR-UDR-10)
+    tinggalkanIsi: 'Role belum dibuat. Isian yang sudah Anda masukkan akan hilang.', // usulan
+    tinggalkan: 'Tinggalkan',
+    tetap: 'Tetap di halaman',
     jenisHint: 'Mengganti jenis organisasi mengosongkan hak akses yang sudah dipilih.', // usulan
     buat: 'Buat role',
     dibuat: (id: string) => `Role ${id} dibuat.`, // usulan

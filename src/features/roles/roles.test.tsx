@@ -1,11 +1,12 @@
 /** Test UI PRD Katalog Role & Aktif/Nonaktif Role. */
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, RouterProvider, Routes, createMemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import { AppProviders, makeQueryClient } from '@/App';
 import { services } from '@/services';
 import { buildNav } from '../shell/navigation';
+import { BuatRolePage } from './BuatRolePage';
 import { RolePage } from './RolePage';
 
 function renderAt(route: string) {
@@ -70,21 +71,58 @@ describe('Nonaktifkan role (FR-AR-04, keputusan PM 14 Okt 2026)', () => {
 });
 
 describe('Buat role & ubah hak akses (FR-KR-09, -09f)', () => {
-  it('buat role: pemilih hak akses mengikuti jenis organisasi, panel role baru terbuka', async () => {
+  it('tombol Buat role membuka halaman /role/baru', async () => {
     await services.dev!.signInAs('u-03');
-    renderAt('/role');
+    const client = makeQueryClient();
+    client.setDefaultOptions({ queries: { retry: false, refetchInterval: false } });
+    render(
+      <AppProviders client={client}>
+        <MemoryRouter initialEntries={['/role']} future={{ v7_relativeSplatPath: true }}>
+          <Routes>
+            <Route path="/role" element={<RolePage />} />
+            <Route path="/role/baru" element={<p>halaman buat role</p>} />
+          </Routes>
+        </MemoryRouter>
+      </AppProviders>,
+    );
     await userEvent.click(await screen.findByRole('button', { name: 'Buat role' }));
-    const dlg = await screen.findByRole('dialog', { name: 'Buat role' });
-    await userEvent.type(within(dlg).getByLabelText(/^Nama role/), 'Analis KKKS');
-    await userEvent.type(within(dlg).getByLabelText(/^Deskripsi/), 'Menganalisis laporan organisasinya');
-    await userEvent.click(within(dlg).getByRole('button', { name: 'Buat role' }));
-    expect(within(dlg).getByText('Pilih minimal satu hak akses.')).toBeInTheDocument();
+    expect(await screen.findByText('halaman buat role')).toBeInTheDocument();
+  });
+
+  it('halaman Buat role: jejak lokasi, tombol kembali, validasi, hak akses mengikuti jenis organisasi', async () => {
+    await services.dev!.signInAs('u-03');
+    const client = makeQueryClient();
+    client.setDefaultOptions({ queries: { retry: false, refetchInterval: false } });
+    const router = createMemoryRouter(
+      [
+        { path: '/role/baru', element: <BuatRolePage /> },
+        { path: '/role/:kode', element: <p>panel role</p> },
+      ],
+      { initialEntries: ['/role/baru'], future: { v7_relativeSplatPath: true } },
+    );
+    render(
+      <AppProviders client={client}>
+        <RouterProvider router={router} />
+      </AppProviders>,
+    );
+    expect(await screen.findByRole('heading', { level: 1, name: 'Buat role' })).toBeInTheDocument();
+    const crumbs = screen.getByRole('navigation', { name: 'Jejak lokasi' });
+    expect(within(crumbs).getByRole('link', { name: 'Role' })).toHaveAttribute('href', '/role');
+    expect(screen.getByRole('link', { name: 'Kembali ke Role' })).toHaveAttribute('href', '/role');
+    expect(screen.queryByRole('dialog')).toBeNull();
+
+    await userEvent.type(screen.getByLabelText(/^Nama role/), 'Analis KKKS');
+    await userEvent.type(screen.getByLabelText(/^Deskripsi/), 'Menganalisis laporan organisasinya');
+    await userEvent.click(screen.getByRole('button', { name: 'Buat role' }));
+    expect(screen.getByText('Pilih minimal satu hak akses.')).toBeInTheDocument();
     // KKKS tidak dapat memilih M-23 AI Guardrails (milik R-07 / Kontraktor).
-    expect(within(dlg).queryByText('AI Guardrails')).toBeNull();
-    const row = within(dlg).getByRole('rowheader', { name: /M-01/ }).closest('tr')!;
-    await userEvent.click(within(row as HTMLElement).getByRole('checkbox', { name: 'Lihat' }));
-    await userEvent.click(within(dlg).getByRole('button', { name: 'Buat role' }));
-    expect(await screen.findByRole('dialog', { name: 'Analis KKKS' })).toBeInTheDocument();
+    expect(screen.queryByText('AI Guardrails')).toBeNull();
+    const row = screen.getByRole('rowheader', { name: /M-01/ }).closest('tr')!;
+    await userEvent.click(within(row as HTMLElement).getByRole('checkbox', { name: /^Lihat/ }));
+    expect(screen.queryByText('Pilih minimal satu hak akses.')).toBeNull();
+    expect(screen.getByText(/1 hak akses dipilih/)).toBeInTheDocument();
+    // Simpan + navigasi ke panel role baru tidak diuji di sini: navigasi data router gagal di jsdom (AbortSignal);
+    // pembuatan role diuji di services/mock/roles.test.ts dan diverifikasi di browser.
   });
 
   it('ubah hak akses menampilkan jumlah pengguna terdampak sebelum disimpan', async () => {
@@ -94,7 +132,7 @@ describe('Buat role & ubah hak akses (FR-KR-09, -09f)', () => {
     await userEvent.click(within(panel).getByRole('button', { name: 'Ubah hak akses' }));
     const dlg = await screen.findByRole('dialog', { name: 'Ubah hak akses' });
     const row = within(dlg).getByRole('rowheader', { name: /M-15/ }).closest('tr')!;
-    await userEvent.click(within(row as HTMLElement).getByRole('checkbox', { name: 'Lihat' }));
+    await userEvent.click(within(row as HTMLElement).getByRole('checkbox', { name: /^Lihat/ }));
     await userEvent.click(within(dlg).getByRole('button', { name: 'Lanjutkan' }));
     const confirm = await screen.findByRole('dialog', { name: /Simpan hak akses R-06/ });
     expect(within(confirm).getByText(/pengguna yang memakai role ini pada permintaan berikutnya/)).toBeInTheDocument();

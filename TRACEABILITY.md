@@ -237,7 +237,7 @@ Data: `services/mock/roles.ts`, katalog klien `lib/role-catalog.ts` (nama, statu
 | FR-KR-05 | `lib/user-rules.ts` `FORBIDDEN_ROLE_COMBOS` sebagai data (UI pengelolaan belum ada) | — | Sebagian |
 | FR-KR-06, 07 | `features/roles/RolePage.tsx` (menu & rute hanya R-03; kolom kode, nama, jenis, cakupan, status, jumlah pengguna → `/pengguna?role=`) | — | Dibangun |
 | FR-KR-08 | `components/RoleDialogs.tsx` `RenameRoleDialog` (berlaku seketika) | — | Dibangun |
-| FR-KR-09, 09a, 09b | `components/RolePermissionDialogs.tsx` `CreateRoleDialog` + `PermissionPicker` (modul & aksi dari satu sumber; aksi dibatasi jenis organisasi) | — | Dibangun |
+| FR-KR-09, 09a, 09b | `BuatRolePage.tsx` (rute `/role/baru`, halaman penuh dengan jejak lokasi + tombol kembali + konfirmasi tinggalkan) + `components/RolePermissionDialogs.tsx` `PermissionPicker` (modul & aksi dari satu sumber; aksi dibatasi jenis organisasi) | — | Dibangun |
 | FR-KR-09c | Role sistem: hak akses dapat diubah, tidak dapat dihapus | — | Dibangun |
 | FR-KR-09d | `DeleteRoleDialog` (role buatan tanpa pengguna; pesan "masih dipakai [n] pengguna") | — | Dibangun |
 | FR-KR-09e | Service menolak selain R-03 (Jejak Audit, PR-03) | — | Mock |

@@ -23,7 +23,7 @@ hardcode; teks lewat props. Aturan ini ditegakkan ESLint (`no-restricted-imports
 | ResendCountdown | patterns | non-DS | `availableAt`, `serverOffsetMs`, `labels`, `onResend` | ✓ | ✓ |
 | AppShell / PageBody | layout | DS (kerangka) | `sidebar`, `skipLinkLabel` | ✓ | — |
 | Sidebar | layout | DS | `groups` (sudah disaring role), `account`, `footer`, `navLabel` | ✓ | ✓ |
-| PageHeader | layout | DS | `title`, `breadcrumbs`, `summary`, `actions`, `tabs` | ✓ | — |
+| PageHeader | layout | DS | `title`, `breadcrumbs`, `summary`, `actions`, `tabs`, `back` (tombol kembali, non-DS) | ✓ | — |
 | Section | layout | DS | `title`, `description`, `action` | ✓ | — |
 | AuthSplitLayout / AuthPageLayout | layout | non-DS | Split: `brand`, `footer`, `aside`; Page: `brand`, `headerAction`, `width` | ✓ | via halaman |
 | RoleSwitcher (dev) | layout | non-DS | `users`, `onSelect`, `tone` | ✓ | — |
