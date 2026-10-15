@@ -1,5 +1,9 @@
 # perisai-web — prototype PERISAI Core Platform
 
+> **Prototype kick-off 21 Okt 2026.** Selain Core Platform, repo ini memuat ilustrasi garis besar modul di luar Core untuk
+> demo kick-off (lihat [Demo kick-off](#demo-kick-off-21-okt-2026)). Ilustrasi kick-off · **bukan desain final dan bukan
+> acuan dev** untuk modul di luar Core.
+
 Prototype React untuk Core Platform PERISAI: **M-15 Identitas & Akses** dan **M-22 Jejak Audit & Log**.
 Kodenya disiapkan agar bisa dilanjutkan tim dev. Tampilan mengikuti PERISAI Design System; data lewat service interface
 yang bisa ditukar ke API nyata.
@@ -32,6 +36,58 @@ Mode data: `VITE_DATA_SOURCE=mock` (default) atau `api` (lihat `.env.example`).
 - Masuk lewat `/masuk` dengan email akun uji + kata sandi uji, lalu kode OTP dari Kotak masuk mock. Cara cepat:
   **Masuk sebagai (uji)** di bawah form Login (hanya mode mock).
 - Tautan aktivasi uji: `/aktivasi/undangan-agus-berlaku` (berlaku), `/aktivasi/undangan-maya-kedaluwarsa` (kedaluwarsa).
+
+## Demo kick-off (21 Okt 2026)
+
+Lima alur dari PRD Garis Besar (Kick-off), dengan data contoh fiktif. Tanpa autentikasi sungguhan: kata sandi uji ada di
+`src/services/mock/seed.ts`, dan kode OTP tampil di layar verifikasi ("Mode demo · kode OTP").
+Gunakan **Ganti peran (demo)** di header untuk berpindah sudut pandang tanpa login ulang. Ulang demo dari awal:
+**Alat uji (mock) › Atur ulang data mock** di bawah Sidebar.
+
+| Peran (demo) | Akun uji | Organisasi |
+|---|---|---|
+| Pimpinan SKK | Hendra Wibisono | SKK Migas |
+| Pengawas SKK | Ratna Paramitha | SKK Migas |
+| Pelapor KKKS | Dimas Pratama (`d.pratama@andalas-energi.example`) | PT Andalas Energi Hulu |
+| Pejabat Berwenang KKKS | Sri Lestari | PT Andalas Energi Hulu |
+| Admin KKKS | Rina Wiyono | PT Andalas Energi Hulu |
+
+Label peran dibaca dari satu peta (`src/lib/rbac.ts` › `ROLES`); nama peran masih bisa berubah.
+
+### Urutan klik
+
+1. **Masuk & Ruang Kerja per peran**
+   1. `/masuk` → email Dimas + kata sandi uji → **Masuk** → masukkan kode OTP yang tampil → **Verifikasi**.
+   2. Ruang Kerja Pelapor: *Tugas saya* + ringkasan organisasi.
+   3. Ganti peran → **Pengawas SKK**: ringkasan lintas KKKS, antrean *Menunggu dokumen bertanda tangan*.
+2. **Insiden dari lapangan sampai ditutup** (mulai di layar ponsel: DevTools browser → ukuran 375 px)
+   1. Pelapor KKKS → **Lapor insiden** (`/lapor`) → keparahan **Kritis**, lokasi, kronologi, foto → **Kirim laporan**.
+   2. Ganti peran → **Pengawas SKK**: notifikasi lonceng + Ruang Kerja *Insiden tinggi/kritis · Belum terverifikasi*.
+      Buka insiden: hanya linimasa, **tanpa tombol aksi**.
+   3. Ganti peran → **Pejabat Berwenang KKKS**: *Kotak persetujuan* → insiden → **Verifikasi** → pilih PIC → **Tugaskan** →
+      **Catat tindakan** → **Tutup insiden** (wajib penyebab + bukti).
+3. **Realisasi WP&B**
+   1. Pelapor KKKS → **Anggaran pengamanan** → *Realisasi bulanan* → **September 2026** (Draft) → **Unggah template**
+      (pilih berkas apa saja) → kategori *Koordinasi aparat* +18% wajib dijelaskan → isi penjelasan → **Ajukan**.
+   2. Pejabat Berwenang KKKS → buka periode yang sama → **Finalisasi** → draf berita acara disusun, status
+      *Menunggu Dokumen Bertanda Tangan* (**Lihat draf berita acara**).
+   3. Pengawas SKK → Ruang Kerja › *Menunggu dokumen bertanda tangan* → pilih PDF → **Unggah dokumen bertanda tangan** →
+      status **Final**. Dasbor anggaran vs realisasi + sorotan deviasi ada di `/wpb`.
+4. **Kontrak BUJP & pengingat**: **Kontrak BUJP** (`/kontrak`) → status Aktif / Akan Berakhir / Berakhir → buka
+   *SPK-BUJP/ADL/2024/017* → dokumen, realisasi, insiden terkait, pengingat 12/6/3/1 bulan. Admin KKKS / Pelapor KKKS:
+   **Daftarkan kontrak**. Notifikasi pengingat ada di lonceng (peran KKKS).
+5. **Dasbor eksekutif & peta panas**: Pimpinan SKK → **Dasbor eksekutif** (`/dasbor`) → klik titik di peta →
+   **Peta panas** (`/peta-panas`) → daftar insiden area → buka detail insiden.
+
+### Aturan yang ditegakkan (data layer `src/services/mock/ops`)
+
+- SKK Migas hanya memantau: tidak ada setujui/tolak/kembalikan/tugaskan/komentar. Satu-satunya aksi tulis: Pengawas SKK
+  mengunggah dokumen bertanda tangan → *Final*.
+- Semua review dan persetujuan oleh Pejabat Berwenang KKKS.
+- Isolasi data: pengguna KKKS hanya menerima data organisasinya; SKK lintas KKKS.
+- Dasbor, peta panas, laporan hanya dari insiden terverifikasi; tinggi/kritis *Belum terverifikasi* tampil terpisah.
+- Modul lain tampil sebagai layar ringkas; Bahan peledak, Layanan infrastruktur, K3, Asisten PERISAI, dan Informasi
+  eksternal bertanda **Konsep**.
 
 ## Rute
 

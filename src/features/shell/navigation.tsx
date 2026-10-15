@@ -9,7 +9,35 @@
  * Keputusan PM 14 Okt 2026 (PR-13): R-07 punya "view (log teknis)" di Matriks M-22, tetapi PRD Log Akses/Jejak Audit tidak
  * memberinya akses ke kedua halaman ini → disembunyikan; log teknis menjadi bagian M-19/M-23.
  */
-import { Building2, History, KeySquare, LayoutDashboard, MailCheck, ScrollText, Settings, Users } from 'lucide-react';
+import {
+  AlertTriangle,
+  BarChart3,
+  Bell,
+  Bomb,
+  Bot,
+  Building2,
+  ClipboardCheck,
+  FileSignature,
+  FileText,
+  Globe2,
+  Handshake,
+  HardHat,
+  History,
+  KeySquare,
+  LayoutDashboard,
+  Lightbulb,
+  ListChecks,
+  MailCheck,
+  Map,
+  PieChart,
+  ScrollText,
+  Server,
+  Settings,
+  ShieldAlert,
+  Siren,
+  Users,
+  Wallet,
+} from 'lucide-react';
 import type { SidebarGroup } from '@/components/layout/Sidebar';
 import { t } from '@/lib/i18n/id';
 import { canSeeInNav, type ModuleId, type RoleId } from '@/lib/rbac';
@@ -24,6 +52,8 @@ interface NavEntry {
 }
 
 export const LOG_ROLES: readonly RoleId[] = ['R-02', 'R-03', 'R-04'];
+/** Dasbor eksekutif (prototype kick-off): Pimpinan & Pengawas SKK lintas KKKS; Admin KKKS & Pejabat Berwenang KKKS organisasinya. */
+export const DASHBOARD_ROLES: readonly RoleId[] = ['R-01', 'R-02', 'R-04', 'R-06'];
 /** FR-UDR-15: penyetuju ubah email (Admin SKK, Admin KKKS). */
 export const EMAIL_APPROVER_ROLES: readonly RoleId[] = ['R-03', 'R-04'];
 /** PRD Kelola Organisasi KKKS (FR-ORG-01, -20, -40; keputusan PM 14 Okt 2026). Digerbangi M-15 karena PRD berada di
@@ -38,7 +68,54 @@ const NAV: { key: string; label?: string; icon?: JSX.Element; collapsible?: bool
   {
     key: 'utama',
     // ASSUMPTION (K-7 → F-23): label "Ikhtisar" (Figma + PRD Login Goals) untuk M-01 Ruang Kerja.
-    entries: [{ module: 'M-01', label: t.nav.ikhtisar, to: '/ruang-kerja', icon: <LayoutDashboard {...ICON} /> }],
+    entries: [
+      { module: 'M-01', label: t.nav.ikhtisar, to: '/ruang-kerja', icon: <LayoutDashboard {...ICON} /> },
+      // Prototype kick-off: dasbor eksekutif & peta panas (EKS-01, ANL-02).
+      { module: 'M-13', label: t.nav.dasbor, to: '/dasbor', roles: DASHBOARD_ROLES, icon: <PieChart {...ICON} /> },
+      { module: 'M-11', label: t.nav.petaPanas, to: '/peta-panas', icon: <Map {...ICON} /> },
+    ],
+  },
+  {
+    key: 'operasional',
+    label: t.nav.operasional,
+    icon: <ClipboardCheck size={14} strokeWidth={1.8} aria-hidden />,
+    collapsible: true,
+    entries: [
+      // INS-01: pintasan form lapor (tampilan ponsel) khusus Pelapor KKKS.
+      { module: 'M-05', label: t.nav.laporInsiden, to: '/lapor', roles: ['R-05'], icon: <Siren size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-05', label: t.nav.insiden, to: '/insiden', icon: <AlertTriangle size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-06', label: t.nav.wpb, to: '/wpb', icon: <Wallet size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-07', label: t.nav.kontrak, to: '/kontrak', icon: <FileSignature size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-07', label: t.nav.pks, to: '/pks-pkt', icon: <Handshake size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-04', label: t.nav.risiko, to: '/risiko', icon: <ShieldAlert size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-09', label: t.nav.tindakLanjut, to: '/tindak-lanjut', icon: <ListChecks size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-12', label: t.nav.peringatanDini, to: '/peringatan-dini', icon: <Bell size={16} strokeWidth={1.8} aria-hidden /> },
+    ],
+  },
+  {
+    key: 'profil-laporan',
+    label: t.nav.profilLaporan,
+    icon: <BarChart3 size={14} strokeWidth={1.8} aria-hidden />,
+    collapsible: true,
+    entries: [
+      { module: 'M-03', label: t.nav.profilKkks, to: '/profil-kkks', icon: <Building2 size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-10', label: t.nav.analitik, to: '/analitik', icon: <BarChart3 size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-13', label: t.nav.laporan, to: '/laporan', icon: <FileText size={16} strokeWidth={1.8} aria-hidden /> },
+    ],
+  },
+  {
+    // Modul yang cakupannya masih dibahas (KD-04, K-02, K-18): layar konsep.
+    key: 'konsep',
+    label: t.nav.konsep,
+    icon: <Lightbulb size={14} strokeWidth={1.8} aria-hidden />,
+    collapsible: true,
+    entries: [
+      { module: 'M-08', label: t.nav.bahanPeledak, to: '/konsep/bahan-peledak', icon: <Bomb size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-25', label: t.nav.infrastruktur, to: '/konsep/layanan-infrastruktur', icon: <Server size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-24', label: t.nav.k3, to: '/konsep/k3', icon: <HardHat size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-02', label: t.nav.asisten, to: '/konsep/asisten', icon: <Bot size={16} strokeWidth={1.8} aria-hidden /> },
+      { module: 'M-14', label: t.nav.infoEksternal, to: '/konsep/informasi-eksternal', icon: <Globe2 size={16} strokeWidth={1.8} aria-hidden /> },
+    ],
   },
   {
     key: 'administrasi',

@@ -18,9 +18,11 @@ export interface RoleSwitcherProps {
   placeholder: string;
   /** inverse = di atas sidebar-bg. */
   tone?: 'default' | 'inverse';
+  /** Sembunyikan label secara visual (tetap terbaca pembaca layar), mis. di header. */
+  hideLabel?: boolean;
 }
 
-export function RoleSwitcher({ users, currentUserId, onSelect, label, placeholder, tone = 'inverse' }: RoleSwitcherProps) {
+export function RoleSwitcher({ users, currentUserId, onSelect, label, placeholder, tone = 'inverse', hideLabel }: RoleSwitcherProps) {
   return (
     <Select
       tone={tone}
@@ -28,6 +30,7 @@ export function RoleSwitcher({ users, currentUserId, onSelect, label, placeholde
       placeholder={placeholder}
       value={currentUserId}
       onValueChange={onSelect}
+      hideLabel={hideLabel}
       options={users.map((u) => ({ value: u.id, label: u.label }))}
     />
   );

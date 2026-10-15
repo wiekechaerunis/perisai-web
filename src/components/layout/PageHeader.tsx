@@ -51,7 +51,7 @@ export function PageHeader({ title, titleAside, breadcrumbs, summary, actions, t
     </nav>
   );
   return (
-    <header className={cn('px-6 pt-6', !tabs && 'pb-1', className)}>
+    <header className={cn('px-4 pt-5 lg:px-6 lg:pt-6', !tabs && 'pb-1', className)}>
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 items-start gap-3">
           {back && (

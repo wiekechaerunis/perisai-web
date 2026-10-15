@@ -98,7 +98,7 @@ describe('Hak akses efektif & cakupan (FR-HE, FR-CD)', () => {
     expect(m15.permissions.map((p) => p.action)).toEqual(['view', 'create', 'edit']);
     expect(m15.permissions[0]!.roles).toEqual(['R-04']);
     expect(m15.cakupan[0]).toMatchObject({ tingkat: 'Organisasi sendiri' });
-    expect(pic.some((m) => m.module === 'M-05')).toBe(false); // belum dirilis
+    expect(pic.some((m) => m.module === 'M-17')).toBe(false); // belum dirilis (M-05 dst. dirilis untuk prototype kick-off)
     expect(await s.users.effectiveAccess('u-13')).toEqual([]); // Nonaktif
   });
 

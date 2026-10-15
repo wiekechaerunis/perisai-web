@@ -35,6 +35,10 @@ export function App() {
   return (
     <AppProviders>
       <RouterProvider router={router} future={{ v7_startTransition: true }} />
+      {/* Penanda prototype kick-off 21 Okt 2026 di setiap halaman (termasuk layar publik). */}
+      <p role="note" className="pointer-events-none fixed bottom-3 right-3 z-50 rounded-sm border border-border bg-surface/95 px-2 py-1 text-caption text-ink-muted shadow-overlay">
+        Ilustrasi kick-off · bukan desain final
+      </p>
     </AppProviders>
   );
 }

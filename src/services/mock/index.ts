@@ -4,6 +4,7 @@
  * sesi dan pencabutan (FR-LO). Setiap peristiwa dicatat ke log akses / jejak audit untuk gelombang 3.
  */
 import { formatTanggalJam } from '@/lib/format';
+import { opsService, resetOpsDb } from './ops';
 import { meetsPolicy } from '@/lib/password';
 import { SECURITY_PARAMS as P } from '@/lib/security-params';
 import type { InviteTokenState, ResetTokenState } from '@/lib/status';
@@ -553,13 +554,15 @@ const dev: DevService = {
   },
   async reset() {
     resetDb();
+    // Data demo modul operasional (prototype kick-off) ikut kembali ke kondisi awal.
+    resetOpsDb();
   },
   decideEmailRequest: devUserTools.decideEmailRequest,
   failNextEmail: devUserTools.failNextEmail,
   simulateRoleChange: devUserTools.simulateRoleChange,
 };
 
-export const mockServices: Services = { auth, password, activation, sessions, users: { ...userService, ...userEditService, ...userProfileService }, account: accountService, logs: logService, emailLinks: emailLinkService, orgs: orgService, roles: roleService, dev };
+export const mockServices: Services = { auth, password, activation, sessions, users: { ...userService, ...userEditService, ...userProfileService }, account: accountService, logs: logService, emailLinks: emailLinkService, orgs: orgService, roles: roleService, ops: opsService, dev };
 
 /** Untuk test: akses log yang dicatat mock. */
 export function mockLogs(): LogEntry[] {

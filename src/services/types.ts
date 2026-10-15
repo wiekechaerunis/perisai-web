@@ -814,4 +814,6 @@ export interface Services {
   emailLinks: EmailLinkService;
   orgs: OrgService;
   roles: RoleService;
+  /** Modul operasional (prototype kick-off 21 Okt 2026). */
+  ops: import('./ops-types').OpsService;
 }
