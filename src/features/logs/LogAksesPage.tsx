@@ -34,8 +34,9 @@ import { reasonValid, ReasonField } from '../users/components/ReasonField';
 import { usersCopy } from '../users/copy';
 import { useOrganisasiFilter } from './hooks';
 import { logsCopy as c } from './copy';
-import { ArchiveTag, PeriodFields, ResultTag, TableTitle, downloadCsv, wibDay } from './shared';
-import { FilterBar } from '@/components/patterns/FilterBar';
+import { ArchiveTag, PeriodFields, ResultTag, TableTitle, downloadCsv, isDefaultPeriod, wibDay } from './shared';
+import { FilterBar, type ActiveFilter } from '@/components/patterns/FilterBar';
+import { Checkbox } from '@/components/ui/Checkbox';
 
 const SEMUA = 'semua';
 
@@ -126,7 +127,16 @@ function AccessLogTab() {
   };
   const entryId = params.get('entri');
 
-  // Tombol Atur ulang filter hanya tampil bila ada filter selain halaman/entri yang dibuka.
+  // Periode bawaan (7 hari terakhir) bukan filter aktif: tidak disimpan di URL.
+  const setPeriod = (v: { dari: string; sampai: string }) =>
+    isDefaultPeriod(v.dari, v.sampai) ? set({ dari: undefined, sampai: undefined }) : set(v);
+  const activeFilters: ActiveFilter[] = [
+    query.organisasiId && { key: 'organisasi', label: `${c.log.organisasi}: ${orgs.find((o) => o.value === query.organisasiId)?.label ?? query.organisasiId}`, onRemove: () => set({ organisasi: undefined }) },
+    query.kelompok && { key: 'jenis', label: `${c.log.jenis}: ${query.kelompok}`, onRemove: () => set({ jenis: undefined }) },
+    query.hasil && { key: 'hasil', label: `${c.hasil}: ${query.hasil}`, onRemove: () => set({ hasil: undefined }) },
+    query.ip && { key: 'ip', label: `${c.log.ip}: ${query.ip}`, onRemove: () => set({ ip: undefined }) },
+  ].filter((f): f is ActiveFilter => !!f);
+  // "Hapus filter" hanya tampil bila ada filter selain halaman/entri yang dibuka.
   const filtered = [...params.keys()].some((k) => !['hal', 'entri', 'tab'].includes(k));
   const columns: ColumnDef<AccessLogEntry, unknown>[] = [
     {
@@ -168,8 +178,10 @@ function AccessLogTab() {
     <div className="flex flex-col gap-5">
       <Section className="border border-border py-4">
         <FilterBar
-          labels={{ more: c.filterLainnya, less: c.sembunyikanFilter }}
-          activeCount={[query.organisasiId, query.kelompok, query.hasil, query.ip, query.gagalBeruntun].filter(Boolean).length}
+          labels={{ more: c.filterLainnya, less: c.sembunyikanFilter, clear: c.reset, remove: c.hapusSatu, active: c.filterAktif }}
+          activeFilters={activeFilters}
+          onClear={filtered ? () => setParams(new URLSearchParams(), { replace: true }) : undefined}
+          quick={<Checkbox label={c.log.gagalBeruntun} checked={query.gagalBeruntun} onChange={() => set({ beruntun: query.gagalBeruntun ? undefined : '1' })} />}
           primary={
             <>
               <TextField
@@ -180,15 +192,8 @@ function AccessLogTab() {
                 leading={<Search size={16} strokeWidth={1.8} />}
                 containerClassName="min-w-[220px] flex-1"
               />
-              <PeriodFields dari={query.dari} sampai={query.sampai} onChange={(v) => set(v)} />
+              <PeriodFields dari={query.dari} sampai={query.sampai} onChange={setPeriod} />
             </>
-          }
-          actions={
-            filtered ? (
-              <Button variant="quiet" onClick={() => setParams(new URLSearchParams(), { replace: true })}>
-                {c.reset}
-              </Button>
-            ) : undefined
           }
           footer={query.gagalBeruntun ? <p className="text-caption text-ink-muted">{c.log.gagalBeruntunAktif(FAILED_STREAK_THRESHOLD)}</p> : undefined}
           advanced={
@@ -221,9 +226,6 @@ function AccessLogTab() {
               className="w-[150px]"
             />
             <TextField label={c.log.ip} value={query.ip ?? ''} onChange={(e) => set({ ip: e.target.value })} containerClassName="w-[160px]" className="font-mono" />
-            <Button aria-pressed={query.gagalBeruntun} variant={query.gagalBeruntun ? 'primary' : 'secondary'} onClick={() => set({ beruntun: query.gagalBeruntun ? undefined : '1' })}>
-              {c.log.gagalBeruntun}
-            </Button>
             </>
           }
         />
@@ -249,7 +251,12 @@ function AccessLogTab() {
           error={list.isError ? c.gagal : undefined}
           onRowClick={(e) => set({ entri: e.id })}
           selectedRowId={entryId ?? undefined}
-          empty={<EmptyState title={c.log.kosong} />}
+          empty={
+            <EmptyState
+              title={c.log.kosong}
+              action={filtered ? <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.reset}</Button> : undefined}
+            />
+          }
         />
         {list.data && <Pagination page={list.data.page} pageSize={list.data.pageSize} total={list.data.total} onPageChange={(p) => set({ hal: String(p), entri: undefined })} pageSizeOptions={PAGE_SIZE_OPTIONS} onPageSizeChange={(n) => set({ [PAGE_SIZE_PARAM]: String(n), entri: undefined })} labels={c.halaman} />}
       </Section>

@@ -3,7 +3,7 @@
  * FR-HE-14a (hanya modul yang dirilis), FR-HE-15 (role asal), FR-HE-16 (akun sendiri); Cakupan Data FR-CD-13/14.
  * Tabel izin mengikuti Figma 109:16307 (PRD Profil Pengguna, tab Akses).
  */
-import { AlertTriangle } from 'lucide-react';
+import { Callout } from '@/components/patterns/Callout';
 import { SCOPE_DESC, scopeLabel, type EffectiveModule, type ScopeEntry } from '@/lib/access';
 import { ACTION_DESC, roleName } from '@/lib/rbac';
 import type { WilayahKerja } from '@/services';
@@ -21,10 +21,9 @@ export function ScopeList({ cakupan, wkNonaktif = [] }: { cakupan: ScopeEntry[];
         ))}
       </ul>
       {wkNonaktif.length > 0 && (
-        <p role="status" className="flex items-start gap-2 rounded-md bg-caution-bg p-3 text-caption text-caution-ink">
-          <AlertTriangle aria-hidden size={14} strokeWidth={1.8} className="mt-0.5 shrink-0" />
+        <Callout variant="peringatan" role="status">
           {c.wkNonaktif(wkNonaktif.map((w) => w.nama).join(', '))}
-        </p>
+        </Callout>
       )}
     </div>
   );

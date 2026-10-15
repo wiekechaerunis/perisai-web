@@ -59,7 +59,7 @@ const triggerCls = (error?: ReactNode, disabled?: boolean) =>
     disabled && 'cursor-not-allowed bg-surface-sunken opacity-60',
   );
 
-const listCls = 'absolute left-0 right-0 top-full z-50 mt-1 max-h-[280px] overflow-y-auto rounded-md border border-border bg-surface py-1 shadow-overlay';
+const listCls = 'absolute left-0 right-0 top-full z-50 mt-1 max-h-[320px] overflow-y-auto rounded-md border border-border bg-surface py-1 shadow-overlay';
 
 /* ---------- Combobox ---------- */
 
@@ -252,7 +252,7 @@ export function MultiSelect({
         <div className={triggerCls(error, disabled)}>
           <div className="flex min-w-0 flex-1 flex-wrap gap-2 py-1">
             {selected.map((o) => (
-              <span key={o.value} className="inline-flex items-center gap-1 rounded-full border border-border-control bg-surface-sunken px-2 py-0.5 text-body-dense">
+              <span key={o.value} className="inline-flex items-center gap-[6px] rounded-full border border-border bg-surface-sunken px-2 py-1 text-[13px] font-medium">
                 {o.label}
                 {!disabled && (
                   <button

@@ -207,7 +207,7 @@ export const logService: LogService = {
     assertR03(a, 'export');
     const rows = queryAccess(q, a);
     // FR-LA-17: ekspor tercatat.
-    audit({ pelakuId: a.id, modul: 'M-22', aksi: 'export', objek: 'Log Akses', sesudah: { Periode: `${q.dari} s.d. ${q.sampai}`, Baris: String(rows.length) }, hasil: 'Berhasil', kelompok: 'Konfigurasi' });
+    audit({ pelakuId: a.id, modul: 'M-22', aksi: 'export', objek: 'Log akses', sesudah: { Periode: `${q.dari} s.d. ${q.sampai}`, Baris: String(rows.length) }, hasil: 'Berhasil', kelompok: 'Konfigurasi' });
     commit();
     return csv(
       ['Waktu (WIB)', 'Pengguna', 'Organisasi', 'Kelompok', 'Peristiwa', 'Hasil', 'Alasan', 'Alamat IP', 'User agent', 'Id sesi', 'Arsip'],
@@ -304,7 +304,7 @@ export const logService: LogService = {
     assertR03(a, 'export');
     const rows = queryAudit(q, a);
     // FR-JA-19: ekspor tercatat.
-    audit({ pelakuId: a.id, modul: 'M-22', aksi: 'export', objek: 'Jejak Audit', sesudah: { Periode: `${q.dari} s.d. ${q.sampai}`, Baris: String(rows.length) }, hasil: 'Berhasil', kelompok: 'Konfigurasi' });
+    audit({ pelakuId: a.id, modul: 'M-22', aksi: 'export', objek: 'Jejak audit', sesudah: { Periode: `${q.dari} s.d. ${q.sampai}`, Baris: String(rows.length) }, hasil: 'Berhasil', kelompok: 'Konfigurasi' });
     commit();
     const kv = (o?: Record<string, string>) => (o ? Object.entries(o).map(([k, v]) => `${k}: ${v}`).join('; ') : '');
     return csv(

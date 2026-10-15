@@ -33,7 +33,7 @@ export function Menu({ trigger, items, side = 'bottom', align = 'start', header 
           side={side}
           align={align}
           sideOffset={6}
-          className="z-50 min-w-[220px] rounded-md border border-border bg-surface p-1 shadow-overlay"
+          className="z-50 min-w-[220px] rounded-md border border-border bg-surface py-1 shadow-overlay"
         >
           {header && <div className="border-b border-border-subtle px-3 pb-2 pt-1">{header}</div>}
           {items.map((it) => (
@@ -42,7 +42,7 @@ export function Menu({ trigger, items, side = 'bottom', align = 'start', header 
               onSelect={it.onSelect}
               disabled={it.disabled}
               className={cn(
-                'flex min-h-control-md cursor-default select-none items-center gap-2 rounded-md px-3 text-body-dense text-ink outline-none',
+                'flex cursor-default select-none items-center gap-2 px-3 py-[10px] text-body-dense text-ink outline-none',
                 'data-[highlighted]:bg-surface-sunken data-[disabled]:text-ink-subtle',
               )}
             >

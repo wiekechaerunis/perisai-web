@@ -75,7 +75,7 @@ describe('Ubah data pengguna (FR-UDR-03, -09, FR-HE-17)', () => {
     renderUbah('u-04');
     expect(await screen.findByText('Anda tidak dapat mengubah role akun Anda sendiri.')).toBeInTheDocument();
     expect(screen.queryByRole('combobox', { name: /Role/ })).toBeNull();
-    expect(screen.getByRole('link', { name: 'Buka Akun Saya' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Buka Akun saya' })).toBeInTheDocument();
   });
 });
 

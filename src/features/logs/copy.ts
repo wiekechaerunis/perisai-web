@@ -12,7 +12,14 @@ export const logsCopy = {
   nonaktif: '(Nonaktif)', // FR-LA-08, FR-JA-13
   hasil: 'Hasil',
   terapkan: 'Tampilkan', // usulan
-  reset: 'Atur ulang filter', // usulan
+  reset: 'Hapus filter', // DS pola Filter daftar (15 Okt 2026)
+  filterAktif: 'Filter aktif',
+  hapusSatu: (label: string) => `Hapus filter ${label}`,
+  // Preset periode — usulan desain 15 Okt 2026 (menunggu persetujuan PM).
+  presetHariIni: 'Hari ini',
+  preset7: '7 hari terakhir',
+  preset30: '30 hari terakhir',
+  presetKhusus: 'Rentang khusus',
   filterLainnya: (n: number) => (n ? `Filter lainnya (${n})` : 'Filter lainnya'), // usulan
   sembunyikanFilter: 'Sembunyikan filter', // usulan
   ekspor: 'Ekspor CSV', // FR-LA-16, FR-JA-18
@@ -38,7 +45,7 @@ export const logsCopy = {
     ip: 'Alamat IP',
     berhasil: 'Berhasil',
     gagal: 'Gagal',
-    gagalBeruntun: 'Kegagalan login beruntun', // FR-LA-12
+    gagalBeruntun: 'Hanya kegagalan login beruntun', // FR-LA-12 (Checkbox filter cepat)
     gagalBeruntunAktif: (n: number) => `Menampilkan pengguna dengan ${n} kali atau lebih kegagalan login berturut-turut.`, // usulan
     kolom: { waktu: 'Waktu', pengguna: 'Pengguna', organisasi: 'Organisasi', peristiwa: 'Peristiwa', hasil: 'Hasil', sumber: 'Sumber' },
     tabel: 'Daftar log akses',
@@ -114,7 +121,7 @@ export const logsCopy = {
     retensi: {
       tombol: 'Kebijakan retensi', // FR-JA-21..25
       judul: 'Kebijakan retensi',
-      keterangan: 'Berlaku untuk Log Akses dan Jejak Audit. Perubahan tidak berlaku surut.', // FR-LA-19, FR-JA-25
+      keterangan: 'Berlaku untuk log akses dan jejak audit. Perubahan tidak berlaku surut.', // FR-LA-19, FR-JA-25
       aktif: 'Masa aktif (bulan)',
       aktifHint: 'Setelah masa aktif, entri diarsipkan dan tetap dapat dicari.',
       total: 'Masa simpan total (tahun)',

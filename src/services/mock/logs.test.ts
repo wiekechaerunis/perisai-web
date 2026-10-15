@@ -42,7 +42,7 @@ describe('Log Akses (FR-LA)', () => {
     expect(old.items.some((e) => e.arsip)).toBe(true);
     const csv = await s.logs.exportAccessLog(last7);
     expect(csv.split('\n')[0]).toContain('Waktu (WIB)');
-    expect((await s.logs.audit(last7)).items[0]).toMatchObject({ aksi: 'export', objek: 'Log Akses' });
+    expect((await s.logs.audit(last7)).items[0]).toMatchObject({ aksi: 'export', objek: 'Log akses' });
     await s.dev!.signInAs('u-02');
     expect(await code(s.logs.exportAccessLog(last7))).toBe('PERMISSION_DENIED');
   });

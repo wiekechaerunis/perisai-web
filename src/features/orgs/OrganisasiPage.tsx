@@ -164,7 +164,7 @@ function OrgListPage({ level }: { level: OrgLevel }) {
               ]}
               className="w-[180px]"
             />
-            {filtered && <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
+            {filtered && <Button variant="quiet" onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
           </div>
         </Section>
         <Section className="border border-border" title={c.tabelJudul}>
@@ -178,7 +178,7 @@ function OrgListPage({ level }: { level: OrgLevel }) {
             error={list.isError ? c.gagalMuat : undefined}
             onRowClick={(o) => open(o.kode)}
             selectedRowId={kode}
-            empty={<EmptyState title={c.kosongFilter} action={filtered ? <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button> : undefined} />}
+            empty={<EmptyState title={filtered ? c.kosongFilter : c.kosong} action={filtered ? <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button> : undefined} />}
           />
           <Pagination page={page} pageSize={PAGE} total={rows.length} onPageChange={(n) => setParam('hal', String(n))} pageSizeOptions={PAGE_SIZE_OPTIONS} onPageSizeChange={(n) => setParam(PAGE_SIZE_PARAM, String(n))} labels={logsCopy.halaman} />
         </Section>

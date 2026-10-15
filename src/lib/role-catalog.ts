@@ -24,7 +24,7 @@ import {
   type SystemRoleId,
 } from './rbac';
 
-export type RoleStatus = 'Aktif' | 'Tidak Aktif';
+export type RoleStatus = 'Aktif' | 'Tidak aktif';
 
 /** Label jenis organisasi pada Tabel R-2. */
 export const JENIS_LABEL: Record<OrgType, string> = { 'SKK Migas': 'Regulator (SKK Migas)', KKKS: 'KKKS', Kontraktor: 'Kontraktor' };
@@ -55,7 +55,7 @@ const status: Record<string, RoleStatus> = {};
 
 /** FR-AR-06: role Tidak Aktif tidak muncul di dropdown mana pun. */
 export function isRoleActive(r: RoleId): boolean {
-  return status[r] !== 'Tidak Aktif';
+  return status[r] !== 'Tidak aktif';
 }
 
 export function roleStatus(r: RoleId): RoleStatus {

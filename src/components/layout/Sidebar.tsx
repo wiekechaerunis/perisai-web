@@ -90,7 +90,7 @@ function Group({ g }: { g: SidebarGroup }) {
                     {it.icon}
                     <span className="flex-1">{it.label}</span>
                     {it.count !== undefined && it.count > 0 && (
-                      <span className="rounded-sm bg-count-bg px-1 font-mono text-caption text-on-action">{it.count}</span>
+                      <span className="rounded-sm bg-count-bg px-1 font-mono text-caption text-count-ink">{it.count}</span>
                     )}
                     {isActive && <span aria-hidden className="h-3 w-1 rounded-sm bg-brand-lime" />}
                   </>

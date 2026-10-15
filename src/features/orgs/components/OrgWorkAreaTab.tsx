@@ -145,13 +145,13 @@ export function OrgWorkAreaTab({ org, canEdit }: { org: OrgDetail; canEdit: bool
                   <span className="block font-mono text-caption text-ink-subtle">{w.kode}</span>
                   {w.dioperasikanBersama && <span className="block text-caption text-ink-muted">{c.bersama}</span>}
                   {canEdit && (
-                    <span className="mt-1 flex gap-3">
-                      <button type="button" className="text-caption font-semibold text-ink underline" onClick={() => setDialog({ kind: 'rename', wk: w })}>
+                    <span className="mt-1 flex gap-4">
+                      <Button variant="link" onClick={() => setDialog({ kind: 'rename', wk: w })}>
                         {c.ubah}
-                      </button>
-                      <button type="button" className="text-caption font-semibold text-ink underline" onClick={() => setDialog({ kind: 'status', wk: w })}>
+                      </Button>
+                      <Button variant="link" onClick={() => setDialog({ kind: 'status', wk: w })}>
                         {w.aktif ? c.nonaktifkan : c.aktifkan}
-                      </button>
+                      </Button>
                     </span>
                   )}
                 </td>

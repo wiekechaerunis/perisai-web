@@ -4,9 +4,9 @@
  * ditulis dengan sapaan "Anda" (keputusan PM 14 Okt 2026).
  */
 export const akunSayaCopy = {
-  judul: 'Akun Saya',
+  judul: 'Akun saya',
   ringkasan: 'Kelola profil dan keamanan akses Anda ke PERISAI.', // Figma 341:6300
-  tabLabel: 'Bagian Akun Saya',
+  tabLabel: 'Bagian akun saya',
   tabProfil: 'Profil',
   tabKeamanan: 'Keamanan masuk', // Figma 341:6507 (Akun Saya PRD menyebut "Keamanan Akun", PR-01 / F-36)
 

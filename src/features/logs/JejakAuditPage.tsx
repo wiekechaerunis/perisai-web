@@ -31,7 +31,7 @@ import { useSession } from '../session/SessionProvider';
 import { logsCopy as c } from './copy';
 import { useOrganisasiFilter } from './hooks';
 import { ArchiveTag, PeriodFields, ResultTag, TableTitle, downloadCsv, wibDay } from './shared';
-import { FilterBar } from '@/components/patterns/FilterBar';
+import { FilterBar, type ActiveFilter } from '@/components/patterns/FilterBar';
 
 const SEMUA = 'semua';
 const a = c.audit;
@@ -237,6 +237,18 @@ export function JejakAuditPage() {
     setParams(next, { replace: true });
   };
   const entryId = params.get('entri');
+  const clearAll = () => (setDraft({ ...emptyQuery() }), setParams(new URLSearchParams(), { replace: true }));
+  // Pil = filter tambahan yang sudah diterapkan (bukan draf); menghapus pil langsung menerapkan ulang tanpa filter itu.
+  const drop = (patch: Partial<typeof fromUrl>) => apply({ ...fromUrl, ...patch });
+  const activeFilters: ActiveFilter[] = applied
+    ? [
+        fromUrl.objek && { key: 'objek', label: `${a.objek}: ${fromUrl.objek}`, onRemove: () => drop({ objek: undefined }) },
+        fromUrl.organisasiId && { key: 'organisasi', label: `${a.organisasi}: ${orgs.find((o) => o.value === fromUrl.organisasiId)?.label ?? fromUrl.organisasiId}`, onRemove: () => drop({ organisasiId: undefined }) },
+        fromUrl.modul && { key: 'modul', label: `${a.modul}: ${fromUrl.modul} ${MODULES[fromUrl.modul].name}`, onRemove: () => drop({ modul: undefined }) },
+        fromUrl.aksi && { key: 'aksi', label: `${a.aksi}: ${ACTION_LABEL[fromUrl.aksi]}`, onRemove: () => drop({ aksi: undefined }) },
+        fromUrl.hasil && { key: 'hasil', label: `${c.hasil}: ${fromUrl.hasil}`, onRemove: () => drop({ hasil: undefined }) },
+      ].filter((f): f is ActiveFilter => !!f)
+    : [];
 
   const columns: ColumnDef<AuditEntry, unknown>[] = [
     {
@@ -284,23 +296,20 @@ export function JejakAuditPage() {
             }}
           >
             <FilterBar
-              labels={{ more: c.filterLainnya, less: c.sembunyikanFilter }}
-              activeCount={[draft.objek, draft.organisasiId, draft.modul, draft.aksi, draft.hasil].filter(Boolean).length}
+              labels={{ more: c.filterLainnya, less: c.sembunyikanFilter, clear: c.reset, remove: c.hapusSatu, active: c.filterAktif }}
+              activeFilters={activeFilters}
+              onClear={applied ? clearAll : undefined}
               primary={
                 <>
                   <TextField label={a.pelaku} placeholder={a.pelakuPlaceholder} value={draft.pelaku ?? ''} onChange={(e) => setDraft((d) => ({ ...d, pelaku: e.target.value || undefined }))} leading={<Search size={16} strokeWidth={1.8} />} containerClassName="min-w-[220px] flex-1" />
                   <PeriodFields dari={draft.dari} sampai={draft.sampai} onChange={(v) => setDraft((d) => ({ ...d, ...v, korelasi: undefined }))} />
                 </>
               }
+              // FR-JA-12: filter diterapkan dengan tombol (DS_GAPS DS-02).
               actions={
-                <>
-                  <Button type="submit" variant="primary">
-                    {c.terapkan}
-                  </Button>
-                  <Button variant="quiet" onClick={() => (setDraft({ ...emptyQuery() }), setParams(new URLSearchParams(), { replace: true }))}>
-                    {c.reset}
-                  </Button>
-                </>
+                <Button type="submit" variant="primary">
+                  {c.terapkan}
+                </Button>
               }
               advanced={
                 <>
@@ -352,7 +361,14 @@ export function JejakAuditPage() {
                 error={list.isError ? c.gagal : undefined}
                 onRowClick={(e) => setParam('entri', e.id)}
                 selectedRowId={entryId ?? undefined}
-                empty={<EmptyState title={a.kosong} />}
+                empty={
+                  <EmptyState
+                    title={a.kosong}
+                    action={
+                      <Button onClick={clearAll}>{c.reset}</Button>
+                    }
+                  />
+                }
               />
               {list.data && <Pagination page={list.data.page} pageSize={list.data.pageSize} total={list.data.total} onPageChange={(p) => setParam('hal', String(p))}
                   pageSizeOptions={PAGE_SIZE_OPTIONS}

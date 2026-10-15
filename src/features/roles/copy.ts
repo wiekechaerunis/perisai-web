@@ -9,7 +9,7 @@ export const roleCopy = {
   tabel: 'Daftar role',
   kolom: { kode: 'Kode', nama: 'Nama', jenis: 'Jenis organisasi', cakupan: 'Cakupan', status: 'Status', pengguna: 'Pengguna' },
   aktif: 'Aktif',
-  tidakAktif: 'Tidak Aktif',
+  tidakAktif: 'Tidak aktif',
   sistem: 'Role sistem', // FR-KR-09c (usulan label)
   memuat: 'Memuat…',
   gagal: 'Daftar role gagal dimuat.',

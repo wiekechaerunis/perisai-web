@@ -42,7 +42,7 @@ export function StatePanel({
       {media && <div aria-hidden>{media}</div>}
       <div className={cn('flex flex-col gap-3', center ? 'items-center gap-5' : 'items-start')}>
         {Icon && <Icon aria-hidden size={18} strokeWidth={1.8} className="text-ink-muted" />}
-        <Heading className={cn('text-ink', center ? 'text-heading-1' : 'text-heading-1')}>{title}</Heading>
+        <Heading className={cn('text-ink', 'text-heading-panel')}>{title}</Heading>
         {description && <div className={cn('text-body text-ink-muted', !center && 'max-w-content-max')}>{description}</div>}
         {actions && <div className={cn('mt-2 flex flex-col gap-3', center ? 'w-[318px] max-w-full' : 'w-full')}>{actions}</div>}
       </div>

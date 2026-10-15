@@ -59,10 +59,10 @@ const navLabels = (roles: Parameters<typeof buildNav>[0]) => buildNav(roles).fla
 
 describe('Navigasi M-22 (FR-LA-06)', () => {
   it('Log Akses & Jejak Audit untuk R-02/R-03/R-04, tidak untuk R-07 dan R-05', () => {
-    expect(navLabels(['R-03'])).toEqual(expect.arrayContaining(['Log Akses', 'Jejak Audit']));
-    expect(navLabels(['R-04'])).toEqual(expect.arrayContaining(['Log Akses', 'Jejak Audit']));
-    expect(navLabels(['R-07'])).not.toContain('Log Akses');
-    expect(navLabels(['R-05'])).not.toContain('Jejak Audit');
+    expect(navLabels(['R-03'])).toEqual(expect.arrayContaining(['Log akses', 'Jejak audit']));
+    expect(navLabels(['R-04'])).toEqual(expect.arrayContaining(['Log akses', 'Jejak audit']));
+    expect(navLabels(['R-07'])).not.toContain('Log akses');
+    expect(navLabels(['R-05'])).not.toContain('Jejak audit');
   });
 });
 

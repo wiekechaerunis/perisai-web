@@ -1,17 +1,21 @@
 /**
- * Toast — komponen NON-DS (usulan di DS_GAPS.md). Pesan singkat setelah aksi berhasil,
- * mis. "Akun berhasil diaktifkan." (FR-AK-14), "Undangan dibuat. …" (FR-UP-19).
- * Tampilan Figma toast-bar (66:3835): lebar 480px, ikon centang dalam lingkaran gelap, tombol tutup x-circle,
- * di kanan atas. Memakai `shadow-overlay`; netral (tidak hijau). Diumumkan ke pembaca layar (Radix Toast).
+ * Toast — PERISAI Design System `Perisai.Toast`. Lebar 480px, lingkaran ikon 24px, pesan 14px medium, tutup x-circle.
+ * Varian berhasil: lingkaran `ink` + centang, diumumkan sopan (Radix `background`), hilang sendiri (~5 detik).
+ * Varian gagal: lingkaran `status-danger-ink` + x, diumumkan langsung (Radix `foreground`), tidak hilang sendiri.
+ * DS: Toast tanpa tombol aksi. Pengecualian PRD Kelola Organisasi FR-ORG-08 ("Undang PIC KKKS") dicatat di
+ * ASSUMPTIONS.md (DS-04) sampai diputuskan PM.
  */
 import * as RadixToast from '@radix-ui/react-toast';
-import { Check, XCircle } from 'lucide-react';
+import { Check, X, XCircle } from 'lucide-react';
+import { cn } from '@/lib/cn';
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
 export interface ToastMessage {
   id: number;
   title: ReactNode;
   description?: ReactNode;
+  /** `gagal`: lingkaran merah, diumumkan langsung, tidak hilang sendiri (DS). Bawaan `berhasil`. */
+  variant?: 'berhasil' | 'gagal';
   /** Aksi lanjutan, mis. "Undang PIC KKKS" setelah organisasi ditambahkan (PRD Kelola Organisasi FR-ORG-08). */
   action?: { label: string; onClick: () => void };
 }
@@ -30,7 +34,7 @@ export interface ToastProviderProps {
   duration?: number;
 }
 
-export function ToastProvider({ children, closeLabel, regionLabel, duration = 6000 }: ToastProviderProps) {
+export function ToastProvider({ children, closeLabel, regionLabel, duration = 5000 }: ToastProviderProps) {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   const show = useCallback((t: Omit<ToastMessage, 'id'>) => {
     setToasts((prev) => [...prev, { ...t, id: Date.now() + Math.random() }]);
@@ -44,11 +48,19 @@ export function ToastProvider({ children, closeLabel, regionLabel, duration = 60
         {toasts.map((t) => (
           <RadixToast.Root
             key={t.id}
+            type={t.variant === 'gagal' ? 'foreground' : 'background'}
+            duration={t.variant === 'gagal' ? Infinity : undefined}
             onOpenChange={(open) => !open && setToasts((prev) => prev.filter((x) => x.id !== t.id))}
             className="flex w-[min(480px,calc(100vw-32px))] items-start gap-4 rounded-lg border border-border-subtle bg-surface py-4 pl-5 pr-6 text-body-dense text-ink shadow-overlay"
           >
-            <span aria-hidden className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-action text-on-action">
-              <Check size={12} strokeWidth={2.4} />
+            <span
+              aria-hidden
+              className={cn(
+                'flex h-6 w-6 shrink-0 items-center justify-center rounded-full',
+                t.variant === 'gagal' ? 'bg-status-danger-ink text-on-action-danger' : 'bg-action text-on-action',
+              )}
+            >
+              {t.variant === 'gagal' ? <X size={12} strokeWidth={2.4} /> : <Check size={12} strokeWidth={2.4} />}
             </span>
             <div className="flex flex-1 flex-col gap-1 pt-0.5">
               <RadixToast.Title className="font-medium">{t.title}</RadixToast.Title>

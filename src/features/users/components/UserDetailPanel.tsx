@@ -10,7 +10,7 @@
  * Tab Profil: tautan "Ubah" per field → halaman /pengguna/:id/ubah (PRD Ubah Data & Role, keputusan PM 14 Okt 2026);
  * Masa berlaku → dialog Perpanjang (FR-SA-22). Riwayat akun: Diundang, Diaktifkan, Login terakhir.
  */
-import { Clock3, KeyRound, Lock, MoreHorizontal } from 'lucide-react';
+import { KeyRound, Lock, MoreHorizontal } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -19,6 +19,7 @@ import { useToast } from '@/components/patterns/Toast';
 import { services } from '@/services';
 import { LOG_ROLES } from '../../shell/navigation';
 import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
+import { Callout } from '@/components/patterns/Callout';
 import { KeyValueList, type KeyValueItem } from '@/components/patterns/KeyValueList';
 import { Menu } from '@/components/patterns/Menu';
 import { SidePanel } from '@/components/patterns/SidePanel';
@@ -93,16 +94,14 @@ export function UserDetailPanel({ userId, session, onClose }: UserDetailPanelPro
     <>
       {u.status === 'Kedaluwarsa' &&
         (u.mintaUndanganBaru ? (
-          <div className="flex flex-col gap-1 rounded-md bg-caution-bg p-[14px] text-caution-ink">
-            <p className="text-body-dense font-semibold">{c.profil.permintaanJudul}</p>
+          <Callout variant="peringatan" role="note" title={c.profil.permintaanJudul}>
             <p className="text-caption">{c.profil.diajukan(formatTanggalJam(u.mintaUndanganBaru))}</p>
             {u.undanganBerlakuSampai && <p className="text-caption">{c.profil.sebelumnyaKedaluwarsa(formatTanggalJam(u.undanganBerlakuSampai))}</p>}
-          </div>
+          </Callout>
         ) : (
-          <p className="flex items-start gap-[10px] rounded-md bg-caution-bg p-3 text-body-dense text-caution-ink">
-            <Clock3 aria-hidden size={16} strokeWidth={1.8} className="mt-0.5 shrink-0" />
+          <Callout variant="peringatan" role="note">
             {c.profil.kedaluwarsaPada(u.undanganBerlakuSampai ? formatTanggal(u.undanganBerlakuSampai) : '—')}
-          </p>
+          </Callout>
         ))}
       {cancelled && (
         <div className="flex flex-col gap-1 rounded-md bg-surface-sunken p-4">

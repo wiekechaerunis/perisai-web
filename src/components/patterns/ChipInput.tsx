@@ -68,7 +68,7 @@ export function ChipInput({ label, chips, onAdd, onRemove, removeLabel, placehol
       </label>
       <div
         className={cn(
-          'flex min-h-control-md flex-wrap items-center gap-1 rounded-md border bg-surface px-2 py-1',
+          'flex min-h-control-md flex-wrap items-center gap-2 rounded-md border bg-surface px-3 py-2',
           'focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus-ring',
           hasError ? 'border-error-ink' : 'border-border-control',
           disabled && 'cursor-not-allowed bg-surface-sunken',
@@ -79,7 +79,7 @@ export function ChipInput({ label, chips, onAdd, onRemove, removeLabel, placehol
             <li
               key={c.value}
               className={cn(
-                'flex items-center gap-1 rounded-full border px-2 py-0.5 text-body-dense',
+                'flex items-center gap-[6px] rounded-full border px-2 py-1 text-[13px] font-medium',
                 mono && 'font-mono',
                 c.tone === 'error' && 'border-error-ink text-error-ink',
                 c.tone === 'warning' && 'border-caution bg-caution-bg text-caution-ink',

@@ -1,13 +1,13 @@
 /**
- * Dialog / ConfirmDialog — komponen NON-DS (usulan di DS_GAPS.md).
- * Pola Figma (Kirim Ulang 109:14140, Tangguhkan 257:8570): lebar 560px, kepala dengan garis bawah, isi, kaki dengan
- * garis atas. Varian `media` (Figma 66:3553 "Undangan Gagal Dikirim"): ilustrasi + teks rata tengah tanpa garis.
+ * Dialog / ConfirmDialog — PERISAI Design System `Perisai.Dialog` / `Perisai.ConfirmDialog`.
+ * Lebar `dialog-width-base` 560px (bawaan), `dialog-width-md` 480px, `dialog-width-lg` 720px; scrim `overlay-scrim`
+ * (standar ink 40%, ruang kendali hitam 60%). Kepala dengan garis bawah, isi, kaki dengan garis atas. Varian `media` (Figma 66:3553 "Undangan Gagal Dikirim"): ilustrasi + teks rata tengah tanpa garis.
  * Overlay memakai `shadow-overlay` (satu-satunya bayangan yang diizinkan DS). Radix: fokus terkunci, Esc menutup.
  * Aksi destruktif hanya boleh tampil di dialog ini (aturan Button DS).
  */
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { useRef, type ReactNode, type RefObject } from 'react';
 import { cn } from '@/lib/cn';
 import { Button } from '../ui/Button';
 
@@ -27,9 +27,18 @@ export interface DialogProps {
   dismissible?: boolean;
   /** Ilustrasi di atas judul; tata letak rata tengah (Figma 66:3553). */
   media?: ReactNode;
-  size?: 'md' | 'lg';
+  /** `base` 560px (bawaan), `md` 480px untuk konfirmasi singkat, `lg` 720px untuk form atau isi panjang. */
+  size?: 'md' | 'base' | 'lg';
   className?: string;
+  /** Elemen yang menerima fokus saat dialog dibuka (DS: tombol Batal untuk konfirmasi destructive). */
+  initialFocus?: RefObject<HTMLElement | null>;
 }
+
+const WIDTH = {
+  md: 'w-[min(var(--dialog-width-md),calc(100vw-32px))]',
+  base: 'w-[min(var(--dialog-width-base),calc(100vw-32px))]',
+  lg: 'w-[min(var(--dialog-width-lg),calc(100vw-32px))]',
+} as const;
 
 export function Dialog({
   open,
@@ -42,21 +51,28 @@ export function Dialog({
   closeLabel,
   dismissible = true,
   media,
-  size = 'md',
+  size = 'base',
   className,
+  initialFocus,
 }: DialogProps) {
   const centered = !!media;
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Portal>
-        <RadixDialog.Overlay className="fixed inset-0 z-40 bg-ink opacity-40" />
+        <RadixDialog.Overlay className="fixed inset-0 z-40 bg-overlay-scrim" />
         <RadixDialog.Content
+          onOpenAutoFocus={(e) => {
+            if (initialFocus?.current) {
+              e.preventDefault();
+              initialFocus.current.focus();
+            }
+          }}
           onEscapeKeyDown={dismissible ? undefined : (e) => e.preventDefault()}
           onPointerDownOutside={dismissible ? undefined : (e) => e.preventDefault()}
           onInteractOutside={dismissible ? undefined : (e) => e.preventDefault()}
           className={cn(
             'fixed left-1/2 top-1/2 z-50 flex max-h-[calc(100vh-48px)] -translate-x-1/2 -translate-y-1/2 flex-col',
-            size === 'lg' ? 'w-[min(720px,calc(100vw-32px))]' : 'w-[min(560px,calc(100vw-32px))]',
+            WIDTH[size],
             'rounded-lg border border-border bg-surface shadow-overlay focus-visible:outline-none',
             className,
           )}
@@ -120,13 +136,15 @@ export function ConfirmDialog({
   onOpenChange,
   ...rest
 }: ConfirmDialogProps) {
+  const cancelRef = useRef<HTMLButtonElement>(null);
   return (
     <Dialog
       {...rest}
+      initialFocus={destructive ? cancelRef : rest.initialFocus}
       onOpenChange={(o) => !loading && onOpenChange(o)}
       footer={
         <>
-          <Button onClick={() => onOpenChange(false)} disabled={loading}>
+          <Button ref={cancelRef} onClick={() => onOpenChange(false)} disabled={loading}>
             {cancelLabel}
           </Button>
           <Button

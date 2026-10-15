@@ -201,7 +201,7 @@ export const roleService: RoleService = {
         throw e;
       }
     }
-    r.status = 'Tidak Aktif';
+    r.status = 'Tidak aktif';
     applyRoleCatalog(db().roles);
     audit({
       pelakuId: a.id,
@@ -209,7 +209,7 @@ export const roleService: RoleService = {
       aksi: 'manage',
       objek: objekRole(id),
       sebelum: { Status: 'Aktif' },
-      sesudah: { Status: 'Tidak Aktif', 'Pengguna saat itu': String(jumlah), ...(opsi.pindahKe ? { 'Dipindahkan ke': opsi.pindahKe, Dipindah: String(result.dipindah), Dilewati: String(result.dilewati.length) } : {}) },
+      sesudah: { Status: 'Tidak aktif', 'Pengguna saat itu': String(jumlah), ...(opsi.pindahKe ? { 'Dipindahkan ke': opsi.pindahKe, Dipindah: String(result.dipindah), Dilewati: String(result.dilewati.length) } : {}) },
       hasil: 'Berhasil',
       kelompok: 'Konfigurasi',
     });
@@ -222,10 +222,10 @@ export const roleService: RoleService = {
     const a = actor();
     requireR03(a, id);
     const r = roleOf(id);
-    if (r.status !== 'Tidak Aktif') throw new ServiceError('NOT_ELIGIBLE');
+    if (r.status !== 'Tidak aktif') throw new ServiceError('NOT_ELIGIBLE');
     r.status = 'Aktif';
     applyRoleCatalog(db().roles);
-    audit({ pelakuId: a.id, modul: 'M-15', aksi: 'manage', objek: objekRole(id), sebelum: { Status: 'Tidak Aktif' }, sesudah: { Status: 'Aktif', 'Pengguna saat itu': String(holders(id).length) }, hasil: 'Berhasil', kelompok: 'Konfigurasi' });
+    audit({ pelakuId: a.id, modul: 'M-15', aksi: 'manage', objek: objekRole(id), sebelum: { Status: 'Tidak aktif' }, sesudah: { Status: 'Aktif', 'Pengguna saat itu': String(holders(id).length) }, hasil: 'Berhasil', kelompok: 'Konfigurasi' });
     commit();
     return toEntry(r);
   },
@@ -295,7 +295,7 @@ export const roleService: RoleService = {
     await delay();
     const a = actor();
     requireR03(a, from);
-    if (roleOf(from).status !== 'Tidak Aktif') throw new ServiceError('NOT_ELIGIBLE');
+    if (roleOf(from).status !== 'Tidak aktif') throw new ServiceError('NOT_ELIGIBLE');
     checkTarget(from, to);
     const result = move(a, from, to);
     audit({ pelakuId: a.id, modul: 'M-15', aksi: 'manage', objek: objekRole(from), sesudah: { 'Dipindahkan ke': to, Dipindah: String(result.dipindah), Dilewati: String(result.dilewati.length) }, hasil: 'Berhasil', kelompok: 'Konfigurasi' });

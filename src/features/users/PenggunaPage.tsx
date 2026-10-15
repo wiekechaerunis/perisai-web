@@ -194,7 +194,7 @@ export function PenggunaPage() {
               options={[{ value: SEMUA, label: c.panel.semuaRole }, ...roleOptions.map((r) => ({ value: r, label: `${r} ${roleName(r)}` }))]}
               className="w-[220px]"
             />
-            {filtered && <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
+            {filtered && <Button variant="quiet" onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
           </div>
         </Section>
         <Section className="border border-border" title={c.tabelJudul}>

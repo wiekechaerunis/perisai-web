@@ -5,6 +5,7 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { Callout } from '@/components/patterns/Callout';
 import { ConfirmDialog } from '@/components/patterns/Dialog';
 import { useToast } from '@/components/patterns/Toast';
 import { Select } from '@/components/ui/Select';
@@ -53,11 +54,13 @@ export function DeactivateOrgDialog({ org, onClose }: { org: OrgDetail; onClose:
       }
     >
       <div className="flex flex-col gap-4">
-        <ul className="flex flex-col gap-1 rounded-md bg-caution-bg p-3 text-body-dense text-caution-ink">
-          {dampak.map((d) => (
-            <li key={d}>{d}</li>
-          ))}
-        </ul>
+        <Callout variant="peringatan" size="compact" role="note">
+          <ul className="flex flex-col gap-1">
+            {dampak.map((d) => (
+              <li key={d}>{d}</li>
+            ))}
+          </ul>
+        </Callout>
         <p className="text-body-dense text-ink-muted">{c.catatan}</p>
         <Select
           label={c.alasan}

@@ -235,8 +235,8 @@ export const usersCopy = {
     tabProfil: 'Profil',
     tabAkses: 'Akses',
     tabAktivitas: 'Aktivitas',
-    bukaLogAkses: 'Buka di Log Akses', // FR-LA-11 (copy usulan)
-    bukaJejakAudit: 'Buka di Jejak Audit', // FR-JA-17 (copy usulan)
+    bukaLogAkses: 'Buka di log akses', // FR-LA-11 (copy usulan)
+    bukaJejakAudit: 'Buka di jejak audit', // FR-JA-17 (copy usulan)
     aktivitasKosong: 'Tidak ada aktivitas dalam 30 hari terakhir.',
     wkNonaktif: '(Nonaktif)', // FR-CD-13
     informasi: 'Informasi pengguna',
@@ -327,9 +327,9 @@ export const usersCopy = {
     jabatanHint: 'Maksimal 100 karakter. Tidak memengaruhi akses.', // FR-UDR-04
     email: 'Email',
     emailHint: 'Email baru berlaku setelah pengguna memverifikasi tautan yang dikirim ke email baru.', // FR-UDR-05 (copy usulan)
-    emailSendiri: 'Ubah email Anda sendiri lewat Akun Saya.', // FR-UDR-12 (copy usulan)
+    emailSendiri: 'Ubah email Anda sendiri lewat Akun saya.', // FR-UDR-12 (copy usulan)
     emailBelumAktif: 'Email akun yang belum aktif diganti dengan membatalkan undangan lalu mengundang ulang.', // disetujui PM 14 Okt 2026 (copy usulan)
-    bukaAkunSaya: 'Buka Akun Saya',
+    bukaAkunSaya: 'Buka Akun saya',
     organisasi: 'Organisasi',
     organisasiHint: 'Organisasi tidak dapat diubah. Pindah organisasi = nonaktifkan akun lalu undang ulang.', // FR-UDR-03
     role: 'Role',

@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Minus, Plus } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { Callout } from '@/components/patterns/Callout';
 import { ConfirmDialog, Dialog } from '@/components/patterns/Dialog';
 import { useToast } from '@/components/patterns/Toast';
 import { Button } from '@/components/ui/Button';
@@ -140,8 +141,7 @@ function TargetPicker({ role, target, onTarget, error }: { role: RoleEntry; targ
 function ResultNote({ result }: { result: RoleMoveResult }) {
   if (!result.dilewati.length) return null;
   return (
-    <div className="flex flex-col gap-1 rounded-md bg-caution-bg p-3 text-body-dense text-caution-ink">
-      <p className="font-semibold">{c.pindah.dilewatiJudul}</p>
+    <Callout variant="peringatan" size="compact" role="note" title={c.pindah.dilewatiJudul}>
       <ul className="flex flex-col gap-0.5">
         {result.dilewati.map((d) => (
           <li key={d.userId}>
@@ -149,7 +149,7 @@ function ResultNote({ result }: { result: RoleMoveResult }) {
           </li>
         ))}
       </ul>
-    </div>
+    </Callout>
   );
 }
 

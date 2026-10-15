@@ -22,7 +22,7 @@ export const StatusAkun: S = {
       <AccountStatusBadge label="Kedaluwarsa" tone="warning" note="Minta undangan baru · 14 Okt 2026" />
       <AccountStatusBadge label="Ditangguhkan" tone="strong" />
       <AccountStatusBadge label="Nonaktif" tone="danger" note="Undangan dibatalkan" />
-      <AccountStatusBadge label="Tidak Aktif" tone="muted" />
+      <AccountStatusBadge label="Tidak aktif" tone="muted" />
       <AccountStatusBadge label="Ikon netral" icon={Mail} />
     </div>
   ),

@@ -113,7 +113,7 @@ export function UbahKataSandiDialog({ open, onOpenChange }: { open: boolean; onO
     >
       <form id="form-ubah-sandi" noValidate onSubmit={onSubmit} className="flex flex-col gap-5">
         {alert && (
-          <Callout variant="error" title={alert.title}>
+          <Callout variant="error" size="compact" title={alert.title}>
             {alert.body}
           </Callout>
         )}

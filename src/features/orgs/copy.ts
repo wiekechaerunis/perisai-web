@@ -16,7 +16,8 @@ export const orgCopy = {
   aktif: 'Aktif',
   nonaktif: 'Nonaktif',
   tanpaPic: 'Tanpa PIC',
-  kosongFilter: 'Tidak ada organisasi yang cocok.',
+  kosong: 'Belum ada organisasi.', // usulan
+  kosongFilter: 'Tidak ada organisasi yang cocok dengan filter.', // DS pola Filter daftar
   hapusFilter: 'Hapus filter',
   gagalMuat: 'Daftar organisasi gagal dimuat.',
   cobaLagi: 'Coba lagi',

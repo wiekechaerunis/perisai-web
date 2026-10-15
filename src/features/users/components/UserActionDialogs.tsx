@@ -8,8 +8,9 @@
  * - Masa berlaku akses: FR-SA-22, -23, -23a, -26
  * - Cabut sesi (admin): FR-LO-14..16 (Tabel S-3)
  */
-import { AlertTriangle, Calendar, Info } from 'lucide-react';
+import { Calendar, Info } from 'lucide-react';
 import { useEffect, useState, type ReactNode } from 'react';
+import { Callout } from '@/components/patterns/Callout';
 import { ConfirmDialog, Dialog } from '@/components/patterns/Dialog';
 import { KeyValueList, type KeyValueItem } from '@/components/patterns/KeyValueList';
 import { useToast } from '@/components/patterns/Toast';
@@ -55,9 +56,9 @@ function useErrorText() {
 
 function ErrorLine({ children }: { children: ReactNode }) {
   return (
-    <p role="alert" className="rounded-md bg-sev-kritis-bg p-3 text-caption text-error-ink">
+    <Callout variant="error" size="compact">
       {children}
-    </p>
+    </Callout>
   );
 }
 
@@ -424,10 +425,9 @@ function AccessEndDialog({ user, onClose }: BaseProps) {
           </button>
         )}
         {warn && (
-          <p role="status" className="flex items-start gap-[10px] rounded-md bg-caution-bg p-3 text-caption text-caution-ink">
-            <AlertTriangle aria-hidden size={16} strokeWidth={1.8} className="shrink-0" />
+          <Callout variant="peringatan" size="compact" role="status">
             {c.undangModal.berlaku(durasiSampai(date, now), formatTanggal(endOfDayWib(date)))}
-          </p>
+          </Callout>
         )}
       </div>
       {err && <ErrorLine>{err}</ErrorLine>}

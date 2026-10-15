@@ -6,11 +6,11 @@
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { ColumnDef } from '@tanstack/react-table';
-import { AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Section } from '@/components/layout/Section';
+import { Callout } from '@/components/patterns/Callout';
 import { DataTable } from '@/components/patterns/DataTable';
 import { ConfirmDialog } from '@/components/patterns/Dialog';
 import { EmptyState } from '@/components/patterns/EmptyState';
@@ -123,10 +123,9 @@ export function PermintaanEmailPage() {
         <Section className="border border-border">
           <div className="flex flex-col gap-4">
             {alert && (
-              <p role="alert" className="flex items-start gap-[10px] rounded-md bg-sev-kritis-bg p-3 text-caption text-error-ink">
-                <AlertCircle aria-hidden size={16} strokeWidth={1.8} className="shrink-0" />
+              <Callout variant="error">
                 {alert}
-              </p>
+              </Callout>
             )}
             <DataTable
               caption={c.tabel}

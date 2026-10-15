@@ -6,10 +6,11 @@
  * Organisasi berubah), Wilayah Kerja untuk R-05, Masa berlaku akses hanya R-03, validasi Tabel V-1, normalisasi email,
  * "Mengirim…", toast sukses, modal gagal kirim. FR-CD-04b: cakupan R-02 seluruh KKKS (default) atau KKKS tertentu.
  */
-import { AlertCircle, AlertTriangle, Calendar } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { needsWk as needsWkFor } from '@/lib/role-catalog';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
+import { Callout } from '@/components/patterns/Callout';
 import { Combobox, MultiSelect } from '@/components/patterns/Combobox';
 import { Dialog } from '@/components/patterns/Dialog';
 import { useToast } from '@/components/patterns/Toast';
@@ -207,10 +208,9 @@ export function InviteDialog({ open, onOpenChange, inviter, ownOrg, prefill }: I
       >
         <form id="form-undang" noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
           {topAlert && (
-            <p role="alert" className="flex items-start gap-[10px] rounded-md bg-sev-kritis-bg p-3 text-caption text-error-ink">
-              <AlertCircle aria-hidden size={16} strokeWidth={1.8} className="shrink-0" />
+            <Callout variant="error" size="compact">
               {topAlert.msg}
-            </p>
+            </Callout>
           )}
           <fieldset disabled={busy} className="flex flex-col gap-4 disabled:opacity-60">
             <TextField
@@ -360,10 +360,9 @@ export function InviteDialog({ open, onOpenChange, inviter, ownOrg, prefill }: I
                   error={errors.aksesBerakhir}
                 />
                 {aksesWarn && (
-                  <p role="status" className="flex items-start gap-[10px] rounded-md bg-caution-bg p-3 text-caption text-caution-ink">
-                    <AlertTriangle aria-hidden size={16} strokeWidth={1.8} className="shrink-0" />
+                  <Callout variant="peringatan" size="compact" role="status">
                     {c.berlaku(durasiSampai(akses, now), formatTanggal(endOfDayWib(akses)))}
-                  </p>
+                  </Callout>
                 )}
               </div>
             )}

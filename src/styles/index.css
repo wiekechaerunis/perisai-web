@@ -4,7 +4,6 @@
 @import '@fontsource/ibm-plex-mono/400.css';
 @import './tokens.css';
 @import './figma.css';
-@import './status.css';
 
 @tailwind base;
 @tailwind components;

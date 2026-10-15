@@ -19,15 +19,15 @@ export const t = {
     permintaanEmail: 'Permintaan ubah email',
     organisasi: 'Organisasi',
     role: 'Role',
-    logAkses: 'Log Akses',
-    jejakAudit: 'Jejak Audit',
+    logAkses: 'Log akses',
+    jejakAudit: 'Jejak audit',
   },
   akun: {
     menu: 'Menu akun',
-    akunSaya: 'Akun Saya',
+    akunSaya: 'Akun saya',
     keluar: 'Keluar',
     // Figma 66:3207 (bahasa Inggris; F-07)
-    hakCipta: '© 2026 SKK Migas. All rights reserved.',
+    hakCipta: '© 2026 SKK Migas. Hak cipta dilindungi.',
   },
   galat: {
     tidakDitemukanJudul: 'Halaman tidak ditemukan',

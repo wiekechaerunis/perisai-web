@@ -12,12 +12,13 @@
  * lalu "Role dan cakupan akses" (arahan PM 14 Okt 2026).
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AlertCircle, Lock, Minus, Plus } from 'lucide-react';
+import { Lock, Minus, Plus } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useBlocker, useNavigate, useParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Section } from '@/components/layout/Section';
+import { Callout } from '@/components/patterns/Callout';
 import { MultiSelect } from '@/components/patterns/Combobox';
 import { ConfirmDialog } from '@/components/patterns/Dialog';
 import { useToast } from '@/components/patterns/Toast';
@@ -206,7 +207,7 @@ function UbahForm({ user: u }: { user: UserDetail }) {
       },
       onError: (err) => {
         setPreview(null);
-        if (!mapError(err)) toast.show({ title: c.gagal });
+        if (!mapError(err)) toast.show({ title: c.gagal, variant: 'gagal' });
       },
     });
   }
@@ -241,10 +242,9 @@ function UbahForm({ user: u }: { user: UserDetail }) {
         ) : (
           <form noValidate onSubmit={onReview} className="flex flex-col gap-6">
             {alert && (
-              <p role="alert" className="flex items-start gap-[10px] rounded-md bg-sev-kritis-bg p-3 text-caption text-error-ink">
-                <AlertCircle aria-hidden size={16} strokeWidth={1.8} className="shrink-0" />
+              <Callout variant="error" size="compact">
                 {alert}
-              </p>
+              </Callout>
             )}
             <Section className="border border-border">
               <div className="flex flex-col gap-4">

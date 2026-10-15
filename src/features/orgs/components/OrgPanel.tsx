@@ -7,10 +7,11 @@
  * Jumlah grup tidak ditampilkan (fitur Grup ditahan KD-03).
  */
 import { useQueryClient } from '@tanstack/react-query';
-import { AlertCircle, Lock, MoreHorizontal } from 'lucide-react';
+import { Lock, MoreHorizontal } from 'lucide-react';
 import { useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
+import { Callout } from '@/components/patterns/Callout';
 import { KeyValueList, type KeyValueItem } from '@/components/patterns/KeyValueList';
 import { Menu } from '@/components/patterns/Menu';
 import { SidePanel } from '@/components/patterns/SidePanel';
@@ -115,9 +116,9 @@ function ProfilTab({ org, level, onInvitePic }: { org: OrgDetail; level: OrgLeve
           label,
           value: shown,
           action: canEdit ? (
-            <button type="button" onClick={() => start(f)} className="text-body-dense font-semibold text-ink underline">
+            <Button variant="link" onClick={() => start(f)}>
               {p.ubah}
-            </button>
+            </Button>
           ) : undefined,
         };
 
@@ -131,10 +132,9 @@ function ProfilTab({ org, level, onInvitePic }: { org: OrgDetail; level: OrgLeve
   return (
     <div className="flex flex-col gap-6">
       {alert && (
-        <p role="alert" className="flex items-start gap-[10px] rounded-md bg-caution-bg p-3 text-caption text-caution-ink">
-          <AlertCircle aria-hidden size={16} strokeWidth={1.8} className="shrink-0" />
+        <Callout variant="peringatan">
           {alert}
-        </p>
+        </Callout>
       )}
       <KeyValueList
         items={[
@@ -178,10 +178,13 @@ function ProfilTab({ org, level, onInvitePic }: { org: OrgDetail; level: OrgLeve
             ))}
           </ul>
         ) : org.jenis === 'KKKS' ? (
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-md bg-caution-bg p-3 text-body-dense text-caution-ink">
+          <Callout
+            variant="peringatan"
+            role="note"
+            action={onInvitePic && org.status === 'Aktif' ? <Button onClick={onInvitePic}>{p.undangPic}</Button> : undefined}
+          >
             <span>{p.bannerTanpaPic}</span>
-            {onInvitePic && org.status === 'Aktif' && <Button onClick={onInvitePic}>{p.undangPic}</Button>}
-          </div>
+          </Callout>
         ) : (
           <p className="text-body-dense text-ink-muted">—</p>
         )}

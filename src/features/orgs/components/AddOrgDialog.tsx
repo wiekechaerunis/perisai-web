@@ -4,8 +4,8 @@
  * chip yang divalidasi satu per satu (merah: format/pribadi/ganda; kuning: dipakai organisasi lain, FR-ORG-07).
  * Penyimpanan bersifat utuh (FR-ORG-09): gagal → alert, isian tidak hilang.
  */
-import { AlertCircle } from 'lucide-react';
 import { useEffect, useState, type FormEvent } from 'react';
+import { Callout } from '@/components/patterns/Callout';
 import { ChipInput, type ChipItem } from '@/components/patterns/ChipInput';
 import { Dialog } from '@/components/patterns/Dialog';
 import { Button } from '@/components/ui/Button';
@@ -126,10 +126,9 @@ export function AddOrgDialog({ open, onOpenChange, onCreated }: { open: boolean;
     >
       <form id="form-tambah-org" noValidate onSubmit={submit} className="flex flex-col gap-4">
         {alert && (
-          <p role="alert" className="flex items-start gap-[10px] rounded-md bg-sev-kritis-bg p-3 text-caption text-error-ink">
-            <AlertCircle aria-hidden size={16} strokeWidth={1.8} className="shrink-0" />
+          <Callout variant="error" size="compact">
             {e.gagalTambah}
-          </p>
+          </Callout>
         )}
         <fieldset disabled={busy} className="flex flex-col gap-4 disabled:opacity-60">
           <TextField label={c.nama} required showRequired placeholder={c.namaPlaceholder} value={nama} onChange={(x) => (setNama(x.target.value), setErrors((p) => ({ ...p, nama: undefined })))} error={errors.nama} />

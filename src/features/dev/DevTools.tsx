@@ -82,7 +82,7 @@ export function DevTools() {
       >
         {c.judul}
       </Button>
-      <Dialog open={open} onOpenChange={setOpen} title={c.judul} description={c.keterangan} closeLabel={c.tutup} className="w-[min(720px,calc(100vw-32px))]">
+      <Dialog open={open} onOpenChange={setOpen} title={c.judul} description={c.keterangan} closeLabel={c.tutup} size="lg">
         <div className="flex max-h-[60vh] flex-col gap-5 overflow-y-auto">
           <section className="flex flex-col gap-2">
             <h3 className="text-heading-3 text-ink-muted">{c.simulasi}</h3>

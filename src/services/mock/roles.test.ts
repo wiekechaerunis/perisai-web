@@ -64,7 +64,7 @@ describe('Aktif & Nonaktif Role (FR-AR-01..21)', () => {
     const r = await s.roles.deactivate('R-06', { pindahKe: 'R-04' });
     expect(r.dipindah).toBe(p.pengguna);
     expect((await s.users.getUser('u-06')).roles).toEqual(['R-04']);
-    expect((await s.roles.get('R-06')).status).toBe('Tidak Aktif');
+    expect((await s.roles.get('R-06')).status).toBe('Tidak aktif');
   });
 
   it('pindah massal dari role Tidak Aktif (FR-AR-13)', async () => {

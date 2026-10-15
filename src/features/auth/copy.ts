@@ -18,7 +18,7 @@ export const authFrameCopy = {
   butuhBantuan: 'Butuh Bantuan?',
   hubungiSupport: 'Hubungi Support',
   // Figma 85:4825 (bahasa Inggris; F-07)
-  hakCipta: '© 2026 SKK Migas. All rights reserved.',
+  hakCipta: '© 2026 SKK Migas. Hak cipta dilindungi.',
 } as const;
 
 /** Panel hero Login (Figma 85:4830, 85:4851). Teks disalin dari Figma; lihat F-07, F-08. */
