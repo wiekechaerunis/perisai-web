@@ -35,6 +35,11 @@ export const roleCopy = {
     tidakDitemukan: 'Role tidak ditemukan', // usulan
     tidakDitemukanIsi: 'Halaman atau data yang Anda cari tidak tersedia.',
   },
+  // Isian langsung di halaman detail role (arahan PM 15 Okt 2026).
+  inline: {
+    adaPerubahan: 'Ada perubahan yang belum disimpan.', // usulan
+    tinggalkanIsi: 'Perubahan role yang belum disimpan akan hilang.', // usulan
+  },
   ubah: {
     judul: 'Ubah nama dan deskripsi', // usulan
     nama: 'Nama role',

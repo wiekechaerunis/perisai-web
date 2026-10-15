@@ -5,14 +5,12 @@
  * berlaku pada permintaan berikutnya tanpa mencabut sesi (FR-KR-09f).
  */
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { ConfirmDialog, Dialog } from '@/components/patterns/Dialog';
+import { ConfirmDialog } from '@/components/patterns/Dialog';
 import { useToast } from '@/components/patterns/Toast';
-import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
 import { ACTION_LABEL, ACTIONS, MODULE_IDS, MODULES, type Action, type ModuleId, type OrgType } from '@/lib/rbac';
 import { allowedActions, JENIS_LABEL } from '@/lib/role-catalog';
-import { isServiceError, services, type RoleEntry, type RolePermissionInput } from '@/services';
+import { services, type RoleEntry, type RolePermissionInput } from '@/services';
 import { roleCopy } from '../copy';
 import { ROLES_KEY } from './RoleDialogs';
 
@@ -120,76 +118,6 @@ export function PermissionPicker({
       </div>
       {error && <p className="text-caption text-error-ink">{error}</p>}
     </fieldset>
-  );
-}
-
-export function EditPermissionsDialog({ role, onClose }: { role: RoleEntry; onClose: () => void }) {
-  const toast = useToast();
-  const invalidate = useInvalidate();
-  const [izin, setIzin] = useState<RolePermissionInput>(toPermissionInput(role.izin));
-  const [err, setErr] = useState<string>();
-  const [confirm, setConfirm] = useState(false);
-  const m = useMutation({ mutationFn: () => services.roles.updatePermissions(role.id, izin) });
-  function save() {
-    m.mutate(undefined, {
-      onSuccess: () => {
-        invalidate();
-        toast.show({ title: c.diubah(role.id) });
-        onClose();
-      },
-      onError: (e) => {
-        setConfirm(false);
-        if (isServiceError(e, 'NO_CHANGES')) onClose();
-        else setErr(isServiceError(e, 'VALIDATION') ? c.minimal : c.gagal);
-      },
-    });
-  }
-  if (confirm) {
-    // FR-KR-09f: modal konfirmasi menampilkan jumlah pengguna terdampak.
-    return (
-      <ConfirmDialog
-        open
-        onOpenChange={(o) => !o && !m.isPending && setConfirm(false)}
-        title={c.konfirmasiJudul(role.id, role.nama)}
-        description={c.konfirmasiIsi(role.pengguna)}
-        closeLabel={roleCopy.ubah.batal}
-        cancelLabel={roleCopy.ubah.batal}
-        confirmLabel={c.simpan}
-        loading={m.isPending}
-        loadingLabel={roleCopy.ubah.menyimpan}
-        onConfirm={save}
-      />
-    );
-  }
-  return (
-    <Dialog
-      open
-      size="lg"
-      onOpenChange={(o) => !o && onClose()}
-      title={c.ubahJudul}
-      description={
-        <>
-          <span className="font-mono">{role.id}</span> {role.nama}
-        </>
-      }
-      closeLabel={roleCopy.ubah.batal}
-      footer={
-        <>
-          <Button onClick={onClose}>{roleCopy.ubah.batal}</Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              if (!MODULE_IDS.some((mm) => izin[mm]?.length)) return setErr(c.minimal);
-              setConfirm(true);
-            }}
-          >
-            {c.lanjut}
-          </Button>
-        </>
-      }
-    >
-      <PermissionPicker orgType={role.orgType} value={izin} onChange={(v) => (setIzin(v), setErr(undefined))} error={err} />
-    </Dialog>
   );
 }
 

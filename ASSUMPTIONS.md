@@ -307,3 +307,11 @@ keputusan #5 Organisasi). Variabel di `src/styles/status.css`, nada di `AccountS
   - Role Aktif: **Ubah hak akses** (primer), ···(Ubah nama dan deskripsi, Nonaktifkan, Hapus); Tidak aktif: **Aktifkan kembali** (primer).
   - ASSUMPTION: tombol "Ubah data" di header ditambahkan (sebelumnya hanya tautan "Ubah" per field) agar aksi utama
     pengguna Aktif terlihat; tautan per field tetap ada.
+- Detail role diubah langsung di halaman (masukan PM 15 Okt 2026), menggantikan dialog "Ubah nama dan deskripsi" dan
+  "Ubah hak akses":
+  - Kartu "Informasi role": nama dan deskripsi berupa isian; jenis organisasi, cakupan, status, jumlah pengguna baca saja.
+  - Kartu "Hak akses": matriks centang modul × aksi yang sama dengan Buat role, menggantikan tabel baca saja.
+  - Tombol Batal + Simpan muncul hanya bila ada perubahan ("Ada perubahan yang belum disimpan."); Simpan hak akses tetap
+    meminta konfirmasi jumlah pengguna terdampak (FR-KR-09f). Meninggalkan halaman dengan perubahan → "Tinggalkan halaman?".
+  - Header: "Aktifkan kembali" (primer) bila Tidak aktif; menu "Aksi lainnya" berisi Nonaktifkan, Pindahkan pengguna,
+    Hapus (menu tidak tampil bila kosong, mis. R-03).

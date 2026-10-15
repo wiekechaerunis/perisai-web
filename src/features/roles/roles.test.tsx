@@ -12,14 +12,17 @@ import { RoleDetailPage, RolePage } from './RolePage';
 function renderAt(route: string) {
   const client = makeQueryClient();
   client.setDefaultOptions({ queries: { retry: false, refetchInterval: false } });
+  // Data router: halaman detail memakai konfirmasi tinggalkan halaman (useBlocker).
+  const router = createMemoryRouter(
+    [
+      { path: '/role', element: <RolePage /> },
+      { path: '/role/:kode', element: <RoleDetailPage /> },
+    ],
+    { initialEntries: [route], future: { v7_relativeSplatPath: true } },
+  );
   return render(
     <AppProviders client={client}>
-      <MemoryRouter initialEntries={[route]} future={{ v7_relativeSplatPath: true }}>
-        <Routes>
-          <Route path="/role" element={<RolePage />} />
-          <Route path="/role/:kode" element={<RoleDetailPage />} />
-        </Routes>
-      </MemoryRouter>
+      <RouterProvider router={router} />
     </AppProviders>,
   );
 }
@@ -68,9 +71,8 @@ describe('Nonaktifkan role (FR-AR-04, keputusan PM 14 Okt 2026)', () => {
     await screen.findByRole('heading', { level: 1, name: 'Administrator Bisnis' });
     const panel = document.body;
     expect(within(panel).getByText('Administrator Bisnis tidak dapat dinonaktifkan.')).toBeInTheDocument();
-    await userEvent.click(within(panel).getByRole('button', { name: 'Aksi lainnya' }));
-    expect(await screen.findByRole('menuitem', { name: 'Ubah nama dan deskripsi' })).toBeInTheDocument();
-    expect(screen.queryByRole('menuitem', { name: 'Nonaktifkan role' })).toBeNull();
+    // Role sistem yang tidak dapat dinonaktifkan dan tidak dapat dihapus: menu "Aksi lainnya" kosong → tidak tampil.
+    expect(within(panel).queryByRole('button', { name: 'Aksi lainnya' })).toBeNull();
   });
 });
 
@@ -129,16 +131,28 @@ describe('Buat role & ubah hak akses (FR-KR-09, -09f)', () => {
     // pembuatan role diuji di services/mock/roles.test.ts dan diverifikasi di browser.
   });
 
+  it('ubah nama langsung di halaman: Simpan aktif bila ada perubahan (FR-KR-08)', async () => {
+    await services.dev!.signInAs('u-03');
+    renderAt('/role/R-06');
+    await screen.findByRole('heading', { level: 1, name: 'Pejabat Berwenang KKKS' });
+    expect(screen.getByRole('button', { name: 'Simpan' })).toBeDisabled();
+    const nama = screen.getByLabelText(/^Nama role/);
+    await userEvent.clear(nama);
+    await userEvent.type(nama, 'Pejabat Berwenang');
+    await userEvent.click(screen.getByRole('button', { name: 'Simpan' }));
+    expect(await screen.findByText('Role diperbarui.')).toBeInTheDocument();
+  });
+
   it('ubah hak akses menampilkan jumlah pengguna terdampak sebelum disimpan', async () => {
     await services.dev!.signInAs('u-03');
     renderAt('/role/R-06');
     await screen.findByRole('heading', { level: 1, name: 'Pejabat Berwenang KKKS' });
     const panel = document.body;
-    await userEvent.click(within(panel).getByRole('button', { name: 'Ubah hak akses' }));
-    const dlg = await screen.findByRole('dialog', { name: 'Ubah hak akses' });
-    const row = within(dlg).getByRole('rowheader', { name: /M-15/ }).closest('tr')!;
+    // Hak akses diubah langsung di halaman; Simpan selalu tampil, aktif setelah ada perubahan.
+    expect(within(panel).getByRole('button', { name: 'Simpan hak akses' })).toBeDisabled();
+    const row = within(panel).getByRole('rowheader', { name: /M-15/ }).closest('tr')!;
     await userEvent.click(within(row as HTMLElement).getByRole('checkbox', { name: /^Lihat/ }));
-    await userEvent.click(within(dlg).getByRole('button', { name: 'Lanjutkan' }));
+    await userEvent.click(within(panel).getByRole('button', { name: 'Simpan hak akses' }));
     const confirm = await screen.findByRole('dialog', { name: /Simpan hak akses R-06/ });
     expect(within(confirm).getByText(/pengguna yang memakai role ini pada permintaan berikutnya/)).toBeInTheDocument();
     await userEvent.click(within(confirm).getByRole('button', { name: 'Simpan hak akses' }));

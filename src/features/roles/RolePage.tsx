@@ -6,23 +6,23 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import type { ColumnDef } from '@tanstack/react-table';
-import { MoreHorizontal, Plus, RotateCcw, ShieldCheck } from 'lucide-react';
-import { useState } from 'react';
+import { MoreHorizontal, Plus, RotateCcw } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Section } from '@/components/layout/Section';
 import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
 import { DataTable } from '@/components/patterns/DataTable';
-import { KeyValueList } from '@/components/patterns/KeyValueList';
+import { ConfirmDialog } from '@/components/patterns/Dialog';
 import { Menu } from '@/components/patterns/Menu';
 import { Button } from '@/components/ui/Button';
-import { effectiveAccess, scopeFor } from '@/lib/access';
 import type { RoleId } from '@/lib/rbac';
 import { services, type RoleEntry } from '@/services';
-import { EffectiveAccessView } from '../access/EffectiveAccessView';
-import { DeactivateRoleDialog, MoveUsersDialog, ReactivateRoleDialog, RenameRoleDialog, ROLES_KEY } from './components/RoleDialogs';
-import { DeleteRoleDialog, EditPermissionsDialog } from './components/RolePermissionDialogs';
+import { useLeaveGuard } from '@/lib/use-leave-guard';
+import { DeactivateRoleDialog, MoveUsersDialog, ReactivateRoleDialog, ROLES_KEY } from './components/RoleDialogs';
+import { RoleInfoForm, RolePermissionsForm } from './components/RoleInlineForms';
+import { DeleteRoleDialog } from './components/RolePermissionDialogs';
 import { roleCopy as c } from './copy';
 
 function StatusBadge({ status }: { status: RoleEntry['status'] }) {
@@ -32,15 +32,20 @@ function StatusBadge({ status }: { status: RoleEntry['status'] }) {
 
 /**
  * Halaman detail role /role/:kode (arahan PM 15 Okt 2026: halaman penuh, pola halaman turunan DS; sebelumnya panel
- * samping). Gaya tombol: satu aksi utama (primer) sesuai status — Aktif: "Ubah hak akses"; Tidak aktif: "Aktifkan
- * kembali" — aksi lain di menu "Aksi lainnya".
+ * samping). Nama/deskripsi dan hak akses diubah langsung di halaman (RoleInlineForms; Simpan muncul bila ada perubahan,
+ * konfirmasi tinggalkan halaman bila belum disimpan). Tombol header: Tidak aktif → "Aktifkan kembali" (primer); aksi lain
+ * (Nonaktifkan, Pindahkan pengguna, Hapus) di menu "Aksi lainnya".
  */
 export function RoleDetailPage() {
   const { kode } = useParams();
   const navigate = useNavigate();
   const id = kode as RoleId;
   const q = useQuery({ queryKey: [...ROLES_KEY, 'detail', id], queryFn: () => services.roles.get(id) });
-  const [dialog, setDialog] = useState<'ubah' | 'izin' | 'hapus' | 'nonaktifkan' | 'aktifkan' | 'pindah' | null>(null);
+  const [dialog, setDialog] = useState<'hapus' | 'nonaktifkan' | 'aktifkan' | 'pindah' | null>(null);
+  const [infoDirty, setInfoDirty] = useState(false);
+  const [izinDirty, setIzinDirty] = useState(false);
+  const saved = useRef(false);
+  const blocker = useLeaveGuard(infoDirty || izinDirty, saved);
   const r = q.data;
   const back = { to: '/role', label: c.panel.kembali };
   const crumbs = (nama: string) => [{ label: c.panel.crumb, to: '/role' }, { label: nama }];
@@ -55,12 +60,8 @@ export function RoleDetailPage() {
       </>
     );
   }
-  // Hak akses role dari katalog (semua modul, termasuk yang belum dirilis — definisi role, bukan akses efektif pengguna).
-  const modules = effectiveAccess('Aktif', [r.id], scopeFor({ roles: [r.id], organisasi: '—', wilayahKerja: [], kkksDitugaskan: [] }), [], false);
   const aktif = r.status === 'Aktif';
   const more = [
-    { key: 'u', label: c.panel.ubah, onSelect: () => setDialog('ubah') },
-    ...(aktif ? [] : [{ key: 'i', label: c.izin.ubah, onSelect: () => setDialog('izin') }]),
     ...(aktif
       ? r.dapatDinonaktifkan
         ? [{ key: 'n', label: c.panel.nonaktifkan, onSelect: () => setDialog('nonaktifkan') }]
@@ -81,50 +82,34 @@ export function RoleDetailPage() {
         back={back}
         actions={
           <>
-            {aktif ? (
-              <Button variant="primary" icon={<ShieldCheck aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setDialog('izin')}>
-                {c.izin.ubah}
-              </Button>
-            ) : (
+            {!aktif && (
               <Button variant="primary" icon={<RotateCcw aria-hidden size={16} strokeWidth={1.8} />} onClick={() => setDialog('aktifkan')}>
                 {c.panel.aktifkan}
               </Button>
             )}
-            <Menu align="end" items={more} trigger={<Button aria-label={c.panel.menu} icon={<MoreHorizontal aria-hidden size={16} strokeWidth={1.8} />} className="px-2" />} />
+            {more.length > 0 && <Menu align="end" items={more} trigger={<Button aria-label={c.panel.menu} icon={<MoreHorizontal aria-hidden size={16} strokeWidth={1.8} />} className="px-2" />} />}
           </>
         }
       />
       <PageBody>
         {!r.dapatDinonaktifkan && <p className="text-caption text-ink-subtle">{c.panel.tidakDapatNonaktif}</p>}
-        <Section className="border border-border" title={c.panel.infoJudul}>
-          <KeyValueList
-            items={[
-              { key: 'd', label: c.panel.deskripsi, value: r.deskripsi },
-              { key: 'j', label: c.panel.jenis, value: r.jenisOrg },
-              { key: 'c', label: c.panel.cakupan, value: r.cakupan },
-              { key: 's', label: c.panel.status, value: r.status },
-              {
-                key: 'u',
-                label: c.panel.pengguna,
-                value: (
-                  <Link to={`/pengguna?role=${r.id}`} className="font-mono underline">
-                    {c.panel.penggunaLink(r.pengguna)}
-                  </Link>
-                ),
-              },
-            ]}
-          />
-        </Section>
-        <Section className="border border-border" title={c.panel.hakAkses} description={c.panel.hakAksesKet}>
-          <EffectiveAccessView modules={modules} showRoles={false} />
-        </Section>
+        <RoleInfoForm role={r} onDirtyChange={setInfoDirty} />
+        <RolePermissionsForm role={r} onDirtyChange={setIzinDirty} />
       </PageBody>
-      {dialog === 'ubah' && <RenameRoleDialog role={r} onClose={() => setDialog(null)} />}
-      {dialog === 'izin' && <EditPermissionsDialog role={r} onClose={() => setDialog(null)} />}
       {dialog === 'hapus' && <DeleteRoleDialog role={r} onClose={() => setDialog(null)} onDeleted={() => navigate('/role')} />}
       {dialog === 'nonaktifkan' && <DeactivateRoleDialog role={r} onClose={() => setDialog(null)} />}
       {dialog === 'aktifkan' && <ReactivateRoleDialog role={r} onClose={() => setDialog(null)} />}
       {dialog === 'pindah' && <MoveUsersDialog role={r} onClose={() => setDialog(null)} />}
+      <ConfirmDialog
+        open={blocker.state === 'blocked'}
+        onOpenChange={(o) => !o && blocker.reset?.()}
+        title={c.izin.tinggalkanJudul}
+        description={c.inline.tinggalkanIsi}
+        confirmLabel={c.izin.tinggalkan}
+        cancelLabel={c.izin.tetap}
+        destructive
+        onConfirm={() => blocker.proceed?.()}
+      />
     </>
   );
 }

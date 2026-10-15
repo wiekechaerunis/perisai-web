@@ -13,11 +13,9 @@ import { ConfirmDialog, Dialog } from '@/components/patterns/Dialog';
 import { useToast } from '@/components/patterns/Toast';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
-import { TextField } from '@/components/ui/TextField';
-import { Textarea } from '@/components/ui/Textarea';
 import { allRoleIds, type RoleId, roleName, roleDef } from '@/lib/rbac';
 import { isRoleActive } from '@/lib/role-catalog';
-import { isServiceError, services, type AccessDiffItem, type RoleEntry, type RoleMoveResult } from '@/services';
+import { services, type AccessDiffItem, type RoleEntry, type RoleMoveResult } from '@/services';
 import { roleCopy as c } from '../copy';
 
 export const ROLES_KEY = ['roles'] as const;
@@ -29,58 +27,6 @@ function useInvalidate() {
     void qc.invalidateQueries({ queryKey: ['role-catalog'] });
     void qc.invalidateQueries({ queryKey: ['users'] });
   };
-}
-
-export function RenameRoleDialog({ role, onClose }: { role: RoleEntry; onClose: () => void }) {
-  const toast = useToast();
-  const invalidate = useInvalidate();
-  const [nama, setNama] = useState(role.nama);
-  const [deskripsi, setDeskripsi] = useState(role.deskripsi);
-  const [errors, setErrors] = useState<Partial<Record<'nama' | 'deskripsi', string>>>({});
-  const m = useMutation({ mutationFn: () => services.roles.rename(role.id, { nama, deskripsi }) });
-  function submit() {
-    const x: typeof errors = {};
-    if (nama.trim().length < 3 || nama.trim().length > 60) x.nama = c.ubah.namaSalah;
-    if (!deskripsi.trim()) x.deskripsi = c.ubah.deskripsiKosong;
-    setErrors(x);
-    if (Object.keys(x).length) return;
-    m.mutate(undefined, {
-      onSuccess: () => {
-        invalidate();
-        toast.show({ title: c.ubah.sukses });
-        onClose();
-      },
-      onError: (err) => {
-        if (isServiceError(err, 'NO_CHANGES')) onClose();
-        else if (isServiceError(err, 'ORG_NAME_TAKEN')) setErrors({ nama: c.ubah.namaDipakai });
-        else setErrors({ nama: c.ubah.namaSalah });
-      },
-    });
-  }
-  return (
-    <Dialog
-      open
-      onOpenChange={(o) => !o && !m.isPending && onClose()}
-      title={c.ubah.judul}
-      description={<span className="font-mono">{role.id}</span>}
-      closeLabel={c.ubah.batal}
-      footer={
-        <>
-          <Button onClick={onClose} disabled={m.isPending}>
-            {c.ubah.batal}
-          </Button>
-          <Button variant="primary" onClick={submit} loading={m.isPending} loadingLabel={c.ubah.menyimpan}>
-            {c.ubah.simpan}
-          </Button>
-        </>
-      }
-    >
-      <div className="flex flex-col gap-4">
-        <TextField label={c.ubah.nama} required showRequired value={nama} onChange={(e) => (setNama(e.target.value), setErrors((p) => ({ ...p, nama: undefined })))} hint={c.ubah.namaHint} error={errors.nama} />
-        <Textarea label={c.ubah.deskripsi} required maxLength={300} showCount value={deskripsi} onChange={(e) => (setDeskripsi(e.target.value), setErrors((p) => ({ ...p, deskripsi: undefined })))} error={errors.deskripsi} />
-      </div>
-    </Dialog>
-  );
 }
 
 function DiffList({ title, icon, items }: { title: string; icon: ReactNode; items: AccessDiffItem[] }) {
