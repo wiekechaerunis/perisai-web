@@ -103,7 +103,7 @@ export function RoleInfoForm({ role, onDirtyChange }: { role: RoleEntry; onDirty
           <TextField label={c.ubah.nama} required showRequired value={nama} onChange={(e) => (setNama(e.target.value), setErrors((p) => ({ ...p, nama: undefined })))} hint={c.ubah.namaHint} error={errors.nama} />
           <Textarea label={c.ubah.deskripsi} required maxLength={300} showCount value={deskripsi} onChange={(e) => (setDeskripsi(e.target.value), setErrors((p) => ({ ...p, deskripsi: undefined })))} error={errors.deskripsi} />
         </div>
-        <dl className="max-w-[640px]">
+        <dl>
           <ReadRow label={c.panel.jenis}>{role.jenisOrg}</ReadRow>
           <ReadRow label={c.panel.cakupan}>{role.cakupan}</ReadRow>
           <ReadRow label={c.panel.status}>{role.status}</ReadRow>

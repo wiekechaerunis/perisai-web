@@ -255,10 +255,10 @@ export function UserDetailPage() {
               label: c.profil.tabProfil,
               content: (
                 <div className="flex flex-col gap-6">
-                  <KeyValueList items={items} />
+                  <KeyValueList items={items} fullWidth />
                   <section className="flex flex-col gap-3">
                     <h3 className="text-heading-3 text-ink">{p.riwayatAkun}</h3>
-                    <KeyValueList items={riwayatAkun} />
+                    <KeyValueList items={riwayatAkun} fullWidth />
                   </section>
                 </div>
               ),

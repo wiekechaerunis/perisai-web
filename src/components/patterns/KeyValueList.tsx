@@ -18,13 +18,15 @@ export interface KeyValueListProps {
   items: KeyValueItem[];
   /** block = blok ringkas berlatar `surface-sunken` di dialog konfirmasi (Figma InfoBlock 109:14140). */
   variant?: 'default' | 'block';
+  /** Isi selebar wadah (halaman detail penuh), bukan lebar baca `content-max`. */
+  fullWidth?: boolean;
   className?: string;
 }
 
-export function KeyValueList({ items, variant = 'default', className }: KeyValueListProps) {
+export function KeyValueList({ items, variant = 'default', fullWidth = false, className }: KeyValueListProps) {
   const block = variant === 'block';
   return (
-    <dl className={cn('max-w-content-max', block && 'rounded-md bg-surface-sunken px-5 py-2', className)}>
+    <dl className={cn(!fullWidth && 'max-w-content-max', block && 'rounded-md bg-surface-sunken px-5 py-2', className)}>
       {items.map((it) => (
         <div
           key={it.key}

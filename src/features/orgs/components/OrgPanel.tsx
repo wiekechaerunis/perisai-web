@@ -142,6 +142,7 @@ function ProfilTab({ org, level, onInvitePic }: { org: OrgDetail; level: OrgLeve
         </Callout>
       )}
       <KeyValueList
+        fullWidth
         items={[
           row('nama', p.field.nama, org.nama),
           {
