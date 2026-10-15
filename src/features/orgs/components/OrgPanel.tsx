@@ -15,6 +15,7 @@ import { PageHeader } from '@/components/layout/PageHeader';
 import { Section } from '@/components/layout/Section';
 import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
 import { Callout } from '@/components/patterns/Callout';
+import { EmptyState } from '@/components/patterns/EmptyState';
 import { KeyValueList, type KeyValueItem } from '@/components/patterns/KeyValueList';
 import { useToast } from '@/components/patterns/Toast';
 import { Button } from '@/components/ui/Button';
@@ -182,13 +183,13 @@ function ProfilTab({ org, level, onInvitePic }: { org: OrgDetail; level: OrgLeve
             ))}
           </ul>
         ) : org.jenis === 'KKKS' ? (
-          <Callout
-            variant="peringatan"
-            role="note"
+          // Masukan PM 15 Okt 2026: EmptyState dengan tombol, bukan Callout peringatan.
+          <EmptyState
+            title={p.bannerTanpaPic}
+            description={p.tanpaAdminIsi}
             action={onInvitePic && org.status === 'Aktif' ? <Button onClick={onInvitePic}>{p.undangPic}</Button> : undefined}
-          >
-            <span>{p.bannerTanpaPic}</span>
-          </Callout>
+            className="py-6"
+          />
         ) : (
           <p className="text-body-dense text-ink-muted">—</p>
         )}

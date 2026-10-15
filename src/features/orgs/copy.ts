@@ -63,6 +63,7 @@ export const orgCopy = {
     aktifkan: 'Aktifkan kembali',
     bannerNonaktif: (tgl: string, alasan: string) => `Organisasi ini nonaktif sejak ${tgl} · ${alasan}`,
     bannerTanpaPic: 'Belum ada Admin KKKS aktif.',
+    tanpaAdminIsi: 'Undang Admin KKKS untuk mengelola pengguna organisasi ini.', // usulan
     undangPic: 'Undang admin',
     field: { nama: 'Nama organisasi', kode: 'Kode', jenis: 'Jenis organisasi', badanHukum: 'Nama badan hukum', skema: 'Skema kontrak', status: 'Status' },
     kodeTerkunci: 'Kode dipakai di nomor dokumen dan tidak dapat diubah.',
