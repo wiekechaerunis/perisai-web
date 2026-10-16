@@ -11,5 +11,4 @@ export const DATA_SOURCE: 'mock' | 'api' = import.meta.env.VITE_DATA_SOURCE === 
 export const services: Services = DATA_SOURCE === 'api' ? apiServices : mockServices;
 
 export * from './types';
-export * from './ops-types';
 export { activityBus } from './activity';

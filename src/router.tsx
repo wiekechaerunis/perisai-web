@@ -11,7 +11,7 @@ import { LoginOtpPage } from './features/auth/pages/LoginOtpPage';
 import { LoginPage } from './features/auth/pages/LoginPage';
 import { useSession } from './features/session/SessionProvider';
 import { NotFoundPage } from './features/shell/ErrorPages';
-import { DASHBOARD_ROLES, EMAIL_APPROVER_ROLES, landingPath, LOG_ROLES, ORG_ROLES, ROLE_ADMIN_ROLES } from './features/shell/navigation';
+import { EMAIL_APPROVER_ROLES, landingPath, LOG_ROLES, ORG_ROLES, ROLE_ADMIN_ROLES } from './features/shell/navigation';
 import { BuatRolePage } from './features/roles/BuatRolePage';
 import { RoleDetailPage, RolePage } from './features/roles/RolePage';
 import { OrganisasiDetailRoute, OrganisasiPage } from './features/orgs/OrganisasiPage';
@@ -25,13 +25,6 @@ import { PermintaanEmailPage } from './features/users/PermintaanEmailPage';
 import { UbahPenggunaPage } from './features/users/UbahPenggunaPage';
 import { BukanSayaPage, VerifikasiEmailPage } from './features/email-links/EmailLinkPages';
 import { RuangKerjaPage } from './features/workspace/RuangKerjaPage';
-import { KontrakDetailPage, KontrakListPage } from './features/contracts/KontrakPages';
-import { DasborEksekutifPage, PetaPanasPage } from './features/dashboard/DashboardPages';
-import { InsidenDetailPage, InsidenListPage } from './features/incidents/InsidenPages';
-import { LaporInsidenPage } from './features/incidents/LaporInsidenPage';
-import { AnalitikPage, KonsepPage, LaporanPage, PeringatanDiniPage, PksPage, ProfilKkksPage, RisikoPage, TindakLanjutPage } from './features/modules/ModulePages';
-import { NotificationsPage } from './features/notifications/NotificationsPage';
-import { WpbDetailPage, WpbPage } from './features/wpb/WpbPages';
 import { t } from './lib/i18n/id';
 
 function RootRedirect() {
@@ -56,29 +49,6 @@ export const routes: RouteObject[] = [
   {
     element: <ProtectedLayout />,
     children: [
-      // Prototype kick-off 21 Okt 2026: modul di luar Core Platform.
-      { path: '/lapor', element: <RequireModule module="M-05" roles={['R-05']}><LaporInsidenPage /></RequireModule> },
-      { path: '/insiden', element: <RequireModule module="M-05"><InsidenListPage /></RequireModule> },
-      { path: '/insiden/:id', element: <RequireModule module="M-05"><InsidenDetailPage /></RequireModule> },
-      { path: '/wpb', element: <RequireModule module="M-06"><WpbPage /></RequireModule> },
-      { path: '/wpb/:id', element: <RequireModule module="M-06"><WpbDetailPage /></RequireModule> },
-      { path: '/kontrak', element: <RequireModule module="M-07"><KontrakListPage /></RequireModule> },
-      { path: '/kontrak/:id', element: <RequireModule module="M-07"><KontrakDetailPage /></RequireModule> },
-      { path: '/pks-pkt', element: <RequireModule module="M-07"><PksPage /></RequireModule> },
-      { path: '/dasbor', element: <RequireModule module="M-13" roles={DASHBOARD_ROLES}><DasborEksekutifPage /></RequireModule> },
-      { path: '/peta-panas', element: <RequireModule module="M-11"><PetaPanasPage /></RequireModule> },
-      { path: '/risiko', element: <RequireModule module="M-04"><RisikoPage /></RequireModule> },
-      { path: '/tindak-lanjut', element: <RequireModule module="M-09"><TindakLanjutPage /></RequireModule> },
-      { path: '/peringatan-dini', element: <RequireModule module="M-12"><PeringatanDiniPage /></RequireModule> },
-      { path: '/profil-kkks', element: <RequireModule module="M-03"><ProfilKkksPage /></RequireModule> },
-      { path: '/analitik', element: <RequireModule module="M-10"><AnalitikPage /></RequireModule> },
-      { path: '/laporan', element: <RequireModule module="M-13"><LaporanPage /></RequireModule> },
-      { path: '/konsep/bahan-peledak', element: <RequireModule module="M-08"><KonsepPage slug="bahan-peledak" /></RequireModule> },
-      { path: '/konsep/layanan-infrastruktur', element: <RequireModule module="M-25"><KonsepPage slug="layanan-infrastruktur" /></RequireModule> },
-      { path: '/konsep/k3', element: <RequireModule module="M-24"><KonsepPage slug="k3" /></RequireModule> },
-      { path: '/konsep/asisten', element: <RequireModule module="M-02"><KonsepPage slug="asisten" /></RequireModule> },
-      { path: '/konsep/informasi-eksternal', element: <RequireModule module="M-14"><KonsepPage slug="informasi-eksternal" /></RequireModule> },
-      { path: '/notifikasi', element: <NotificationsPage /> },
       {
         path: '/ruang-kerja',
         element: (

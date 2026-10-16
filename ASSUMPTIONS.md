@@ -327,21 +327,3 @@ keputusan #5 Organisasi). Variabel di `src/styles/status.css`, nada di `AccountS
   "Sesi aktif" (Grup ditahan KD-03); error domain saat ubah email juga "Hubungi Admin SKK."; "Cakupan Pengawas SKK".
 - Belum disesuaikan (di luar cakupan wording): Admin SKK hanya dapat mengundang R-04 ke organisasi KKKS
   (`lib/user-rules.ts`); email "Role Admin SKK diberikan" masih dikirim (`services/mock/edit.ts`).
-
-## Prototype kick-off 21 Okt 2026 (disetujui PM 15 Okt 2026)
-
-- Dibangun di repo ini (bukan proyek terpisah), di atas Core Platform: login + OTP, role, dan organisasi uji yang ada.
-  KKKS contoh = organisasi uji Core (Andalas, Mahakam, Natuna, Seram) — sudah fiktif; 6 WK (WK Seram Timur hanya di data
-  operasional), 20 lokasi berkoordinat perkiraan.
-- ASSUMPTION: tingkat keparahan Kritis/Tinggi/Sedang/Rendah (DS SeverityBadge; K-05 belum disahkan).
-- ASSUMPTION: status insiden "Belum terverifikasi" → "Terverifikasi" → "Ditangani" → "Ditutup", plus "Dikembalikan";
-  insiden direview Pejabat Berwenang KKKS sebelum resmi (BRD 3.4.3 masih terbuka).
-- ASSUMPTION: kategori WP&B contoh (Q-37): Personel pengamanan (BUJP), Peralatan & sistem keamanan, Koordinasi aparat,
-  Pelatihan & sertifikasi, Operasional & logistik. Rencana bulanan = nilai disepakati tahunan / 12.
-- Status realisasi WP&B mengikuti BRD 3.4: Draft → Review Internal KKKS (→ Perlu Perbaikan) → Difinalisasi KKKS →
-  Menunggu Dokumen Bertanda Tangan → Final. ASSUMPTION: pencocokan angka dokumen vs data terkunci selalu lolos.
-- Kontrak BUJP: Akan Berakhir = ≤ 12 bulan sebelum berakhir (AB-10). Pengingat hari-H (BRD) tidak ditampilkan.
-- Angka modul Risiko, peringatan dini, PKS/PKT, dan laporan adalah ilustrasi statis.
-- Modul di luar Core dirilis di menu (`RELEASED_MODULES`) untuk demo; menu mengikuti matriks hak akses BRD.
-- Peta panas: SVG offline dengan garis pulau disederhanakan (bukan peta resmi), atas permintaan PM.
-- Mode mock: kode OTP ditampilkan di layar verifikasi; pengganti peran demo di header (hanya adapter mock).

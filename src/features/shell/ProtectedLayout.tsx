@@ -25,8 +25,6 @@ import { DevTools } from '../dev/DevTools';
 import { IdleWarning } from '../session/IdleWarning';
 import { SESSION_QUERY_KEY, useSessionGuard, type LoginRedirectState } from '../session/SessionProvider';
 import { useEmailRequests } from '../users/PermintaanEmailPage';
-import { NotificationBell } from '../notifications/NotificationsPage';
-import { DemoRoleSwitcher } from './DemoRoleSwitcher';
 import { buildNav, EMAIL_APPROVER_ROLES } from './navigation';
 
 function initials(nama: string): string {
@@ -118,17 +116,7 @@ export function ProtectedLayout() {
   return (
     <AppShell
       skipLinkLabel={t.app.lompatKeKonten}
-      header={
-        <AppHeader
-          start={<DemoRoleSwitcher />}
-          end={
-            <>
-              <NotificationBell />
-              {userMenu}
-            </>
-          }
-        />
-      }
+      header={<AppHeader end={userMenu} />}
       sidebar={
         <Sidebar
           navLabel={t.app.navUtama}

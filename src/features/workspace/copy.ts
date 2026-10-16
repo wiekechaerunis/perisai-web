@@ -7,5 +7,4 @@ export const workspaceCopy = {
   organisasi: 'Organisasi',
   cakupan: 'Cakupan data',
   loginTerakhir: 'Login terakhir',
-  memuat: 'Memuat…',
 } as const;

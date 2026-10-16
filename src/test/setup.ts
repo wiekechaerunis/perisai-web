@@ -2,7 +2,6 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, beforeEach } from 'vitest';
 import { mockServices } from '@/services/mock';
-import { resetOpsDb } from '@/services/mock/ops';
 
 // Radix memakai API browser yang tidak ada di jsdom.
 class ResizeObserverStub {
@@ -20,7 +19,6 @@ beforeEach(async () => {
   sessionStorage.clear();
   // Data mock ditanam ulang untuk setiap test.
   await mockServices.dev!.reset();
-  resetOpsDb();
 });
 
 afterEach(() => cleanup());

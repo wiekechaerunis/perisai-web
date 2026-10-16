@@ -34,7 +34,7 @@ describe('Ubah pengguna lain (FR-UDR-01..09)', () => {
     const input = { nama: 'Sri Lestari Wulandari', jabatan: 'VP Security', roles: ['R-06' as const, 'R-04' as const] };
     const p = await s.users.previewUpdate('u-06', input);
     expect(p.perubahan.map((c) => c.field)).toEqual(['nama', 'roles']);
-    expect(p.aksesBertambah.map((m) => m.module)).toEqual(expect.arrayContaining(['M-15', 'M-22'])); // + modul kick-off yang ikut dirilis
+    expect(p.aksesBertambah.map((m) => m.module)).toEqual(['M-15', 'M-22']);
     expect(p.aksesBerkurang).toEqual([]);
     const after = await s.users.updateUser('u-06', input);
     expect(after).toMatchObject({ nama: 'Sri Lestari Wulandari', roles: ['R-06', 'R-04'] });

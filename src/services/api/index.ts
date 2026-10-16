@@ -170,43 +170,4 @@ export const apiServices: Services = {
     cancelEmailChange: () => http('DELETE', '/me/email-requests'),
     dismissEmailRejection: () => http('DELETE', '/me/email-requests/rejected'),
   },
-  // Modul operasional (prototype kick-off): endpoint USULAN, belum disepakati Tech Lead.
-  ops: {
-    refs: () => http('GET', '/ops/refs'),
-    workspace: () => http('GET', '/workspace'),
-    incidents: {
-      list: (q = {}) => http('GET', `/incidents?${qs(q)}`),
-      get: (id) => http('GET', `/incidents/${encodeURIComponent(id)}`),
-      report: (input) => http('POST', '/incidents', input),
-      verify: (id) => http('POST', `/incidents/${encodeURIComponent(id)}/verify`),
-      sendBack: (id, alasan) => http('POST', `/incidents/${encodeURIComponent(id)}/send-back`, { alasan }),
-      assign: (id, pic) => http('POST', `/incidents/${encodeURIComponent(id)}/assign`, { pic }),
-      addAction: (id, catatan) => http('POST', `/incidents/${encodeURIComponent(id)}/actions`, { catatan }),
-      close: (id, input) => http('POST', `/incidents/${encodeURIComponent(id)}/close`, input),
-    },
-    wpb: {
-      list: () => http('GET', '/wpb/periods'),
-      get: (id) => http('GET', `/wpb/periods/${encodeURIComponent(id)}`),
-      summary: () => http('GET', '/wpb/summary'),
-      save: (id, lines) => http('PUT', `/wpb/periods/${encodeURIComponent(id)}`, { lines }),
-      submit: (id, lines) => http('POST', `/wpb/periods/${encodeURIComponent(id)}/submit`, { lines }),
-      sendBack: (id, alasan) => http('POST', `/wpb/periods/${encodeURIComponent(id)}/send-back`, { alasan }),
-      finalize: (id) => http('POST', `/wpb/periods/${encodeURIComponent(id)}/finalize`),
-      uploadSigned: (id, namaFile) => http('POST', `/wpb/periods/${encodeURIComponent(id)}/signed-document`, { namaFile }),
-    },
-    contracts: {
-      list: () => http('GET', '/contracts'),
-      get: (id) => http('GET', `/contracts/${encodeURIComponent(id)}`),
-      create: (input) => http('POST', '/contracts', input),
-    },
-    pks: () => http('GET', '/partnerships'),
-    followUps: () => http('GET', '/follow-ups'),
-    notifications: {
-      list: () => http('GET', '/notifications'),
-      markAllRead: () => http('POST', '/notifications/read-all'),
-    },
-    executive: () => http('GET', '/dashboard/executive'),
-    heatmap: () => http('GET', '/dashboard/heatmap'),
-    resetDemo: async () => undefined,
-  },
 };

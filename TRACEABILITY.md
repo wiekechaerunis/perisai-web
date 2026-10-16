@@ -428,21 +428,3 @@ Data: `services/mock/logs.ts`, `lib/access.ts`, `lib/log-events.ts`. Asumsi: ASS
 | PRD | Tab ID | ClickUp ID | Alasan |
 |---|---|---|---|
 | Verifikasi Dua Langkah (FR-MF) | 062c2670-aa60 | z8pmx9p62u | KD-02 / PR-01 belum diputuskan |
-
-## Prototype kick-off 21 Okt 2026 · PRD Garis Besar (Kick-off) + BRD v0.5
-
-Ilustrasi garis besar, **bukan acuan dev**. Kode PRD mengikuti PRD Garis Besar (tab 01–13).
-
-| FR / PRD | PRD Garis Besar | File/komponen | Status |
-|---|---|---|---|
-| RKJ-01..03 (Ruang Kerja per peran, Tugas Saya, Kotak Persetujuan) | Tab 04 | `features/workspace/RuangKerjaPage.tsx` | Ilustrasi |
-| INS-01 (lapor dari ponsel) | Tab 06 | `features/incidents/LaporInsidenPage.tsx` (`/lapor`) | Ilustrasi |
-| INS-02..08 (verifikasi, kembalikan, tugaskan PIC, tindakan, tutup + bukti; notifikasi SKK) | Tab 06, BR-INS-04/08 | `features/incidents/InsidenPages.tsx` (`/insiden`, `/insiden/:id`) | Ilustrasi |
-| OPS-01..04, OPS-12, PLT-03 (realisasi, deviasi 10%, finalisasi, berita acara, unggah dokumen bertanda tangan) | Tab 07, BR-WPB-04/05, BR-DOK-04 | `features/wpb/WpbPages.tsx` (`/wpb`, `/wpb/:id`) | Ilustrasi |
-| OPS-05..08, ANL-01 (register BUJP, detail, status dari tanggal, pengingat 12/6/3/1) | Tab 08, AB-09/10 | `features/contracts/KontrakPages.tsx` (`/kontrak`, `/kontrak/:id`) | Ilustrasi |
-| EKS-01 (dasbor eksekutif; belum terverifikasi terpisah) | Tab 13, BR-EKS-01, AB-17 | `features/dashboard/DashboardPages.tsx` (`/dasbor`) | Ilustrasi |
-| ANL-02 (peta panas → area → insiden → detail) | Tab 11 | `features/dashboard/DashboardPages.tsx` (`/peta-panas`), `components/patterns/IndonesiaMap.tsx` | Ilustrasi |
-| Notifikasi (PLT) | Tab 02 | `features/notifications/NotificationsPage.tsx` (`/notifikasi`, lonceng header) | Ilustrasi |
-| Layar ringkas: Risiko, PKS/PKT, Tindak lanjut, Profil KKKS, Analitik, Peringatan dini, Laporan | Tab 03, 04, 05, 08, 11, 12, 13 | `features/modules/ModulePages.tsx` | Ringkas |
-| Konsep: Bahan peledak, Layanan infrastruktur, K3, Asisten PERISAI, Informasi eksternal | Tab 09, 10, 12, 13 | `features/modules/ModulePages.tsx` (`/konsep/*`) | Konsep |
-| KD-01, isolasi data, AB-17 | BRD 6.2, PU-13 | `services/mock/ops/index.ts` + `ops.test.ts` | Ditegakkan di data layer |

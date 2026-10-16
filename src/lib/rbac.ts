@@ -176,8 +176,7 @@ export const MODULES: Record<ModuleId, ModuleDef> = {
  * ASSUMPTION (K-6): mengikuti FR-PA-10/FR-HE-14a (disembunyikan), bukan BRD 16.2 (tampil sesuai role).
  * Ubah di satu tempat ini bila keputusan berbeda.
  */
-// Prototype kick-off 21 Okt 2026: modul di luar Core tampil di menu (sebagian layar ringkas/konsep).
-export const RELEASED_MODULES: ReadonlySet<ModuleId> = new Set<ModuleId>(['M-01', 'M-02', 'M-03', 'M-04', 'M-05', 'M-06', 'M-07', 'M-08', 'M-09', 'M-10', 'M-11', 'M-12', 'M-13', 'M-14', 'M-15', 'M-22', 'M-24', 'M-25']);
+export const RELEASED_MODULES: ReadonlySet<ModuleId> = new Set<ModuleId>(['M-01', 'M-15', 'M-22']);
 
 /* ---------- Matriks (PRD Matriks Role × Modul × Aksi, 4.3) ---------- */
 

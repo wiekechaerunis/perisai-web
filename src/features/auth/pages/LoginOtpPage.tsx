@@ -45,7 +45,6 @@ export function LoginOtpPage() {
 
   return (
     <PublicFrame>
-      {challenge.data && <DemoOtpHint />}
       {challenge.data ? (
         <OtpForm
           context="login"
@@ -72,18 +71,5 @@ export function LoginOtpPage() {
         </p>
       )}
     </PublicFrame>
-  );
-}
-
-/** Prototype kick-off (adapter mock saja): tampilkan kode OTP terbaru dari kotak masuk mock agar demo tidak buntu. */
-function DemoOtpHint() {
-  const inbox = useQuery({ queryKey: ['dev', 'inbox', 'otp'], queryFn: () => services.dev!.inbox(), enabled: !!services.dev, refetchInterval: 2_000 });
-  const latest = [...(inbox.data ?? [])].sort((a, b) => b.sentAt.localeCompare(a.sentAt)).find((m) => m.subject === 'Kode verifikasi masuk PERISAI');
-  const code = latest?.body.match(/(\d{4,8})/)?.[1];
-  if (!services.dev || !code) return null;
-  return (
-    <p role="note" className="mb-4 rounded-md border border-border bg-surface-sunken px-3 py-2 text-center text-caption text-ink-muted">
-      Mode demo · kode OTP: <span className="font-mono text-body-dense font-semibold text-ink">{code}</span>
-    </p>
   );
 }
