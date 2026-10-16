@@ -61,7 +61,7 @@ export function DeactivateOrgDialog({ org, onClose }: { org: OrgDetail; onClose:
             ))}
           </ul>
         </Callout>
-        <p className="text-body-dense text-ink-muted">{c.catatan}</p>
+        <p className="text-body text-ink-muted">{c.catatan}</p>
         <Select
           label={c.alasan}
           placeholder={c.alasanPlaceholder}

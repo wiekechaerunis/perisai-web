@@ -1,12 +1,12 @@
 /**
- * Kerangka layar publik (NON-DS, DS_GAPS.md). Dua varian mengikuti Figma CORE-PERISAI:
+ * Kerangka layar publik — DS v2 · Lime (AuthForm, StatusPage):
  *
- * - AuthSplitLayout — Login (85:4794): panel autentikasi 563px di kiri (logo atas, form di tengah, footer bawah),
- *   panel visual di kanan. Panel kanan disembunyikan di layar sempit (NFR PRD Login "Responsiveness").
- * - AuthPageLayout — OTP, Aktivasi, Lupa/Atur ulang kata sandi (118:235, 66:2546, 66:2602): header 80px
- *   (logo kiri, tautan bantuan kanan, garis bawah), isi satu kolom di tengah.
+ * - AuthSplitLayout — Login: susunan AuthSplitLayout DS v1 tetap (panel form 563px kiri: logo 120px di atas, form
+ *   di tengah maks. 400px, footer bawah; panel foto di kanan, disembunyikan di layar sempit).
+ * - AuthPageLayout — OTP, Aktivasi, Lupa/Atur ulang kata sandi, halaman status tautan email: bar atas `surface` 56px
+ *   (logo PERISAI 26px kiri; "Butuh bantuan?" + link "Hubungi support" kanan), isi satu kolom di tengah.
  *
- * Tema dipaksa `standar` karena logo hanya tampil di area terang (aturan Logo DS).
+ * Tema dipaksa `light` karena logo hanya untuk latar terang (aturan Logo DS v2).
  */
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
@@ -25,11 +25,11 @@ export interface AuthSplitLayoutProps {
 
 export function AuthSplitLayout({ brand, children, footer, aside, className }: AuthSplitLayoutProps) {
   return (
-    <div data-theme="standar" className={cn('flex min-h-screen bg-surface', className)}>
-      <div className="flex min-h-screen w-full flex-col px-6 pb-8 pt-10 md:px-[88px] lg:w-[563px] lg:shrink-0 lg:pr-[61px]">
-        <div>{brand}</div>
-        <main className="flex flex-1 items-center py-10">
-          <div className="w-full max-w-[420px]">{children}</div>
+    <div data-theme="light" className={cn('flex min-h-screen bg-surface', className)}>
+      <div className="flex min-h-screen w-full flex-col items-center px-6 pb-8 pt-10 md:px-[80px] lg:w-auth-panel-width lg:shrink-0">
+        <div className="flex w-full max-w-[400px] justify-center">{brand}</div>
+        <main className="flex w-full flex-1 items-center justify-center py-10">
+          <div className="w-full max-w-[400px]">{children}</div>
         </main>
         {footer}
       </div>
@@ -50,13 +50,13 @@ export interface AuthPageLayoutProps {
 
 export function AuthPageLayout({ brand, headerAction, children, width = 'form', className }: AuthPageLayoutProps) {
   return (
-    <div data-theme="standar" className={cn('flex min-h-screen flex-col bg-surface', className)}>
-      <header className="flex h-[80px] shrink-0 items-center justify-between border-b border-[color:var(--figma-header-border)] px-6 md:px-[80px]">
+    <div data-theme="light" className={cn('flex min-h-screen flex-col bg-surface', className)}>
+      <header className="flex h-[56px] shrink-0 items-center justify-between border-b border-border px-6">
         {brand}
         {headerAction}
       </header>
       <main className="flex flex-1 items-center justify-center px-6 pb-[80px] pt-[60px]">
-        <div className={cn('w-full', width === 'form' ? 'max-w-[400px]' : 'max-w-[640px]')}>{children}</div>
+        <div className={cn('w-full', width === 'form' ? 'max-w-[400px]' : 'max-w-[420px]')}>{children}</div>
       </main>
     </div>
   );

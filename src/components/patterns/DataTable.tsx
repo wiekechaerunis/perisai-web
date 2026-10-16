@@ -1,7 +1,8 @@
 /**
- * DataTable — PERISAI Design System `Perisai.DataTable` (Data).
- * Baris min. `row-min` (44px), garis `border-subtle`, tanpa zebra; nama kolom `label` di `ink-muted`;
- * angka rata kanan `mono`. Duduk langsung di Section tanpa kotak tambahan.
+ * DataTable — PERISAI DS v2 · Lime `DataTable`. Duduk di dalam kartu bersama toolbar dan pagination.
+ * Kepala `surface-subtle`, teks `label` `ink-muted`, padding 10px, garis bawah `border`. Baris min. 52px, garis
+ * `border-subtle`, hover `surface-subtle` + garis kiri 3px `action` (120ms). Kolom pertama/terakhir berjarak 16px dari tepi kartu. Angka rata kanan
+ * tabular. Kolom pertama = judul `body-strong` + ID `data-id` (disusun pemakai).
  * Dibangun di atas TanStack Table; data, kolom, dan teks kosong disediakan pemakai.
  */
 import {
@@ -37,7 +38,7 @@ export interface DataTableProps<T> {
   initialSorting?: SortingState;
   /** Klik baris membuka detail (pola master-detail). Baris tetap punya tautan/tombol yang bisa difokus. */
   onRowClick?: (row: T) => void;
-  /** Id baris yang sedang dipilih → `surface-selected`. */
+  /** Id baris yang sedang dipilih → `surface-subtle`. */
   selectedRowId?: string;
   className?: string;
 }
@@ -67,17 +68,17 @@ export function DataTable<T>({
     getSortedRowModel: getSortedRowModel(),
   });
 
-  if (error) return <div role="alert" className="py-6 text-body-dense text-ink">{error}</div>;
+  if (error) return <div role="alert" className="py-6 text-body text-ink">{error}</div>;
   if (loading) return <div aria-busy className="py-6">{loadingContent}</div>;
   if (data.length === 0 && empty) return <>{empty}</>;
 
   return (
-    <div className={cn('w-full overflow-x-auto', className)}>
-      <table className="w-full border-collapse text-left">
+    <div className={cn('p-scroll w-full overflow-x-auto', className)}>
+      <table className="w-full min-w-[760px] border-separate border-spacing-0 text-left">
         <caption className="sr-only">{caption}</caption>
         <thead>
           {table.getHeaderGroups().map((hg) => (
-            <tr key={hg.id} className="border-b border-border">
+            <tr key={hg.id}>
               {hg.headers.map((h) => {
                 const meta = h.column.columnDef.meta as DataTableColumnMeta | undefined;
                 const sorted = h.column.getIsSorted();
@@ -86,17 +87,20 @@ export function DataTable<T>({
                     key={h.id}
                     scope="col"
                     aria-sort={sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : undefined}
-                    className={cn('px-3 py-2 text-label text-ink-muted', meta?.align === 'right' && 'text-right')}
+                    className={cn(
+                      'whitespace-nowrap border-b border-border bg-surface-subtle p-[10px] text-label text-ink-muted first:pl-4 last:pr-4',
+                      meta?.align === 'right' && 'text-right',
+                    )}
                   >
                     {h.isPlaceholder ? null : h.column.getCanSort() ? (
                       <button
                         type="button"
                         onClick={h.column.getToggleSortingHandler()}
-                        className="inline-flex items-center gap-1 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
+                        className="inline-flex items-center gap-1 transition-colors duration-fast hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
                       >
                         {flexRender(h.column.columnDef.header, h.getContext())}
-                        {sorted === 'asc' && <ArrowUp aria-hidden size={14} strokeWidth={1.8} />}
-                        {sorted === 'desc' && <ArrowDown aria-hidden size={14} strokeWidth={1.8} />}
+                        {sorted === 'asc' && <ArrowUp aria-hidden size={14} strokeWidth={2} />}
+                        {sorted === 'desc' && <ArrowDown aria-hidden size={14} strokeWidth={2} />}
                       </button>
                     ) : (
                       flexRender(h.column.columnDef.header, h.getContext())
@@ -113,9 +117,9 @@ export function DataTable<T>({
               key={row.id}
               onClick={onRowClick ? () => onRowClick(row.original) : undefined}
               className={cn(
-                'border-b border-border-subtle last:border-b-0 hover:bg-surface-sunken',
+                'group/row transition-colors duration-fast hover:bg-surface-subtle',
                 onRowClick && 'cursor-pointer',
-                row.id === selectedRowId && 'bg-surface-selected',
+                row.id === selectedRowId && 'bg-surface-subtle',
               )}
             >
               {row.getVisibleCells().map((cell) => {
@@ -124,9 +128,11 @@ export function DataTable<T>({
                   <td
                     key={cell.id}
                     className={cn(
-                      'h-row-min px-3 py-3 align-middle text-body-dense text-ink',
+                      'h-row-min border-b border-border-subtle p-[10px] align-middle text-body text-ink first:pl-4 last:pr-4 group-last/row:border-b-0',
+                      // Ekspresi E4: baris yang di-hover diberi garis kiri 3px `action`.
+                      'first:group-hover/row:shadow-[inset_3px_0_0_var(--color-action)]',
                       meta?.align === 'right' && 'text-right',
-                      meta?.mono && 'font-mono',
+                      meta?.mono && 'font-mono text-caption',
                     )}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -7,10 +7,10 @@ diselesaikan di sini; kode yang terdampak ditandai `ASSUMPTION` beserta kode ruj
 
 | Kode | Konflik | Asumsi sementara | Lokasi |
 |---|---|---|---|
-| K-1 | Strength meter Tabel P-1 (merah/kuning/hijau) vs DS (hanya severitas berwarna) | Bar netral `ink`; label kata selalu tampil; "Lemah" memakai `caution` | `components/patterns/PasswordStrengthMeter.tsx` |
+| K-1 | Strength meter Tabel P-1 (merah/kuning/hijau) vs DS v1 (hanya severitas berwarna) | **Selesai 16 Okt 2026 (DS v2 PasswordField):** bar berwarna `error-ink` → `caution-ink` → `status-success-ink`, selalu dengan kata ("Kekuatan kata sandi: Cukup") — sejalan PRD P-1 dan Figma 82:4635 | `components/patterns/PasswordStrengthMeter.tsx` |
 | K-2 | Alert server di atas form (Tabel E-1, L-2, U-1) tidak punya varian Callout DS | Varian usulan `error` (border + ikon `error-ink`) | `components/patterns/Callout.tsx` |
 | K-3 | Label PRD Title Case ("Simpan Password Baru") vs DS sentence case | Label/judul/tombol sentence case; teks pesan disalin persis | `features/*/copy.ts` |
-| K-4 | Pesan PRD mencampur "Password" dan "Kata sandi" | Disalin persis dari PRD (perilaku/validasi ikut PRD) | `features/auth/copy.ts` |
+| K-4 | Pesan PRD mencampur "Password" dan "Kata sandi" | **Diubah 16 Okt 2026 (DS v2 AuthForm/PasswordField):** semua pesan layar publik memakai "kata sandi" (isi pesan PRD tetap, hanya istilahnya). Email di Buat kata sandi kini tersamar (keputusan PM 16 Okt; FR-AK-08 perlu diperbarui) | `features/auth/copy.ts` |
 | K-5 | Status akun (Diundang, Aktif, Kedaluwarsa, Ditangguhkan, Nonaktif) tidak ada di daftar baku WorkflowStatus | Kosakata di `lib/status.ts`; komponen `AccountStatus` diusulkan (Gel. 2) | `lib/status.ts`, `DS_GAPS.md` |
 | K-10 | DS memuat font dari Google Fonts; deployment bisa di jaringan tertutup | Self-host `@fontsource` | `src/styles/index.css` |
 | K-11 | DS README: "PERISAI belum punya logo", tetapi ada aset "Logo PERISAI" | Diganti F-17: logo PERISAI dari Figma di layar publik; Sidebar tetap teks | `features/auth/components/AuthFrame.tsx` |

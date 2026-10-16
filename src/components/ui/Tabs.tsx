@@ -1,6 +1,6 @@
 /**
- * Tabs — PERISAI Design System `Perisai.Tabs` (Navigasi).
- * Tab aktif: teks tebal `ink` + garis bawah 2px `action`, tanpa latar berwarna. Jumlah item di `ink-subtle`.
+ * Tabs — PERISAI DS v2 · Lime (tab di bawah PageHeader atau di dalam kartu).
+ * Tab aktif (Ekspresi E1): teks 600 `ink` + garis bawah 3px `action`; tab lain 500 `ink-muted`. Jumlah item `ink-muted`.
  * Dua mode: `TabsNav` (tautan rute, untuk halaman bertab) dan `Tabs` (Radix, konten dalam halaman).
  */
 import * as RadixTabs from '@radix-ui/react-tabs';
@@ -11,10 +11,10 @@ import { cn } from '@/lib/cn';
 // Warna garis bawah dipisah (aktif vs tidak) karena `cn` tidak memakai tailwind-merge: `border-transparent` + `border-action`
 // sekaligus membuat garis tab aktif hilang (urutan CSS).
 const triggerBase =
-  'relative -mb-px inline-flex h-control-md items-center gap-2 border-b-2 px-1 text-body-dense ' +
+  'relative -mb-px inline-flex h-control-height items-center gap-[6px] px-0.5 text-body transition-[color,box-shadow] duration-fast ' +
   'hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring';
-const triggerIdle = 'border-transparent text-ink-muted';
-const triggerActive = 'border-action font-semibold text-ink';
+const triggerIdle = 'font-medium text-ink-muted';
+const triggerActive = 'font-semibold text-ink shadow-[inset_0_-3px_0_var(--color-action)]';
 
 export interface TabItem {
   value: string;
@@ -23,7 +23,7 @@ export interface TabItem {
 }
 
 function Count({ n }: { n?: number }) {
-  return n === undefined ? null : <span className="font-mono text-caption text-ink-subtle">{n}</span>;
+  return n === undefined ? null : <span className="text-caption font-semibold text-ink-muted">{n}</span>;
 }
 
 export interface TabsNavProps {
@@ -69,7 +69,7 @@ export function Tabs({ items, label, value, defaultValue, onValueChange, classNa
           <RadixTabs.Trigger
             key={it.value}
             value={it.value}
-            className={cn(triggerBase, 'border-transparent text-ink-muted data-[state=active]:border-action data-[state=active]:font-semibold data-[state=active]:text-ink')}
+            className={cn(triggerBase, 'font-medium text-ink-muted data-[state=active]:font-semibold data-[state=active]:text-ink data-[state=active]:shadow-[inset_0_-3px_0_var(--color-action)]')}
           >
             {it.label}
             <Count n={it.count} />

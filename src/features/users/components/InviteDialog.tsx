@@ -240,7 +240,7 @@ export function InviteDialog({ open, onOpenChange, inviter, ownOrg, prefill }: I
                 (emailRegistered ? (
                   <>
                     {v.emailTerdaftar.split(v.emailTerdaftarLink)[0]}
-                    <Link to={`/pengguna?cari=${encodeURIComponent(email.trim().toLowerCase())}`} onClick={() => onOpenChange(false)} className="underline">
+                    <Link to={`/pengguna?cari=${encodeURIComponent(email.trim().toLowerCase())}`} onClick={() => onOpenChange(false)} className="link-inline">
                       {v.emailTerdaftarLink}
                     </Link>
                     {v.emailTerdaftar.split(v.emailTerdaftarLink)[1]}
@@ -253,7 +253,7 @@ export function InviteDialog({ open, onOpenChange, inviter, ownOrg, prefill }: I
             <TextField
               label={
                 <>
-                  {c.jabatan} <span className="text-ink-subtle">{c.opsional}</span>
+                  {c.jabatan} <span className="text-ink-muted">{c.opsional}</span>
                 </>
               }
               placeholder={c.jabatanPlaceholder}
@@ -315,14 +315,14 @@ export function InviteDialog({ open, onOpenChange, inviter, ownOrg, prefill }: I
               <fieldset className="flex flex-col gap-2">
                 <legend className="mb-1 text-label text-ink-muted">{c.cakupanR02}</legend>
                 {(['semua', 'sebagian'] as const).map((m) => (
-                  <label key={m} className="flex items-center gap-2 text-body-dense text-ink">
+                  <label key={m} className="flex items-center gap-2 text-body text-ink">
                     <input
                       type="radio"
                       name="cakupan-r02"
                       value={m}
                       checked={cakupanMode === m}
                       onChange={() => (setCakupanMode(m), clear('cakupan'))}
-                      className="h-4 w-4 accent-[var(--color-action)]"
+                      className="h-4 w-4 accent-[var(--color-ink)]"
                     />
                     {m === 'semua' ? c.cakupanSemua : c.cakupanSebagian}
                   </label>
@@ -347,7 +347,7 @@ export function InviteDialog({ open, onOpenChange, inviter, ownOrg, prefill }: I
                 <TextField
                   label={
                     <>
-                      {c.aksesBerakhir} <span className="text-ink-subtle">{c.opsional}</span>
+                      {c.aksesBerakhir} <span className="text-ink-muted">{c.opsional}</span>
                     </>
                   }
                   type="date"

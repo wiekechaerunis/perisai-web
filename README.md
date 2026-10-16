@@ -70,8 +70,9 @@ ESLint 9 + Prettier · `vercel.json` (SPA rewrite; **belum di-deploy**).
 ## Struktur
 
 ```
-design-system/tokens.json   salinan tokens.json PERISAI Design System (artifact 114e8e1a-…, tokens v1, diambil 14 Okt 2026)
-scripts/build-tokens.ts     tokens.json → src/styles/tokens.css (otomatis sebelum dev/build/storybook)
+design-system/tokens.json   salinan tokens.json PERISAI Design System v2 · Lime (artifact F64DT1H6…, versi 1792162946-4038, diambil 16 Okt 2026)
+design-system/tokens.local.json  token prototype yang belum ada di DS v2 (DS_GAPS DS-07)
+scripts/build-tokens.ts     tokens.json + tokens.local.json → src/styles/tokens.css (otomatis sebelum dev/build/storybook)
 src/components/ui|patterns|layout   implementasi resmi komponen DS + komponen non-DS (DS_GAPS.md)
 src/features/<fitur>        halaman, copy.ts (teks PRD), hook
 src/services                types.ts (kontrak), mock/, api/, index.ts
@@ -84,7 +85,7 @@ src/lib                     rbac.ts, status.ts, format.ts, password.ts, security
 |---|---|
 | PRD Core Platform (Claude Docs, master) | 13 Okt 2026 |
 | BRD | **v0.5** (13 Okt 2026); katalog role 6.2, M-15, M-22 |
-| PERISAI Design System | tokens v1 |
+| PERISAI Design System | **v2 · Lime** (versi 1792162946-4038, *berlaku* — K1–K6 diputuskan PM 16 Okt 2026); tema `light`/`dark`; font Plus Jakarta Sans + IBM Plex Mono |
 | Decision Log | KD-01..KD-07 masih *Diusulkan* |
 | Figma `CORE-PERISAI` (`qeqeJ9KGVpCFxLM6vTAK0a`) | dibaca 14 Okt 2026; aset di `src/assets/figma/`, nilai di luar DS di `src/styles/figma.css` |
 

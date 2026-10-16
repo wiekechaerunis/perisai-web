@@ -110,7 +110,7 @@ export const akunSayaCopy = {
       atur: 'Atur', // Figma
       passkeyJudul: 'Passkey', // Figma
       passkeyIsi: 'Masuk dengan sidik jari, wajah, PIN perangkat, atau kunci keamanan. Data biometrik tetap di perangkat Anda.', // Figma
-      passkeyJumlah: (n: number, maks: number) => `${n} / ${maks}`, // Figma
+      passkeyJumlah: (n: number, maks: number) => `${n} dari ${maks}`, // DS v2 ManagedList ("4 dari 5")
       passkeyKosong: 'Belum ada passkey tersimpan.', // usulan
       tambahPasskey: 'Tambah passkey', // Figma
       belumTersedia: 'Pengaturan aplikasi autentikator dan passkey belum tersedia.', // usulan (KD-02)

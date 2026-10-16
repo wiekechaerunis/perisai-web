@@ -39,14 +39,14 @@ export function AksesTab({ user, onUbah }: { user: UserDetail; onUbah?: () => vo
               <span className="flex flex-col gap-0.5">
                 {user.roles.map((r) => (
                   <span key={r}>
-                    <span className="font-mono text-caption text-ink-subtle">{r}</span> <span className="font-semibold">{roleName(r)}</span>
-                    {!isRoleActive(r) && <span className="text-caption text-ink-subtle"> {roleCopy.penandaTidakAktif}</span>}
+                    <span className="font-mono text-caption text-ink-muted">{r}</span> <span className="font-semibold">{roleName(r)}</span>
+                    {!isRoleActive(r) && <span className="text-caption text-ink-muted"> {roleCopy.penandaTidakAktif}</span>}
                   </span>
                 ))}
               </span>
             ),
             action: onUbah ? (
-              <button type="button" onClick={onUbah} className="text-body-dense font-semibold text-ink underline">
+              <button type="button" onClick={onUbah} className="text-body font-semibold text-ink underline-offset-[3px] hover:underline">
                 {p.ubah}
               </button>
             ) : undefined,
@@ -55,8 +55,8 @@ export function AksesTab({ user, onUbah }: { user: UserDetail; onUbah?: () => vo
         ]}
       />
       <section className="flex flex-col gap-2">
-        <h3 className="text-heading-3 text-ink">{accessCopy.izinEfektif(countPermissions(q.data))}</h3>
-        <p className="text-caption text-ink-subtle">{accessCopy.berasalDari(user.roles.join(', '))}</p>
+        <h3 className="text-body-strong text-ink">{accessCopy.izinEfektif(countPermissions(q.data))}</h3>
+        <p className="text-caption text-ink-muted">{accessCopy.berasalDari(user.roles.join(', '))}</p>
         <EffectiveAccessView modules={q.data} loading={q.isPending} error={q.isError} showRoles={user.roles.length > 1} />
       </section>
     </div>
@@ -110,23 +110,23 @@ export function AktivitasTab({ user, canManage, showLogLinks }: { user: UserDeta
   return (
     <div className="flex flex-col gap-6">
       <section className="flex flex-col gap-2">
-        <h3 className="text-heading-3 text-ink">{p.sesiAktif(sessions.isPending ? user.sesiAktif : list.length)}</h3>
+        <h3 className="text-body-strong text-ink">{p.sesiAktif(sessions.isPending ? user.sesiAktif : list.length)}</h3>
         {sessions.isPending ? (
-          <p role="status" className="text-body-dense text-ink-muted">{accessCopy.memuat}</p>
+          <p role="status" className="text-body text-ink-muted">{accessCopy.memuat}</p>
         ) : list.length === 0 ? (
-          <p className="text-body-dense text-ink-muted">{p.tidakAdaSesi}</p>
+          <p className="text-body text-ink-muted">{p.tidakAdaSesi}</p>
         ) : (
           <ul className="flex flex-col">
             {list.map((s) => (
               <li key={s.id} className="flex items-start justify-between gap-4 border-b border-border-subtle py-3 last:border-b-0">
                 <span className="flex flex-col gap-0.5">
-                  <span className="text-body-dense font-medium text-ink">
+                  <span className="text-body font-medium text-ink">
                     {s.browser} · {s.sistemOperasi} · {s.perkiraanLokasi}
                   </span>
                   <span className="text-caption text-ink-muted">{p.aktifLalu(formatRelatif(s.aktivitasTerakhir))}</span>
                 </span>
                 {canManage && (
-                  <button type="button" onClick={() => setRevoke(s)} className="text-body-dense font-semibold text-ink underline">
+                  <button type="button" onClick={() => setRevoke(s)} className="text-body font-semibold text-ink underline-offset-[3px] hover:underline">
                     {p.keluar}
                   </button>
                 )}
@@ -136,14 +136,14 @@ export function AktivitasTab({ user, canManage, showLogLinks }: { user: UserDeta
         )}
       </section>
       <section className="flex flex-col gap-2">
-        <h3 className="text-heading-3 text-ink">{p.riwayatPerubahan}</h3>
+        <h3 className="text-body-strong text-ink">{p.riwayatPerubahan}</h3>
         {user.riwayat.length === 0 ? (
-          <p className="text-body-dense text-ink-muted">{c.profil.riwayatKosong}</p>
+          <p className="text-body text-ink-muted">{c.profil.riwayatKosong}</p>
         ) : (
           <ul className="flex flex-col gap-3">
             {user.riwayat.map((e) => (
               <li key={e.id} className="flex flex-col gap-0.5">
-                <span className="text-body-dense text-ink">{e.peristiwa}</span>
+                <span className="text-body text-ink">{e.peristiwa}</span>
                 <span className="text-caption text-ink-muted">
                   {[e.pelaku ? p.oleh(e.pelaku) : null, formatTanggalJam(e.at), e.keterangan].filter(Boolean).join(' · ')}
                 </span>
@@ -153,11 +153,11 @@ export function AktivitasTab({ user, canManage, showLogLinks }: { user: UserDeta
         )}
       </section>
       {showLogLinks && (
-        <div className="flex flex-wrap gap-4 text-body-dense">
-          <Link to={`/log-akses?pengguna=${encodeURIComponent(user.email)}`} className="text-ink underline">
+        <div className="flex flex-wrap gap-4 text-body">
+          <Link to={`/log-akses?pengguna=${encodeURIComponent(user.email)}`} className="link-inline">
             {c.profil.bukaLogAkses}
           </Link>
-          <Link to={`/jejak-audit?objek=${encodeURIComponent(`pengguna #${user.id}`)}&dari=2000-01-01`} className="text-ink underline">
+          <Link to={`/jejak-audit?objek=${encodeURIComponent(`pengguna #${user.id}`)}&dari=2000-01-01`} className="link-inline">
             {c.profil.bukaJejakAudit}
           </Link>
         </div>

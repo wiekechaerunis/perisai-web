@@ -1,12 +1,14 @@
 /**
- * Toast — PERISAI Design System `Perisai.Toast`. Lebar 480px, lingkaran ikon 24px, pesan 14px medium, tutup x-circle.
+ * Toast — PERISAI DS v2 · Lime `Toast`. Lebar 480px, `surface`, garis `border-subtle`, `radius-lg`, `shadow-overlay`,
+ * padding 16/24/16/20; lingkaran ikon 24px; pesan 14/20 500; tombol tutup 28px. Muncul naik 4px (160ms) di kanan bawah,
+ * bertumpuk berjarak 8px.
  * Varian berhasil: lingkaran `ink` + centang, diumumkan sopan (Radix `background`), hilang sendiri (~5 detik).
- * Varian gagal: lingkaran `status-danger-ink` + x, diumumkan langsung (Radix `foreground`), tidak hilang sendiri.
+ * Varian gagal: lingkaran `error-ink` + x, diumumkan langsung (Radix `foreground`), tidak hilang sendiri.
  * DS: Toast tanpa tombol aksi. Pengecualian PRD Kelola Organisasi FR-ORG-08 ("Undang Admin KKKS") dicatat di
  * ASSUMPTIONS.md (DS-04) sampai diputuskan PM.
  */
 import * as RadixToast from '@radix-ui/react-toast';
-import { Check, X, XCircle } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
@@ -51,23 +53,23 @@ export function ToastProvider({ children, closeLabel, regionLabel, duration = 50
             type={t.variant === 'gagal' ? 'foreground' : 'background'}
             duration={t.variant === 'gagal' ? Infinity : undefined}
             onOpenChange={(open) => !open && setToasts((prev) => prev.filter((x) => x.id !== t.id))}
-            className="flex w-[min(480px,calc(100vw-32px))] items-start gap-4 rounded-lg border border-border-subtle bg-surface py-4 pl-5 pr-6 text-body-dense text-ink shadow-overlay"
+            className="flex w-[min(480px,calc(100vw-32px))] animate-rise items-center gap-4 rounded-lg border border-border-subtle bg-surface py-4 pl-5 pr-6 text-lead font-medium text-ink shadow-overlay"
           >
             <span
               aria-hidden
               className={cn(
                 'flex h-6 w-6 shrink-0 items-center justify-center rounded-full',
-                t.variant === 'gagal' ? 'bg-status-danger-ink text-on-action-danger' : 'bg-action text-on-action',
+                t.variant === 'gagal' ? 'bg-error-ink text-surface' : 'bg-ink text-surface',
               )}
             >
               {t.variant === 'gagal' ? <X size={12} strokeWidth={2.4} /> : <Check size={12} strokeWidth={2.4} />}
             </span>
-            <div className="flex flex-1 flex-col gap-1 pt-0.5">
+            <div className="flex flex-1 flex-col gap-1">
               <RadixToast.Title className="font-medium">{t.title}</RadixToast.Title>
-              {t.description && <RadixToast.Description className="text-ink-muted">{t.description}</RadixToast.Description>}
+              {t.description && <RadixToast.Description className="text-body font-normal text-ink-muted">{t.description}</RadixToast.Description>}
               {t.action && (
                 <RadixToast.Action altText={t.action.label} asChild>
-                  <button type="button" onClick={t.action.onClick} className="self-start text-body-dense font-semibold text-ink underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring">
+                  <button type="button" onClick={t.action.onClick} className="self-start text-body font-semibold text-ink underline-offset-[3px] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring">
                     {t.action.label}
                   </button>
                 </RadixToast.Action>
@@ -75,13 +77,13 @@ export function ToastProvider({ children, closeLabel, regionLabel, duration = 50
             </div>
             <RadixToast.Close
               aria-label={closeLabel}
-              className="flex h-6 w-6 items-center justify-center rounded-md text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
+              className="flex h-[28px] w-[28px] shrink-0 items-center justify-center rounded-md text-ink transition-colors duration-fast hover:bg-surface-sunken focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
             >
-              <XCircle aria-hidden size={14} strokeWidth={1.8} />
+              <X aria-hidden size={15} strokeWidth={2} />
             </RadixToast.Close>
           </RadixToast.Root>
         ))}
-        <RadixToast.Viewport className="fixed right-6 top-[72px] z-[60] flex flex-col gap-2 outline-none" />
+        <RadixToast.Viewport className="fixed bottom-6 right-6 z-[60] flex flex-col-reverse gap-2 outline-none" />
       </RadixToast.Provider>
     </ToastContext.Provider>
   );

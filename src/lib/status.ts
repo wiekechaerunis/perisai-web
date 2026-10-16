@@ -13,7 +13,7 @@ export type AccountStatus = (typeof ACCOUNT_STATUSES)[number];
  * Nada tampilan badge. Status akun berwarna mengikuti Figma 109:16180 (arahan PM 14 Okt 2026, menggantikan F-20/K-5
  * yang netral); `neutral`/`muted`/`caution` tetap tersedia untuk badge lain.
  */
-export type StatusTone = 'neutral' | 'muted' | 'caution' | 'success' | 'warning' | 'danger' | 'strong';
+export type StatusTone = 'neutral' | 'muted' | 'caution' | 'success' | 'warning' | 'danger' | 'strong' | 'info';
 
 export interface StatusDisplay {
   label: string;
@@ -23,10 +23,11 @@ export interface StatusDisplay {
 
 export const ACCOUNT_STATUS_DISPLAY: Record<AccountStatus, StatusDisplay> = {
   // Figma 109:16180 (arahan PM 14 Okt 2026): berwarna, tanpa ikon.
-  Diundang: { label: 'Diundang', tone: 'strong' },
+  // K4 (PM 16 Okt 2026, DS v2): proses berjalan = biru status-info; Ditangguhkan menunggu tindakan admin = caution.
+  Diundang: { label: 'Diundang', tone: 'info' },
   Aktif: { label: 'Aktif', tone: 'success' },
   Kedaluwarsa: { label: 'Kedaluwarsa', tone: 'warning' },
-  Ditangguhkan: { label: 'Ditangguhkan', tone: 'strong' },
+  Ditangguhkan: { label: 'Ditangguhkan', tone: 'caution' },
   Nonaktif: { label: 'Nonaktif', tone: 'danger' },
 };
 

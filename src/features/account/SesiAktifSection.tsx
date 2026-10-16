@@ -61,12 +61,12 @@ export function SesiAktifSection() {
   const others = sessions.filter((s) => !s.perangkatIni);
 
   return (
-    <Section title={c.judul} description={c.keterangan} className="border border-border">
+    <Section title={c.judul} description={c.keterangan}>
       <div className="flex flex-col gap-4">
         {list.isPending ? (
-          <p className="text-body-dense text-ink-muted">{t.app.memuat}</p>
+          <p className="text-body text-ink-muted">{t.app.memuat}</p>
         ) : list.isError ? (
-          <p role="alert" className="text-body-dense text-ink">{c.gagalMemuat}</p>
+          <p role="alert" className="text-body text-ink">{c.gagalMemuat}</p>
         ) : (
           <ul aria-label={c.tabelLabel} className="flex flex-col">
             {sessions.map((s) => {
@@ -75,20 +75,20 @@ export function SesiAktifSection() {
                 <li key={s.id} className="flex items-start gap-3 border-b border-border-subtle py-3">
                   <Icon aria-hidden size={20} strokeWidth={1.8} className="mt-px shrink-0 text-ink-muted" />
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
-                    <span className="text-body-dense font-medium text-ink">{deviceLabel(s)}</span>
+                    <span className="text-body font-medium text-ink">{deviceLabel(s)}</span>
                     <span className="text-caption text-ink-muted">{s.perkiraanLokasi}</span>
                     <span className="text-caption text-ink-muted">
                       {c.aktivitasTerakhir(formatTanggalJam(s.aktivitasTerakhir))} · {c.masuk(formatTanggalJam(s.waktuMasuk))}
                     </span>
                   </div>
                   {s.perangkatIni ? (
-                    <AccountStatusBadge label={c.perangkatIni} tone="success" />
+                    <AccountStatusBadge label={c.perangkatIni} tone="selected" />
                   ) : (
                     <button
                       type="button"
                       onClick={() => setTarget(s)}
                       aria-label={`${c.cabut}: ${deviceLabel(s)}`}
-                      className="shrink-0 text-body-dense font-semibold text-ink underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
+                      className="shrink-0 text-body font-semibold text-error-ink underline-offset-[3px] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
                     >
                       {c.cabut}
                     </button>

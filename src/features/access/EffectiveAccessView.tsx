@@ -14,7 +14,7 @@ export function ScopeList({ cakupan, wkNonaktif = [] }: { cakupan: ScopeEntry[];
     <div className="flex flex-col gap-2">
       <ul className="flex flex-col gap-1">
         {cakupan.map((s) => (
-          <li key={s.role} className="text-body-dense text-ink">
+          <li key={s.role} className="text-body text-ink">
             <span className="font-medium">{scopeLabel(s)}</span>
             <span className="text-ink-muted"> · {roleName(s.role)} — {SCOPE_DESC[s.tingkat]}</span>
           </li>
@@ -40,17 +40,17 @@ export function countPermissions(modules: EffectiveModule[] | undefined): number
  * kode modul + aksi Tabel X-1 (Figma memakai contoh "users.view"; ASSUMPTION, tidak ada daftar kode izin di PRD).
  */
 export function EffectiveAccessView({ modules, loading, error, showRoles = true }: { modules?: EffectiveModule[]; loading?: boolean; error?: boolean; showRoles?: boolean }) {
-  if (loading) return <p role="status" className="text-body-dense text-ink-muted">{c.memuat}</p>;
-  if (error) return <p role="alert" className="text-body-dense text-ink">{c.gagal}</p>;
-  if (!modules?.length) return <p className="text-body-dense text-ink-muted">{c.kosong}</p>;
+  if (loading) return <p role="status" className="text-body text-ink-muted">{c.memuat}</p>;
+  if (error) return <p role="alert" className="text-body text-ink">{c.gagal}</p>;
+  if (!modules?.length) return <p className="text-body text-ink-muted">{c.kosong}</p>;
   return (
-    <table className="w-full border-collapse text-left text-body-dense">
+    <table className="w-full border-collapse text-left text-body">
       <caption className="sr-only">{c.judul}</caption>
       <thead>
-        <tr className="bg-surface-sunken text-label text-ink">
-          <th scope="col" className="px-0 py-2 pr-3 font-semibold">{c.kolom.modul}</th>
-          <th scope="col" className="py-2 pr-3 font-semibold">{c.kolom.izin}</th>
-          <th scope="col" className="py-2 font-semibold">{c.kolom.deskripsi}</th>
+        <tr className="text-label text-ink-muted">
+          <th scope="col" className="border-b border-border bg-surface-subtle p-[10px]">{c.kolom.modul}</th>
+          <th scope="col" className="border-b border-border bg-surface-subtle p-[10px]">{c.kolom.izin}</th>
+          <th scope="col" className="border-b border-border bg-surface-subtle p-[10px]">{c.kolom.deskripsi}</th>
         </tr>
       </thead>
       {modules.map((m) => (
@@ -58,16 +58,16 @@ export function EffectiveAccessView({ modules, loading, error, showRoles = true 
           {m.permissions.map((p, i) => (
             <tr key={p.action} className="align-top">
               {i === 0 && (
-                <th scope="rowgroup" rowSpan={m.permissions.length} className="py-3 pr-3 font-semibold text-ink">
+                <th scope="rowgroup" rowSpan={m.permissions.length} className="p-[10px] font-semibold text-ink">
                   {m.nama}
-                  <span className="block font-mono text-caption font-normal text-ink-subtle">{m.module}</span>
+                  <span className="block font-mono text-caption font-normal text-ink-muted">{m.module}</span>
                 </th>
               )}
-              <td className="py-3 pr-3 font-mono text-caption text-ink-muted">{`${m.module}.${p.action}`}</td>
-              <td className="py-3 text-ink">
+              <td className="whitespace-nowrap p-[10px] font-mono text-caption text-ink-muted">{`${m.module}.${p.action}`}</td>
+              <td className="p-[10px] text-ink">
                 {ACTION_DESC[p.action]}
                 {p.notes.length > 0 && <span className="text-ink-muted"> ({p.notes.join('; ')})</span>}
-                {showRoles && <span className="block text-caption text-ink-subtle">{c.dari(p.roles.map((r) => `${r} ${roleName(r)}`).join(', '))}</span>}
+                {showRoles && <span className="block text-caption text-ink-muted">{c.dari(p.roles.map((r) => `${r} ${roleName(r)}`).join(', '))}</span>}
               </td>
             </tr>
           ))}

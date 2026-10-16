@@ -399,11 +399,11 @@ function AccessEndDialog({ user, onClose }: BaseProps) {
       }
     >
       <KeyValueList variant="block" items={info(user).filter((i) => i.key !== 'status')} />
-      <p className="text-body-dense text-ink-muted">
+      <p className="text-body text-ink-muted">
         {c.status.berlakuSaatIni(user.aksesBerakhir ? formatTanggal(user.aksesBerakhir) : c.status.tidakDibatasi)}
       </p>
       {(user.status === 'Nonaktif' || user.status === 'Ditangguhkan') && (
-        <p role="status" className="flex items-start gap-[10px] rounded-md bg-surface-sunken p-3 text-body-dense text-ink">
+        <p role="status" className="flex items-start gap-[10px] rounded-md bg-surface-sunken p-3 text-body text-ink">
           <Info aria-hidden size={16} strokeWidth={1.8} className="mt-0.5 shrink-0" />
           {user.status === 'Nonaktif' ? c.status.infoNonaktif : c.status.infoDitangguhkan}
         </p>
@@ -420,7 +420,7 @@ function AccessEndDialog({ user, onClose }: BaseProps) {
           error={error}
         />
         {date && (
-          <button type="button" onClick={() => setDate('')} className="self-start text-caption text-ink underline">
+          <button type="button" onClick={() => setDate('')} className="self-start text-caption text-ink font-semibold underline-offset-[3px] hover:underline">
             {c.status.hapusBatas}
           </button>
         )}

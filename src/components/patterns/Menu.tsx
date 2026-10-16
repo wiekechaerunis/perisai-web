@@ -1,6 +1,7 @@
 /**
- * Menu — komponen NON-DS (usulan di DS_GAPS.md). Menu tarik-turun untuk aksi akun
- * (Pengaturan akun, Keluar; FR-LO-01). Radix DropdownMenu: navigasi panah, Esc menutup.
+ * Menu — PERISAI DS v2 · Lime `ActionMenu`: daftar `radius-lg` + `shadow-overlay`, padding 6px; item 36px
+ * `radius-sm`, ikon 16px `ink` di kiri, hover `surface-sunken`; aksi destruktif paling bawah `error-ink` setelah pemisah.
+ * Muncul fade + geser 4px (160ms). Radix DropdownMenu: navigasi panah, Esc menutup.
  */
 import * as RadixMenu from '@radix-ui/react-dropdown-menu';
 import type { ReactNode } from 'react';
@@ -13,6 +14,8 @@ export interface MenuItem {
   onSelect: () => void;
   /** Item tampil tetapi tidak dapat dipilih (mis. "Akhiri semua sesi" tanpa sesi aktif). */
   disabled?: boolean;
+  /** Aksi destruktif: teks `error-ink`, ditaruh paling bawah setelah pemisah. */
+  danger?: boolean;
 }
 
 export interface MenuProps {
@@ -33,22 +36,25 @@ export function Menu({ trigger, items, side = 'bottom', align = 'start', header 
           side={side}
           align={align}
           sideOffset={6}
-          className="z-50 min-w-[220px] rounded-md border border-border bg-surface py-1 shadow-overlay"
+          className="z-50 min-w-[220px] animate-pop-in rounded-lg bg-surface p-[6px] shadow-overlay"
         >
-          {header && <div className="border-b border-border-subtle px-3 pb-2 pt-1">{header}</div>}
-          {items.map((it) => (
-            <RadixMenu.Item
-              key={it.key}
-              onSelect={it.onSelect}
-              disabled={it.disabled}
-              className={cn(
-                'flex cursor-default select-none items-center gap-2 px-3 py-[10px] text-body-dense text-ink outline-none',
-                'data-[highlighted]:bg-surface-sunken data-[disabled]:text-ink-subtle',
-              )}
-            >
-              {it.icon}
-              {it.label}
-            </RadixMenu.Item>
+          {header && <div className="mb-1 border-b border-border-subtle px-[10px] pb-[10px] pt-1">{header}</div>}
+          {items.map((it, i) => (
+            <div key={it.key}>
+              {it.danger && i > 0 && !items[i - 1]!.danger && <RadixMenu.Separator className="my-1 h-px bg-border-subtle" />}
+              <RadixMenu.Item
+                onSelect={it.onSelect}
+                disabled={it.disabled}
+                className={cn(
+                  'flex min-h-control-sm cursor-default select-none items-center gap-[10px] rounded-sm px-[10px] text-body outline-none transition-colors duration-fast',
+                  'data-[highlighted]:bg-surface-sunken data-[disabled]:text-ink-disabled',
+                  it.danger ? 'text-error-ink' : 'text-ink',
+                )}
+              >
+                {it.icon}
+                {it.label}
+              </RadixMenu.Item>
+            </div>
           ))}
         </RadixMenu.Content>
       </RadixMenu.Portal>

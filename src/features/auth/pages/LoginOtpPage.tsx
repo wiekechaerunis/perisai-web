@@ -35,7 +35,8 @@ export function LoginOtpPage() {
   });
 
   // FR-LG-18: tanpa langkah password → kembali ke Login.
-  if (!preAuthId || (challenge.isSuccess && !challenge.data)) return <Navigate to="/masuk" replace />;
+  if (!preAuthId || (challenge.isSuccess && !challenge.data))
+    return <Navigate to="/masuk" replace />;
 
   const backToLogin = (alert?: LoginAlertCode) => {
     clearPreAuth();

@@ -74,13 +74,13 @@ describe('Log Akses', () => {
     const table = await screen.findByRole('table', { name: 'Daftar log akses' });
     await waitFor(() => expect(within(table).getAllByRole('row').length).toBeGreaterThan(1));
     expect(within(table).queryByText('PT Mahakam Sejahtera Petroleum')).toBeNull();
-    expect(screen.queryByRole('button', { name: 'Ekspor CSV' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Ekspor log akses (CSV)' })).toBeNull();
   });
 
   it('R-03 bisa mengekspor dan membuka detail entri (FR-LA-09, FR-LA-16)', async () => {
     await services.dev!.signInAs('u-03');
     renderPage('/log-akses');
-    expect(await screen.findByRole('button', { name: 'Ekspor CSV' })).toBeInTheDocument();
+    expect(await screen.findByRole('button', { name: 'Ekspor log akses (CSV)' })).toBeInTheDocument();
     const table = await screen.findByRole('table', { name: 'Daftar log akses' });
     await waitFor(() => expect(within(table).getAllByRole('row').length).toBeGreaterThan(1));
     await userEvent.click(within(table).getAllByRole('row')[1]!);
@@ -94,7 +94,9 @@ describe('Jejak Audit (FR-JA-12)', () => {
     renderPage('/jejak-audit');
     expect(await screen.findByText('Pilih filter untuk menampilkan jejak audit')).toBeInTheDocument();
     expect(screen.queryByRole('table')).toBeNull();
-    await userEvent.click(screen.getByRole('button', { name: 'Tampilkan' }));
+    // DS v2: filter disusun di panel kanan, lalu diterapkan dengan tombol Tampilkan (FR-JA-12).
+    await userEvent.click(screen.getByRole('button', { name: 'Pilih filter' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Tampilkan' }));
     const table = await screen.findByRole('table');
     await waitFor(() => expect(within(table).getAllByRole('row').length).toBeGreaterThan(1));
   });

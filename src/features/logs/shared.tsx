@@ -1,6 +1,8 @@
 /** Utilitas bersama halaman log: tanggal WIB, unduh CSV, filter periode, badge hasil berwarna, judul tabel. */
 import { useState } from 'react';
-import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
+import { AccountStatusBadge, TAG_BASE, TAG_TONE } from '@/components/patterns/AccountStatusBadge';
+import { cn } from '@/lib/cn';
+import { formatTanggal } from '@/lib/format';
 import { Select } from '@/components/ui/Select';
 import { TextField } from '@/components/ui/TextField';
 import { logsCopy as c } from './copy';
@@ -47,14 +49,25 @@ function presetOf(dari: string, sampai: string): string {
  * Periode sebagai satu Select dengan preset (Hari ini, 7 hari terakhir, 30 hari terakhir, Rentang khusus). Kotak
  * "Dari tanggal" / "Sampai tanggal" hanya muncul untuk rentang khusus, agar baris utama filter tidak penuh kotak.
  */
-export function PeriodFields({ dari, sampai, onChange }: { dari: string; sampai: string; onChange: (v: { dari: string; sampai: string }) => void }) {
+export function PeriodFields({
+  dari,
+  sampai,
+  onChange,
+  inPanel = false,
+}: {
+  dari: string;
+  sampai: string;
+  onChange: (v: { dari: string; sampai: string }) => void;
+  /** Di dalam panel filter: label preset disembunyikan (legend sudah menyebut Periode), lebar penuh. */
+  inPanel?: boolean;
+}) {
   const [custom, setCustom] = useState(() => presetOf(dari, sampai) === KHUSUS);
   const value = custom ? KHUSUS : presetOf(dari, sampai);
   return (
-    <fieldset className="flex flex-wrap items-end gap-2">
-      <legend className="sr-only">{c.periode}</legend>
+    <div className="flex flex-wrap items-end gap-2">
       <Select
         label={c.periode}
+        hideLabel={inPanel}
         value={value}
         onValueChange={(v) => {
           if (v === KHUSUS) return setCustom(true);
@@ -68,15 +81,15 @@ export function PeriodFields({ dari, sampai, onChange }: { dari: string; sampai:
           { value: '30', label: c.preset30 },
           { value: KHUSUS, label: c.presetKhusus },
         ]}
-        className="w-[190px]"
+        className={inPanel ? 'w-full' : 'w-[190px]'}
       />
       {custom && (
-        <>
-      <TextField label={c.dari} type="date" value={dari} max={sampai} onChange={(e) => onChange({ dari: e.target.value, sampai })} containerClassName="w-[170px]" required />
-      <TextField label={c.sampai} type="date" value={sampai} min={dari} onChange={(e) => onChange({ dari, sampai: e.target.value })} containerClassName="w-[170px]" required />
-        </>
+        <div className="grid w-full grid-cols-2 gap-2">
+          <TextField label={c.dari} type="date" value={dari} max={sampai} onChange={(e) => onChange({ dari: e.target.value, sampai })} required />
+          <TextField label={c.sampai} type="date" value={sampai} min={dari} onChange={(e) => onChange({ dari, sampai: e.target.value })} required />
+        </div>
       )}
-    </fieldset>
+    </div>
   );
 }
 
@@ -95,5 +108,12 @@ export function TableTitle({ title }: { title: string }) {
 }
 
 export function ArchiveTag() {
-  return <span className="ml-2 inline-flex h-5 items-center rounded-sm border border-border bg-surface-sunken px-2 text-caption font-medium text-ink-muted">{c.arsip}</span>;
+  return <span className={cn(TAG_BASE, TAG_TONE.muted, 'ml-2')}>{c.arsip}</span>;
+}
+
+/** Rentang tanggal untuk pil filter: "5–14 Okt 2026" gaya README DS (memakai format tanggal penuh di kedua ujung). */
+export function formatRentang(dari: string, sampai: string): string {
+  const a = formatTanggal(`${dari}T00:00:00+07:00`);
+  const b = formatTanggal(`${sampai}T00:00:00+07:00`);
+  return a === b ? a : `${a} – ${b}`;
 }

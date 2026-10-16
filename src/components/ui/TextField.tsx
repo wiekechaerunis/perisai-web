@@ -1,5 +1,8 @@
 /**
- * TextField — PERISAI Design System `Perisai.TextField` (Form).
+ * TextField — PERISAI DS v2 · Lime `TextField`.
+ * Label 12/16 600 `ink` (+ `*` `error-ink`) → kotak 40px (48px layar publik) `radius-md` bergaris dalam 1px
+ * `border-control`; hover garis `ink`; fokus garis 2px `action-line`; error garis 2px `error-ink` + pesan; baca saja
+ * `surface-subtle` + garis `border`; nonaktif `surface-sunken` + `ink-disabled`.
  * Label selalu terlihat (sentence case), petunjuk di bawah, error memakai `error-ink`
  * dan diumumkan ke pembaca layar. Mendukung:
  * - `type="password"` + `revealable`: toggle tampil/sembunyikan (default tersembunyi)
@@ -30,7 +33,7 @@ export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   digitsOnly?: boolean;
   /** Ikon di kiri dalam field (Lucide 16px, dekoratif), mis. mail/lock di layar Login Figma. */
   leading?: ReactNode;
-  /** md = control-md 36px (default), lg = control-lg 44px (aksi utama / kode verifikasi). */
+  /** md = control-height 40px (default), lg = control-lg 48px (layar publik). */
   size?: 'md' | 'lg';
   /** Elemen di kanan dalam field (selain tombol mata). */
   trailing?: ReactNode;
@@ -39,6 +42,14 @@ export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElemen
   /** Sembunyikan label secara visual tetapi tetap tersedia untuk pembaca layar. */
   hideLabel?: boolean;
   containerClassName?: string;
+}
+
+/** Kelas state kotak isian DS v2 (dipakai juga oleh Select, Textarea, Combobox, ChipInput). */
+export function inputStateClass({ error, disabled, readOnly }: { error?: boolean; disabled?: boolean; readOnly?: boolean }): string {
+  if (disabled) return 'cursor-not-allowed bg-surface-sunken text-ink-disabled shadow-[inset_0_0_0_1px_var(--color-border)]';
+  if (readOnly) return 'bg-surface-subtle text-ink shadow-[inset_0_0_0_1px_var(--color-border)]';
+  if (error) return 'bg-surface text-ink shadow-[inset_0_0_0_2px_var(--color-error-ink)]';
+  return 'bg-surface text-ink shadow-[inset_0_0_0_1px_var(--color-border-control)] hover:shadow-[inset_0_0_0_1px_var(--color-ink)] focus:shadow-[inset_0_0_0_2px_var(--color-action-line)] focus-within:shadow-[inset_0_0_0_2px_var(--color-action-line)]';
 }
 
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(
@@ -83,8 +94,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   }
 
   return (
-    <div className={cn('flex flex-col gap-1', containerClassName)}>
-      <label htmlFor={inputId} className={cn('text-label text-ink-muted', hideLabel && 'sr-only')}>
+    <div className={cn('flex flex-col gap-[6px]', containerClassName)}>
+      <label htmlFor={inputId} className={cn('text-label text-ink', hideLabel && 'sr-only')}>
         {label}
         {rest.required && showRequired && (
           <span aria-hidden className="ml-1 text-error-ink">
@@ -94,7 +105,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
       </label>
       <div className="relative">
         {leading && (
-          <span aria-hidden className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-ink-subtle">
+          <span aria-hidden className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-ink-muted">
             {leading}
           </span>
         )}
@@ -108,13 +119,10 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
           readOnly={readOnly}
           onChange={handleChange}
           className={cn(
-            'w-full rounded-md border bg-surface px-3 text-body text-ink',
-            size === 'lg' ? 'h-control-lg' : 'h-control-md',
+            'w-full rounded-md border-0 px-3 outline-none transition-shadow duration-fast placeholder:text-ink-muted',
+            size === 'lg' ? 'h-control-lg text-lead' : 'h-control-height text-body',
             leading ? 'pl-10' : '',
-            'placeholder:text-ink-subtle disabled:cursor-not-allowed disabled:bg-surface-sunken',
-            'read-only:bg-surface-sunken read-only:border-border',
-            'focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus-ring',
-            error ? 'border-error-ink' : 'border-border-control',
+            inputStateClass({ error: !!error, disabled, readOnly }),
             (revealable && isPassword) || trailing ? 'pr-10' : '',
             digitsOnly && 'font-mono tracking-[0.3em]',
             className,
@@ -131,9 +139,9 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
                 disabled={disabled}
                 aria-label={revealed ? revealLabels.hide : revealLabels.show}
                 aria-pressed={revealed}
-                className="flex h-8 w-8 items-center justify-center rounded-md text-ink-muted hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
+                className="flex h-8 w-8 items-center justify-center rounded-md text-ink-muted transition-colors duration-fast hover:bg-surface-sunken hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
               >
-                {revealed ? <EyeOff size={16} strokeWidth={1.8} aria-hidden /> : <Eye size={16} strokeWidth={1.8} aria-hidden />}
+                {revealed ? <EyeOff size={18} strokeWidth={1.9} aria-hidden /> : <Eye size={18} strokeWidth={1.9} aria-hidden />}
               </button>
             )}
           </div>
@@ -142,7 +150,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
       {(error || hint) && (
         <p
           id={hintId}
-          className={cn('text-caption', error ? 'text-error-ink' : 'text-ink-subtle')}
+          className={cn('text-caption', error ? 'font-medium text-error-ink' : 'text-ink-muted')}
           aria-live={error ? 'polite' : undefined}
         >
           {error ?? hint}

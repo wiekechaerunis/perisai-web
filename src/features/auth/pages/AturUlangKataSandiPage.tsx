@@ -25,9 +25,19 @@ import { aturUlangCopy as c, passwordCopy } from '../copy';
 function TokenState({ state }: { state: Exclude<ResetTokenState, 'valid'> }) {
   const navigate = useNavigate();
   const map = {
-    invalid: { title: c.tidakValidJudul, body: c.tidakValidIsi, cta: c.mintaBaru, to: '/lupa-kata-sandi' },
+    invalid: {
+      title: c.tidakValidJudul,
+      body: c.tidakValidIsi,
+      cta: c.mintaBaru,
+      to: '/lupa-kata-sandi',
+    },
     used: { title: c.dipakaiJudul, body: c.dipakaiIsi, cta: c.masuk, to: '/masuk' },
-    expired: { title: c.kedaluwarsaJudul, body: c.kedaluwarsaIsi, cta: c.mintaBaru, to: '/lupa-kata-sandi' },
+    expired: {
+      title: c.kedaluwarsaJudul,
+      body: c.kedaluwarsaIsi,
+      cta: c.mintaBaru,
+      to: '/lupa-kata-sandi',
+    },
   } as const;
   const s = map[state];
   return (
@@ -48,12 +58,18 @@ function TokenState({ state }: { state: Exclude<ResetTokenState, 'valid'> }) {
 export function AturUlangKataSandiPage() {
   const { token = '' } = useParams();
   const navigate = useNavigate();
-  const check = useQuery({ queryKey: ['reset-token', token], queryFn: () => services.password.checkResetToken(token), retry: false });
+  const check = useQuery({
+    queryKey: ['reset-token', token],
+    queryFn: () => services.password.checkResetToken(token),
+    retry: false,
+  });
 
   const [pw, setPw] = useState('');
   const [confirm, setConfirm] = useState('');
   const [errors, setErrors] = useState<{ pw?: string; confirm?: string }>({});
-  const [expiredDuringSubmit, setExpired] = useState<Exclude<ResetTokenState, 'valid'> | null>(null);
+  const [expiredDuringSubmit, setExpired] = useState<Exclude<ResetTokenState, 'valid'> | null>(
+    null,
+  );
   const pwRef = useRef<HTMLInputElement>(null);
   const confirmRef = useRef<HTMLInputElement>(null);
 
@@ -90,7 +106,12 @@ export function AturUlangKataSandiPage() {
   }
 
   let body;
-  if (check.isPending) body = <p role="status" className="text-body text-ink-muted">{t.app.memuat}</p>;
+  if (check.isPending)
+    body = (
+      <p role="status" className="text-body text-ink-muted">
+        {t.app.memuat}
+      </p>
+    );
   else if (check.isError)
     body = (
       <Callout variant="error" title={c.kendalaJudul}>
@@ -103,8 +124,8 @@ export function AturUlangKataSandiPage() {
     body = (
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-3 text-center">
-          <h1 className="text-heading-1 text-ink">{c.judul}</h1>
-          <p className="text-body-dense text-ink-muted">{c.keterangan}</p>
+          <h1 className="text-center text-page-title text-ink">{c.judul}</h1>
+          <p className="text-center text-lead text-ink-subtle">{c.keterangan}</p>
         </div>
         {mutation.isError && !errors.pw && !expiredDuringSubmit && (
           <Callout variant="error" title={c.kendalaJudul}>
@@ -123,6 +144,7 @@ export function AturUlangKataSandiPage() {
           required
         />
         <TextField
+          size="lg"
           ref={confirmRef}
           label={c.konfirmasi}
           type="password"
@@ -138,11 +160,25 @@ export function AturUlangKataSandiPage() {
           error={errors.confirm}
           required
         />
-        <Button type="submit" variant="primary" size="lg" block disabled={!canSubmit} loading={mutation.isPending} loadingLabel={c.menyimpan}>
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          block
+          disabled={!canSubmit}
+          loading={mutation.isPending}
+          loadingLabel={c.menyimpan}
+        >
           {c.simpan}
         </Button>
       </form>
     );
 
-  return <PublicFrame width={expiredDuringSubmit || (check.data && check.data !== 'valid') ? 'state' : 'form'}>{body}</PublicFrame>;
+  return (
+    <PublicFrame
+      width={expiredDuringSubmit || (check.data && check.data !== 'valid') ? 'state' : 'form'}
+    >
+      {body}
+    </PublicFrame>
+  );
 }

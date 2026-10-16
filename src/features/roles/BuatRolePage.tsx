@@ -9,6 +9,7 @@ import { useLeaveGuard } from '@/lib/use-leave-guard';
 import { useRef, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
+import { FormFooter } from '@/components/layout/FormFooter';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Section } from '@/components/layout/Section';
 import { ConfirmDialog } from '@/components/patterns/Dialog';
@@ -79,8 +80,8 @@ export function BuatRolePage() {
         back={{ to: '/role', label: c.kembaliKe }}
       />
       <PageBody>
-        <form noValidate onSubmit={submit} className="flex flex-col gap-5">
-          <Section title={c.infoJudul} className="border border-border">
+        <form noValidate onSubmit={submit} className="flex flex-col gap-4">
+          <Section title={c.infoJudul}>
             <div className="flex flex-col gap-4">
               <TextField label={u.nama} required showRequired value={nama} onChange={(e) => (setNama(e.target.value), clear('nama'))} error={errors.nama} containerClassName="max-w-[560px]" />
               <Textarea label={u.deskripsi} required maxLength={300} showCount value={deskripsi} onChange={(e) => (setDeskripsi(e.target.value), clear('deskripsi'))} error={errors.deskripsi} />
@@ -96,17 +97,21 @@ export function BuatRolePage() {
               </div>
             </div>
           </Section>
-          <Section className="border border-border">
+          <Section>
             <PermissionPicker orgType={orgType} value={izin} onChange={(v) => (setIzin(v), clear('izin'))} error={errors.izin} scroll={false} />
           </Section>
-          <div className="flex flex-wrap justify-end gap-2">
-            <Button onClick={() => navigate('/role')} disabled={m.isPending}>
-              {c.batal}
-            </Button>
-            <Button type="submit" variant="primary" loading={m.isPending} loadingLabel={u.menyimpan}>
-              {c.buat}
-            </Button>
-          </div>
+          <FormFooter
+            start={
+              <Button onClick={() => navigate('/role')} disabled={m.isPending}>
+                {c.batal}
+              </Button>
+            }
+            end={
+              <Button type="submit" variant="primary" loading={m.isPending} loadingLabel={u.menyimpan}>
+                {c.buat}
+              </Button>
+            }
+          />
         </form>
       </PageBody>
       <ConfirmDialog

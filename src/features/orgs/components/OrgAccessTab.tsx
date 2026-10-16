@@ -36,13 +36,13 @@ function SectionHeader({ title, meta, hint, action }: { title: string; meta?: st
   return (
     <div className="flex flex-col gap-1 pb-1">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="flex items-baseline gap-2 text-heading-3 text-ink">
+        <h3 className="flex items-baseline gap-2 text-body-strong text-ink">
           {title}
-          {meta && <span className="font-mono text-caption font-normal text-ink-subtle">{meta}</span>}
+          {meta && <span className="font-mono text-caption font-normal text-ink-muted">{meta}</span>}
         </h3>
         {action}
       </div>
-      {hint && <p className="text-caption text-ink-subtle">{hint}</p>}
+      {hint && <p className="text-caption text-ink-muted">{hint}</p>}
     </div>
   );
 }
@@ -56,7 +56,7 @@ function LinkAction({ children, onClick, disabled, title, label }: { children: R
       disabled={disabled}
       title={title}
       aria-label={label}
-      className="shrink-0 text-body-dense font-semibold text-ink underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:text-ink-subtle disabled:no-underline"
+      className="shrink-0 text-body font-semibold text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring disabled:cursor-not-allowed disabled:text-ink-muted disabled:no-underline underline-offset-[3px] hover:underline"
     >
       {children}
     </button>
@@ -97,7 +97,7 @@ function DomainSection({ org, canEdit }: { org: OrgDetail; canEdit: boolean }) {
       <ul className="flex flex-col border-t border-border-subtle">
         {org.domainDetail.map((d) => (
           <li key={d.domain} className="flex items-center gap-3 border-b border-border-subtle py-3">
-            <span className="min-w-0 flex-1 break-all font-mono text-body-dense text-ink">{d.domain}</span>
+            <span className="min-w-0 flex-1 break-all font-mono text-body text-ink">{d.domain}</span>
             <span className="shrink-0 text-caption text-ink-muted">{c.domainPengguna(d.pengguna)}</span>
             {canEdit && (
               <LinkAction disabled={terakhir} title={terakhir ? e.domainTerakhir : undefined} label={terakhir ? `${c.hapus} ${d.domain}. ${e.domainTerakhir}` : `${c.hapus} ${d.domain}`} onClick={() => setHapus(d)}>
@@ -250,16 +250,16 @@ function RemoveAllowedEmailDialog({ org, entry, onClose }: { org: OrgDetail; ent
     >
       {entry.akunAktif > 0 && (
         <div className="flex flex-col gap-3">
-          <label className="flex items-center gap-2 text-body-dense text-ink">
-            <input type="checkbox" checked={nonaktifkan} onChange={(x) => setNonaktifkan(x.target.checked)} className="h-4 w-4 accent-[var(--color-action)]" />
+          <label className="flex items-center gap-2 text-body text-ink">
+            <input type="checkbox" checked={nonaktifkan} onChange={(x) => setNonaktifkan(x.target.checked)} className="h-4 w-4 accent-[var(--color-ink)]" />
             {c.nonaktifkanAkun}
           </label>
           {nonaktifkan ? (
             <ReasonField label={c.alasanNonaktif} placeholder={c.alasanNonaktifPlaceholder} options={Object.keys(ALASAN_NONAKTIF)} value={reason} onChange={setReason} showErrors={touched} />
           ) : (
-            <p className="text-body-dense text-ink-muted">
+            <p className="text-body text-ink-muted">
               {c.akunTetapAktif(entry.berlakuSampai ? formatTanggal(`${entry.berlakuSampai}T12:00:00+07:00`) : c.tanpaBatas)}{' '}
-              <Link to={`/pengguna?cari=${encodeURIComponent(entry.email)}`} className="font-semibold text-ink underline">
+              <Link to={`/pengguna?cari=${encodeURIComponent(entry.email)}`} className="link-inline">
                 {c.lihatPengguna}
               </Link>
             </p>
@@ -287,13 +287,13 @@ function EmailSection({ org, canEdit }: { org: OrgDetail; canEdit: boolean }) {
         }
       />
       {org.emailDiizinkanDaftar.length === 0 ? (
-        <p className="border-t border-border-subtle py-3 text-body-dense text-ink-muted">{c.emailKosong}</p>
+        <p className="border-t border-border-subtle py-3 text-body text-ink-muted">{c.emailKosong}</p>
       ) : (
         <ul className="flex flex-col border-t border-border-subtle">
           {org.emailDiizinkanDaftar.map((x) => (
             <li key={x.id} className="flex flex-col gap-1 border-b border-border-subtle py-3">
               <div className="flex items-start gap-3">
-                <span className="min-w-0 flex-1 break-all font-mono text-body-dense text-ink">{x.email}</span>
+                <span className="min-w-0 flex-1 break-all font-mono text-body text-ink">{x.email}</span>
                 {canEdit && (
                   <span className="flex shrink-0 gap-3">
                     <LinkAction label={`${c.ubahTanggal} ${x.email}`} onClick={() => setDialog({ kind: 'edit', entry: x })}>
@@ -329,7 +329,7 @@ export function OrgAccessTab({ org, canEdit }: { org: OrgDetail; canEdit: boolea
     <div className="flex flex-col gap-8">
       <DomainSection org={org} canEdit={canEdit} />
       <EmailSection org={org} canEdit={canEdit} />
-      <p className="text-caption text-ink-subtle">{c.ipCatatan}</p>
+      <p className="text-caption text-ink-muted">{c.ipCatatan}</p>
     </div>
   );
 }

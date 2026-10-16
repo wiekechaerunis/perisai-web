@@ -6,7 +6,7 @@
  * Desain: "Design belum ada" → mengikuti look & feel Figma OTP/Aktivasi 118:235, 66:2602 (PR-11, keputusan 14 Okt 2026).
  */
 import { useMutation } from '@tanstack/react-query';
-import { ArrowLeft, MailCheck } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { Callout } from '@/components/patterns/Callout';
@@ -25,7 +25,10 @@ function validate(email: string): string | undefined {
 
 export function BackToLogin() {
   return (
-    <Link to="/masuk" className="inline-flex items-center gap-1 text-body-dense text-ink underline-offset-2 hover:underline">
+    <Link
+      to="/masuk"
+      className="inline-flex items-center gap-1 text-body text-ink underline-offset-2 hover:underline"
+    >
       <ArrowLeft aria-hidden size={16} strokeWidth={1.8} />
       {c.kembali}
     </Link>
@@ -52,7 +55,13 @@ export function LupaKataSandiPage() {
   if (mutation.isSuccess) {
     return (
       <PublicFrame>
-        <StatePanel align="center" icon={MailCheck} title={c.terkirimJudul} description={c.terkirim} actions={<BackToLogin />} />
+        <StatePanel
+          align="center"
+          illustration="berhasil"
+          title={c.terkirimJudul}
+          description={c.terkirim}
+          actions={<BackToLogin />}
+        />
       </PublicFrame>
     );
   }
@@ -61,8 +70,8 @@ export function LupaKataSandiPage() {
     <PublicFrame>
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-3 text-center">
-          <h1 className="text-heading-1 text-ink">{c.judul}</h1>
-          <p className="text-body-dense text-ink-muted">{c.keterangan}</p>
+          <h1 className="text-center text-page-title text-ink">{c.judul}</h1>
+          <p className="text-center text-lead text-ink-subtle">{c.keterangan}</p>
         </div>
         {mutation.isError && (
           <Callout variant="error" title={c.kendalaJudul}>
@@ -70,6 +79,7 @@ export function LupaKataSandiPage() {
           </Callout>
         )}
         <TextField
+          size="lg"
           ref={inputRef}
           label={c.email}
           type="email"
@@ -84,7 +94,14 @@ export function LupaKataSandiPage() {
           error={error}
           required
         />
-        <Button type="submit" variant="primary" size="lg" block loading={mutation.isPending} loadingLabel={c.mengirim}>
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          block
+          loading={mutation.isPending}
+          loadingLabel={c.mengirim}
+        >
           {c.kirim}
         </Button>
         <BackToLogin />

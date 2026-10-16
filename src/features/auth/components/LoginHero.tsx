@@ -1,7 +1,7 @@
 /**
  * Panel visual kanan layar Login (Figma 85:4826). Dekoratif: foto anjungan lepas pantai dengan potongan miring
  * (mask 85:4828 → clip-path), aksen lime, judul, teks pendukung, tiga kapabilitas, dan tagline.
- * Aksen memakai `brand-lime` DS (#bed630); Figma #b7d334 (selisih kecil, dicatat di DS_GAPS.md).
+ * Aksen memakai `action` DS (#bed630); Figma #b7d334 (selisih kecil, dicatat di DS_GAPS.md).
  */
 import { Bell, ChartLine, Shield } from 'lucide-react';
 import hero from '@/assets/figma/hero.png';
@@ -31,7 +31,7 @@ export function LoginHero() {
       </div>
       <div className="absolute bottom-[90px] left-[19%] flex w-[min(646px,72%)] flex-col gap-6">
         <div className="flex flex-col gap-[10px]">
-          <span aria-hidden className="h-[3px] w-[36px] bg-brand-lime" />
+          <span aria-hidden className="h-[3px] w-[36px] bg-action" />
           <p className="text-[34px] font-semibold leading-[40px] text-[color:var(--figma-hero-ink)]">
             {c.judul.map((line) => (
               <span key={line} className="block">

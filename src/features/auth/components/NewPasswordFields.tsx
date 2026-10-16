@@ -10,36 +10,43 @@ import { TextField, type TextFieldProps } from '@/components/ui/TextField';
 import { PASSWORD_RULES, passwordStrength } from '@/lib/password';
 import { passwordCopy as c } from '../copy';
 
-export interface NewPasswordFieldProps extends Omit<TextFieldProps, 'type' | 'revealable' | 'value'> {
+export interface NewPasswordFieldProps
+  extends Omit<TextFieldProps, 'type' | 'revealable' | 'value'> {
   value: string;
 }
 
 /** Field password baru: checklist tampil sejak awal (sebelum mengetik), strength meter real-time. */
-export const NewPasswordField = forwardRef<HTMLInputElement, NewPasswordFieldProps>(function NewPasswordField(
-  { value, ...rest },
-  ref,
-) {
-  const checklistId = useId();
-  const strength = passwordStrength(value);
-  return (
-    <div className="flex flex-col gap-2">
-      <TextField
-        ref={ref}
-        type="password"
-        revealable
-        revealLabels={c.reveal}
-        autoComplete="new-password"
-        value={value}
-        aria-describedby={checklistId}
-        {...rest}
-      />
-      <PasswordStrengthMeter bars={strength.bars} label={strength.label} weak={strength.label === 'Lemah'} srPrefix={c.kekuatan} />
-      <PasswordChecklist
-        id={checklistId}
-        label={c.syarat}
-        srStatus={c.syaratStatus}
-        rules={PASSWORD_RULES.map((r) => ({ id: r.id, label: r.label, met: r.test(value) }))}
-      />
-    </div>
-  );
-});
+export const NewPasswordField = forwardRef<HTMLInputElement, NewPasswordFieldProps>(
+  function NewPasswordField({ value, ...rest }, ref) {
+    const checklistId = useId();
+    const strength = passwordStrength(value);
+    return (
+      <div className="flex flex-col gap-2">
+        <TextField
+          size="lg"
+          ref={ref}
+          type="password"
+          revealable
+          revealLabels={c.reveal}
+          autoComplete="new-password"
+          value={value}
+          aria-describedby={checklistId}
+          {...rest}
+        />
+        <PasswordStrengthMeter
+          bars={strength.bars}
+          label={strength.label}
+          weak={strength.label === 'Lemah'}
+          srPrefix={c.kekuatan}
+          prefix={c.kekuatanPrefiks}
+        />
+        <PasswordChecklist
+          id={checklistId}
+          label={c.syarat}
+          srStatus={c.syaratStatus}
+          rules={PASSWORD_RULES.map((r) => ({ id: r.id, label: r.label, met: r.test(value) }))}
+        />
+      </div>
+    );
+  },
+);

@@ -37,9 +37,9 @@ function DiffList({ title, icon, items }: { title: string; icon: ReactNode; item
         {title}
       </h4>
       {items.length === 0 ? (
-        <p className="text-body-dense text-ink-subtle">—</p>
+        <p className="text-body text-ink-muted">—</p>
       ) : (
-        <ul className="flex flex-col gap-1 text-body-dense">
+        <ul className="flex flex-col gap-1 text-body">
           {items.map((m) => (
             <li key={m.module}>
               <span className="font-mono text-caption text-ink-muted">{m.module}</span> {m.nama}
@@ -68,10 +68,10 @@ function TargetPicker({ role, target, onTarget, error }: { role: RoleEntry; targ
       />
       {preview.data && (
         <div className="flex flex-col gap-2 rounded-md bg-surface-sunken p-3">
-          <p className="text-body-dense text-ink">{c.pindah.pratinjau(preview.data.pengguna, role.id, target)}</p>
+          <p className="text-body text-ink">{c.pindah.pratinjau(preview.data.pengguna, role.id, target)}</p>
           <h4 className="text-label text-ink-muted">{c.pindah.aksesJudul}</h4>
           {!preview.data.aksesBertambah.length && !preview.data.aksesBerkurang.length ? (
-            <p className="text-body-dense text-ink-muted">{c.pindah.sama}</p>
+            <p className="text-body text-ink-muted">{c.pindah.sama}</p>
           ) : (
             <div className="grid gap-3 md:grid-cols-2">
               <DiffList title={c.pindah.bertambah} icon={<Plus aria-hidden size={14} strokeWidth={1.8} />} items={preview.data.aksesBertambah} />
@@ -143,14 +143,14 @@ export function DeactivateRoleDialog({ role, onClose }: { role: RoleEntry; onClo
       <div className="flex flex-col gap-4">
         {dipakai && (
           <>
-            <Link to={`/pengguna?role=${role.id}`} className="self-start text-body-dense font-semibold text-ink underline">
+            <Link to={`/pengguna?role=${role.id}`} className="self-start text-body font-semibold text-ink underline-offset-[3px] hover:underline">
               {c.nonaktifkan.lihatPengguna}
             </Link>
             <fieldset className="flex flex-col gap-2">
               <legend className="mb-1 text-label text-ink-muted">{c.nonaktifkan.pilihan}</legend>
               {(['pindah', 'lewati'] as const).map((x) => (
-                <label key={x} className="flex items-center gap-2 text-body-dense text-ink">
-                  <input type="radio" name="mode-nonaktif-role" checked={mode === x} onChange={() => setMode(x)} className="h-4 w-4 accent-[var(--color-action)]" />
+                <label key={x} className="flex items-center gap-2 text-body text-ink">
+                  <input type="radio" name="mode-nonaktif-role" checked={mode === x} onChange={() => setMode(x)} className="h-4 w-4 accent-[var(--color-ink)]" />
                   {x === 'pindah' ? c.nonaktifkan.pindah : c.nonaktifkan.lewati}
                 </label>
               ))}
@@ -158,7 +158,7 @@ export function DeactivateRoleDialog({ role, onClose }: { role: RoleEntry; onClo
             {mode === 'pindah' && <TargetPicker role={role} target={target} onTarget={(r) => (setTarget(r), setErr(undefined))} error={err} />}
           </>
         )}
-        <p className="text-caption text-ink-subtle">{c.nonaktifkan.catatan}</p>
+        <p className="text-caption text-ink-muted">{c.nonaktifkan.catatan}</p>
       </div>
     </ConfirmDialog>
   );

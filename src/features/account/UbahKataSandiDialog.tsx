@@ -134,6 +134,7 @@ export function UbahKataSandiDialog({ open, onOpenChange }: { open: boolean; onO
           required
         />
         <NewPasswordField
+          size="md"
           ref={refs.next}
           label={c.baru}
           value={next}

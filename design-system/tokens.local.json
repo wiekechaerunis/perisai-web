@@ -1,0 +1,32 @@
+{
+  "note": "Token tambahan prototype yang BELUM ada di PERISAI DS v2 · Lime. Digabung oleh scripts/build-tokens.ts dan tailwind.config.ts. Setiap entri tercatat di DS_GAPS.md (DS-07).",
+  "type": {
+    "groups": [
+      {
+        "name": "Prototype",
+        "family": "sans",
+        "styles": [
+          { "name": "dialog-title", "fontSize": "17px", "lineHeight": "24px", "fontWeight": 700, "usage": "Judul Dialog (README Dialog: 17/24 700); belum ada sebagai token tipe." },
+          { "name": "lead", "fontSize": "14px", "lineHeight": "20px", "fontWeight": 400, "usage": "Kalimat pengantar AuthForm dan pesan Toast (14/20)." }
+        ]
+      }
+    ]
+  },
+  "spacing": {
+    "tokens": [
+      { "name": "space-8", "value": "32px", "usage": "Jarak besar layar publik." },
+      { "name": "space-10", "value": "40px", "usage": "Jarak besar layar publik." }
+    ]
+  },
+  "size": {
+    "tokens": [
+      { "name": "control-sm", "value": "36px", "usage": "Tombol/input di toolbar tabel dan panel (README Button)." },
+      { "name": "control-lg", "value": "48px", "usage": "Kontrol layar publik (README AuthForm)." },
+      { "name": "row-min", "value": "52px", "usage": "Tinggi minimum baris tabel (README DataTable 52–56px)." },
+      { "name": "content-max", "value": "720px", "usage": "Lebar maks. kolom form." },
+      { "name": "dialog-width-md", "value": "480px", "usage": "Dialog md (README Dialog)." },
+      { "name": "dialog-width-lg", "value": "640px", "usage": "Dialog lg (README Dialog)." },
+      { "name": "auth-panel-width", "value": "563px", "usage": "Panel form AuthSplitLayout (DS v1)." }
+    ]
+  }
+}

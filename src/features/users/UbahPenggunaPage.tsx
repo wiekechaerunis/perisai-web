@@ -17,6 +17,7 @@ import { Lock, Minus, Plus } from 'lucide-react';
 import { useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
+import { FormFooter } from '@/components/layout/FormFooter';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Section } from '@/components/layout/Section';
 import { Callout } from '@/components/patterns/Callout';
@@ -70,11 +71,11 @@ function ReadOnly({ label, children, hint }: { label: string; children: ReactNod
   return (
     <div className="flex flex-col gap-1">
       <span className="text-label text-ink-muted">{label}</span>
-      <div className="flex min-h-control-md items-center justify-between gap-2 rounded-md border border-border bg-surface-sunken px-3 py-2 text-body-dense text-ink">
+      <div className="flex min-h-control-height items-center justify-between gap-2 rounded-md bg-surface-subtle px-3 shadow-[inset_0_0_0_1px_var(--color-border)] py-2 text-body text-ink">
         <div className="min-w-0 break-words">{children}</div>
-        <Lock aria-hidden size={16} strokeWidth={1.8} className="shrink-0 text-ink-subtle" />
+        <Lock aria-hidden size={16} strokeWidth={1.8} className="shrink-0 text-ink-muted" />
       </div>
-      {hint && <p className="text-caption text-ink-subtle">{hint}</p>}
+      {hint && <p className="text-caption text-ink-muted">{hint}</p>}
     </div>
   );
 }
@@ -86,7 +87,7 @@ export function UbahPenggunaPage() {
   if (!u) {
     return (
       <PageBody>
-        <p role="status" className="text-body-dense text-ink-muted">
+        <p role="status" className="text-body text-ink-muted">
           {detail.isError ? usersCopy.profil.tidakDitemukanIsi : usersCopy.profil.memuat}
         </p>
       </PageBody>
@@ -225,7 +226,7 @@ function UbahForm({ user: u }: { user: UserDetail }) {
       <>
         {header}
         <PageBody>
-          <p role="status" className="rounded-md bg-surface-sunken p-3 text-body-dense text-ink">
+          <p role="status" className="rounded-md bg-surface-sunken p-3 text-body text-ink">
             {c.tidakDapat}
           </p>
         </PageBody>
@@ -240,18 +241,18 @@ function UbahForm({ user: u }: { user: UserDetail }) {
         {preview ? (
           <Ringkasan preview={preview} busy={save.isPending} onBack={() => setPreview(null)} onCancel={() => navigate(`/pengguna/${u.id}`)} onSave={onSave} />
         ) : (
-          <form noValidate onSubmit={onReview} className="flex flex-col gap-6">
+          <form noValidate onSubmit={onReview} className="flex flex-col gap-4">
             {alert && (
               <Callout variant="error" size="compact">
                 {alert}
               </Callout>
             )}
-            <Section className="border border-border">
+            <Section>
               <div className="flex flex-col gap-4">
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex flex-col gap-1">
-                    <h2 className="text-heading-2 text-ink">{c.seksiData}</h2>
-                    <p className="text-body-dense text-ink-muted">{c.seksiDataKeterangan}</p>
+                    <h2 className="text-section-title text-ink">{c.seksiData}</h2>
+                    <p className="text-body text-ink-muted">{c.seksiDataKeterangan}</p>
                   </div>
                   <StatusBadge user={u} />
                 </div>
@@ -278,7 +279,7 @@ function UbahForm({ user: u }: { user: UserDetail }) {
                           self ? (
                             <>
                               {c.emailSendiri}{' '}
-                              <Link to="/akun-saya" className="font-semibold text-ink underline">
+                              <Link to="/akun-saya" className="link-inline">
                                 {c.bukaAkunSaya}
                               </Link>
                             </>
@@ -299,7 +300,7 @@ function UbahForm({ user: u }: { user: UserDetail }) {
                   </div>
                 </div>
                 <hr className="border-border-subtle" />
-                <h2 className="text-heading-2 text-ink">{c.seksiRole}</h2>
+                <h2 className="text-section-title text-ink">{c.seksiRole}</h2>
                 {self ? (
                   <div className="flex flex-col gap-2">
                     <span className="text-label text-ink-muted" title={c.roleSendiri}>
@@ -307,12 +308,12 @@ function UbahForm({ user: u }: { user: UserDetail }) {
                     </span>
                     <ul className="flex flex-wrap gap-2" aria-describedby="role-sendiri">
                       {u.roles.map((r) => (
-                        <li key={r} className="rounded-md border border-border bg-surface-selected px-3 py-1 text-caption text-ink">
+                        <li key={r} className="inline-flex h-6 items-center rounded-sm bg-status-neutral-bg px-[9px] text-tag text-status-neutral-ink">
                           {roleOptionLabel(r)}
                         </li>
                       ))}
                     </ul>
-                    <p id="role-sendiri" className="text-caption text-ink-subtle">
+                    <p id="role-sendiri" className="text-caption text-ink-muted">
                       {c.roleSendiri}
                     </p>
                   </div>
@@ -349,14 +350,14 @@ function UbahForm({ user: u }: { user: UserDetail }) {
                   <fieldset className="flex flex-col gap-2">
                     <legend className="mb-1 text-label text-ink-muted">{usersCopy.undangModal.cakupanR02}</legend>
                     {(['semua', 'sebagian'] as const).map((m) => (
-                      <label key={m} className="flex items-center gap-2 text-body-dense text-ink">
+                      <label key={m} className="flex items-center gap-2 text-body text-ink">
                         <input
                           type="radio"
                           name="cakupan-r02"
                           value={m}
                           checked={f.cakupanMode === m}
                           onChange={() => set('cakupanMode', m, 'cakupan')}
-                          className="h-4 w-4 accent-[var(--color-action)]"
+                          className="h-4 w-4 accent-[var(--color-ink)]"
                         />
                         {m === 'semua' ? usersCopy.undangModal.cakupanSemua : usersCopy.undangModal.cakupanSebagian}
                       </label>
@@ -384,14 +385,16 @@ function UbahForm({ user: u }: { user: UserDetail }) {
                     {u.aksesBerakhir ? c.masaBerlakuSampai(formatTanggal(u.aksesBerakhir)) : usersCopy.profil.tanpaBatas}
                   </ReadOnly>
                 </div>
-                <div className="flex justify-end gap-2">
-                  <Button onClick={() => navigate(`/pengguna/${u.id}`)}>{c.batal}</Button>
-                  <Button type="submit" variant="primary" disabled={!dirty} loading={check.isPending} loadingLabel={c.memeriksa}>
-                    {c.tinjau}
-                  </Button>
-                </div>
               </div>
             </Section>
+            <FormFooter
+              start={<Button onClick={() => navigate(`/pengguna/${u.id}`)}>{c.batal}</Button>}
+              end={
+                <Button type="submit" variant="primary" disabled={!dirty} loading={check.isPending} loadingLabel={c.memeriksa}>
+                  {c.tinjau}
+                </Button>
+              }
+            />
           </form>
         )}
       </PageBody>
@@ -425,28 +428,28 @@ function Ringkasan({
 }) {
   const noAccessChange = !preview.aksesBertambah.length && !preview.aksesBerkurang.length;
   return (
-    <div className="flex flex-col gap-6">
-      <Section className="border border-border">
+    <div className="flex flex-col gap-4">
+      <Section>
         <div className="flex flex-col gap-3">
-          <h2 className="text-heading-2 text-ink">{c.ringkasanJudul}</h2>
-          <p className="text-caption text-ink-subtle">{c.ringkasanKeterangan}</p>
-          <table className="w-full border-collapse text-left text-body-dense">
+          <h2 className="text-section-title text-ink">{c.ringkasanJudul}</h2>
+          <p className="text-caption text-ink-muted">{c.ringkasanKeterangan}</p>
+          <table className="w-full border-collapse text-left text-body">
             <caption className="sr-only">{c.ringkasanJudul}</caption>
             <thead>
-              <tr className="border-b border-border text-label text-ink-muted">
-                <th scope="col" className="py-2 pr-4 font-medium">{c.kolom.field}</th>
-                <th scope="col" className="py-2 pr-4 font-medium">{c.kolom.sebelum}</th>
-                <th scope="col" className="py-2 font-medium">{c.kolom.sesudah}</th>
+              <tr className="text-label text-ink-muted">
+                <th scope="col" className="border-b border-border bg-surface-subtle p-[10px]">{c.kolom.field}</th>
+                <th scope="col" className="border-b border-border bg-surface-subtle p-[10px]">{c.kolom.sebelum}</th>
+                <th scope="col" className="border-b border-border bg-surface-subtle p-[10px]">{c.kolom.sesudah}</th>
               </tr>
             </thead>
             <tbody>
               {preview.perubahan.map((p) => (
                 <tr key={p.field} className="border-b border-border-subtle align-top">
-                  <th scope="row" className="py-3 pr-4 font-medium text-ink">{c.fieldLabel[p.field]}</th>
-                  <td className="py-3 pr-4 text-ink-muted">{p.sebelum}</td>
-                  <td className="py-3 text-ink">
+                  <th scope="row" className="p-[10px] font-semibold text-ink">{c.fieldLabel[p.field]}</th>
+                  <td className="p-[10px] text-ink-muted">{p.sebelum}</td>
+                  <td className="p-[10px] text-ink">
                     <span className="font-semibold">{p.sesudah}</span>
-                    {p.field === 'email' && <span className="block text-caption text-ink-subtle">{c.emailTertundaCatatan}</span>}
+                    {p.field === 'email' && <span className="block text-caption text-ink-muted">{c.emailTertundaCatatan}</span>}
                   </td>
                 </tr>
               ))}
@@ -454,12 +457,12 @@ function Ringkasan({
           </table>
         </div>
       </Section>
-      <Section className="border border-border">
+      <Section>
         <div className="flex flex-col gap-3">
-          <h2 className="text-heading-2 text-ink">{c.aksesJudul}</h2>
-          <p className="text-caption text-ink-subtle">{c.aksesKeterangan}</p>
+          <h2 className="text-section-title text-ink">{c.aksesJudul}</h2>
+          <p className="text-caption text-ink-muted">{c.aksesKeterangan}</p>
           {noAccessChange ? (
-            <p className="text-body-dense text-ink-muted">{c.aksesSama}</p>
+            <p className="text-body text-ink-muted">{c.aksesSama}</p>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
               <AccessList title={c.aksesBertambah} icon={<Plus aria-hidden size={14} strokeWidth={1.8} />} items={preview.aksesBertambah} />
@@ -468,17 +471,23 @@ function Ringkasan({
           )}
         </div>
       </Section>
-      <div className="flex flex-wrap justify-end gap-2">
-        <Button onClick={onBack} disabled={busy}>
-          {c.kembali}
-        </Button>
-        <Button onClick={onCancel} disabled={busy}>
-          {c.batal}
-        </Button>
-        <Button variant="primary" onClick={onSave} loading={busy} loadingLabel={c.menyimpan}>
-          {c.simpan}
-        </Button>
-      </div>
+      <FormFooter
+        start={
+          <Button onClick={onBack} disabled={busy}>
+            {c.kembali}
+          </Button>
+        }
+        end={
+          <>
+            <Button variant="subtle" onClick={onCancel} disabled={busy}>
+              {c.batal}
+            </Button>
+            <Button variant="primary" onClick={onSave} loading={busy} loadingLabel={c.menyimpan}>
+              {c.simpan}
+            </Button>
+          </>
+        }
+      />
     </div>
   );
 }
@@ -486,16 +495,16 @@ function Ringkasan({
 function AccessList({ title, icon, items }: { title: string; icon: ReactNode; items: UserChangePreview['aksesBertambah'] }) {
   return (
     <div className="flex flex-col gap-2">
-      <h3 className="flex items-center gap-2 text-heading-3 text-ink">
+      <h3 className="flex items-center gap-2 text-body-strong text-ink">
         {icon}
         {title}
       </h3>
       {items.length === 0 ? (
-        <p className="text-body-dense text-ink-subtle">—</p>
+        <p className="text-body text-ink-muted">—</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {items.map((m) => (
-            <li key={m.module} className="text-body-dense text-ink">
+            <li key={m.module} className="text-body text-ink">
               <span className="font-mono text-caption text-ink-muted">{m.module}</span> {m.nama}
               <span className="block text-ink-muted">{m.aksi.join(', ')}</span>
             </li>

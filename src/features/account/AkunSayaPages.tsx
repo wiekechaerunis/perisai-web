@@ -9,7 +9,8 @@
  * Menggantikan "Pengaturan akun" (K-8 diselesaikan oleh Figma: satu halaman Akun Saya).
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Fingerprint, KeyRound, Lock, Mail, Smartphone } from 'lucide-react';
+import { Fingerprint, KeyRound, Lock, Mail, Plus, Smartphone } from 'lucide-react';
+import { Callout } from '@/components/patterns/Callout';
 import { useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { Outlet, useBlocker } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
@@ -67,12 +68,12 @@ export function AkunSayaLayout() {
 function ReadOnly({ label, children, hint }: { label: string; children: ReactNode; hint?: ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-label text-ink-muted">{label}</span>
-      <div className="flex min-h-control-md items-center justify-between gap-2 rounded-md border border-border bg-surface-sunken px-3 py-2 text-body-dense text-ink">
+      <span className="text-label text-ink">{label}</span>
+      <div className="flex min-h-control-height items-center justify-between gap-2 rounded-md bg-surface-subtle px-3 shadow-[inset_0_0_0_1px_var(--color-border)] py-2 text-body text-ink">
         <div className="min-w-0 break-words">{children}</div>
-        <Lock aria-hidden size={16} strokeWidth={1.8} className="shrink-0 text-ink-subtle" />
+        <Lock aria-hidden size={16} strokeWidth={1.8} className="shrink-0 text-ink-muted" />
       </div>
-      {hint && <p className="text-caption text-ink-subtle">{hint}</p>}
+      {hint && <p className="text-caption text-ink-muted">{hint}</p>}
     </div>
   );
 }
@@ -141,12 +142,12 @@ export function AkunSayaProfilPage() {
 
   return (
     <>
-      <Section className="border border-border">
+      <Section>
         <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
           <div className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-1">
-              <h2 className="text-heading-2 text-ink">{c.profil.judul}</h2>
-              <p className="text-body-dense text-ink-muted">{c.profil.keterangan}</p>
+              <h2 className="text-section-title text-ink">{c.profil.judul}</h2>
+              <p className="text-body text-ink-muted">{c.profil.keterangan}</p>
             </div>
             <StatusBadge user={{ status: m.status, organisasi: m.organisasi }} />
           </div>
@@ -163,9 +164,9 @@ export function AkunSayaProfilPage() {
                 error={errors.nama}
               />
               <div className="flex flex-col gap-1">
-                <span className="text-label text-ink-muted">{c.profil.email}</span>
+                <span className="text-label text-ink">{c.profil.email}</span>
                 <div className="flex items-center gap-2">
-                  <div className="flex min-h-control-md flex-1 items-center rounded-md border border-border bg-surface-sunken px-3 text-body-dense text-ink">
+                  <div className="flex min-h-control-height flex-1 items-center rounded-md bg-surface-subtle px-3 shadow-[inset_0_0_0_1px_var(--color-border)] text-body text-ink">
                     <span className="break-all">{m.email}</span>
                   </div>
                   {req?.status !== 'Menunggu Persetujuan' && (
@@ -179,7 +180,7 @@ export function AkunSayaProfilPage() {
                     </span>
                     {req.alasan && <span className="text-ink-muted">{c.email.alasanDitolak(req.alasan)}</span>}
                     <span>
-                      <button type="button" className="underline" onClick={() => dismissReq.mutate()}>
+                      <button type="button" className="link-inline" onClick={() => dismissReq.mutate()}>
                         {c.email.tutup}
                       </button>
                     </span>
@@ -192,15 +193,15 @@ export function AkunSayaProfilPage() {
                     </span>
                     {req.status === 'Menunggu Verifikasi' && (
                       <>
-                        <button type="button" className="underline" onClick={() => setEmailOpen(true)}>
+                        <button type="button" className="link-inline" onClick={() => setEmailOpen(true)}>
                           {c.email.verifikasi}
                         </button>
-                        <button type="button" className="underline" onClick={() => resendCode.mutate()}>
+                        <button type="button" className="link-inline" onClick={() => resendCode.mutate()}>
                           {c.email.kirimUlang}
                         </button>
                       </>
                     )}
-                    <button type="button" className="underline" onClick={() => cancelReq.mutate()}>
+                    <button type="button" className="link-inline" onClick={() => cancelReq.mutate()}>
                       {c.email.batalkanPermintaan}
                     </button>
                   </div>
@@ -220,19 +221,19 @@ export function AkunSayaProfilPage() {
             </div>
           </div>
           <hr className="border-border-subtle" />
-          <h2 className="text-heading-2 text-ink">{c.profil.roleJudul}</h2>
+          <h2 className="text-section-title text-ink">{c.profil.roleJudul}</h2>
           <div className="flex flex-col gap-2">
-            <span className="text-label text-ink-muted" title={c.profil.roleTooltip}>
+            <span className="text-label text-ink" title={c.profil.roleTooltip}>
               {c.profil.role}
             </span>
             <ul className="flex flex-wrap gap-2" aria-describedby="role-tooltip">
               {m.roles.map((r) => (
-                <li key={r} className="rounded-md border border-border bg-surface-selected px-3 py-1 text-caption text-ink">
+                <li key={r} className="inline-flex h-6 items-center rounded-sm bg-status-neutral-bg px-[9px] text-tag text-status-neutral-ink">
                   {roleName(r)}
                 </li>
               ))}
             </ul>
-            <p id="role-tooltip" className="text-caption text-ink-subtle">
+            <p id="role-tooltip" className="text-caption text-ink-muted">
               {c.profil.roleTooltip}
             </p>
           </div>
@@ -261,14 +262,14 @@ export function AkunSayaProfilPage() {
           </div>
         </form>
       </Section>
-      <Section className="border border-border">
+      <Section>
         <div className="flex flex-col gap-3">
-          <h2 className="text-heading-2 text-ink">{accessCopy.judul}</h2>
-          <p className="text-caption text-ink-subtle">{accessCopy.keterangan}</p>
+          <h2 className="text-section-title text-ink">{accessCopy.judul}</h2>
+          <p className="text-caption text-ink-muted">{accessCopy.keterangan}</p>
           <EffectiveAccessView modules={m.hakAkses} />
         </div>
       </Section>
-      <p className="text-caption text-ink-subtle">{c.profil.catatan}</p>
+      <Callout variant="info" size="compact">{c.profil.catatan}</Callout>
       <EmailChangeDialog open={emailOpen} onOpenChange={setEmailOpen} me={m} startAtCode={req?.status === 'Menunggu Verifikasi'} onChanged={refresh} />
       <ConfirmDialog
         open={blocker.state === 'blocked'}
@@ -288,12 +289,12 @@ export function AkunSayaKeamananPage() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Section className="border border-border">
+      <Section>
         <div className="flex flex-wrap items-center gap-4">
           <KeyRound aria-hidden size={20} strokeWidth={1.8} className="text-ink-muted" />
           <div className="flex min-w-0 flex-1 flex-col">
-            <h2 className="text-heading-2 text-ink">{c.keamanan.sandiJudul}</h2>
-            <p className="text-body-dense text-ink-muted">
+            <h2 className="text-section-title text-ink">{c.keamanan.sandiJudul}</h2>
+            <p className="text-body text-ink-muted">
               {me.data?.kataSandiDiubah ? c.keamanan.sandiDiubah(formatTanggalJam(me.data.kataSandiDiubah)) : c.keamanan.sandiBelum}
             </p>
           </div>
@@ -303,7 +304,7 @@ export function AkunSayaKeamananPage() {
       <MetodeVerifikasi email={me.data?.email} />
       <SesiAktifSection />
       <RiwayatMasuk onUbahSandi={() => setOpen(true)} />
-      <p className="text-caption text-ink-subtle">{c.keamanan.catatan}</p>
+      <Callout variant="info" size="compact">{c.keamanan.catatan}</Callout>
       <UbahKataSandiDialog open={open} onOpenChange={setOpen} />
     </>
   );
@@ -311,6 +312,20 @@ export function AkunSayaKeamananPage() {
 
 /** Batas passkey per akun (Figma 341:6507 "Batas lima passkey"). */
 const MAKS_PASSKEY = 5;
+
+/** ManagedList DS v2: meter kuota bersegmen ("0 dari 5"); segmen terpakai `action` (Ekspresi E5). */
+function QuotaMeter({ used, max, label }: { used: number; max: number; label: string }) {
+  return (
+    <span className="flex items-center gap-2">
+      <span aria-hidden className="flex w-[80px] gap-0.5">
+        {Array.from({ length: max }, (_, i) => (
+          <span key={i} className={i < used ? 'h-[6px] flex-1 rounded-[2px] bg-action' : 'h-[6px] flex-1 rounded-[2px] bg-border'} />
+        ))}
+      </span>
+      <span className="text-caption tabular-nums text-ink-muted">{label}</span>
+    </span>
+  );
+}
 
 /**
  * Figma 341:6507 kartu "Metode verifikasi masuk". Kode email = OTP login (PRD Login) dan selalu aktif.
@@ -322,22 +337,22 @@ function MetodeVerifikasi({ email }: { email?: string }) {
   const row = (icon: ReactNode, judul: string, badge?: ReactNode, aside?: ReactNode) => (
     <div className="flex items-center gap-3">
       {icon}
-      <h3 className="min-w-0 flex-1 text-body-dense font-medium text-ink">{judul}</h3>
+      <h3 className="min-w-0 flex-1 text-body-strong text-ink">{judul}</h3>
       {badge}
       {aside}
     </div>
   );
   const ikon = 'shrink-0 text-ink-muted';
   return (
-    <Section title={m.judul} description={m.keterangan} className="border border-border">
+    <Section title={m.judul} description={m.keterangan}>
       <div className="flex flex-col">
         <div className="flex flex-col gap-2 border-t border-border-subtle py-4">
           {row(<Mail aria-hidden size={20} strokeWidth={1.8} className={ikon} />, m.emailJudul, <AccountStatusBadge label={m.aktif} tone="success" />)}
-          <p className="text-body-dense text-ink">{m.emailIsi(email ?? '—')}</p>
+          {email ? <p className="text-body text-ink">{m.emailIsi(email)}</p> : <p className="text-body text-ink-muted">{t.app.memuat}</p>}
         </div>
         <div className="flex flex-col items-start gap-3 border-t border-border-subtle py-4">
           <div className="w-full">{row(<Smartphone aria-hidden size={20} strokeWidth={1.8} className={ikon} />, m.autentikatorJudul, <AccountStatusBadge label={m.belumDiatur} tone="muted" />)}</div>
-          <p className="text-body-dense text-ink-muted">{m.autentikatorIsi}</p>
+          <p className="text-body text-ink-muted">{m.autentikatorIsi}</p>
           {/* ASSUMPTION: nonaktif sampai PRD Verifikasi Dua Langkah (KD-02). */}
           <Button disabled aria-describedby="metode-belum-tersedia">{m.atur}</Button>
         </div>
@@ -347,13 +362,15 @@ function MetodeVerifikasi({ email }: { email?: string }) {
               <Fingerprint aria-hidden size={20} strokeWidth={1.8} className={ikon} />,
               m.passkeyJudul,
               undefined,
-              <span className="font-mono text-caption text-ink-muted">{m.passkeyJumlah(0, MAKS_PASSKEY)}</span>,
+              <QuotaMeter used={0} max={MAKS_PASSKEY} label={m.passkeyJumlah(0, MAKS_PASSKEY)} />,
             )}
           </div>
-          <p className="text-body-dense text-ink-muted">{m.passkeyIsi}</p>
+          <p className="text-body text-ink-muted">{m.passkeyIsi}</p>
           <p className="text-caption text-ink-muted">{m.passkeyKosong}</p>
-          <Button disabled aria-describedby="metode-belum-tersedia">{m.tambahPasskey}</Button>
-          <p id="metode-belum-tersedia" className="text-caption text-ink-subtle">{m.belumTersedia}</p>
+          <Button disabled block aria-describedby="metode-belum-tersedia" icon={<Plus aria-hidden size={16} strokeWidth={2} />}>
+            {m.tambahPasskey}
+          </Button>
+          <p id="metode-belum-tersedia" className="text-caption text-ink-muted">{m.belumTersedia}</p>
         </div>
       </div>
     </Section>
@@ -365,17 +382,17 @@ function RiwayatMasuk({ onUbahSandi }: { onUbahSandi: () => void }) {
   const q = useQuery({ queryKey: ['me', 'login-history'], queryFn: () => services.logs.myLoginHistory() });
   const k = c.keamanan.kolom;
   return (
-    <Section className="border border-border">
+    <Section>
       <div className="flex flex-col gap-3">
-        <h2 className="text-heading-2 text-ink">{c.keamanan.riwayatJudul}</h2>
-        <p className="text-caption text-ink-subtle">{c.keamanan.riwayatKeterangan}</p>
+        <h2 className="text-section-title text-ink">{c.keamanan.riwayatJudul}</h2>
+        <p className="text-caption text-ink-muted">{c.keamanan.riwayatKeterangan}</p>
         {q.isError ? (
-          <p role="alert" className="text-body-dense text-ink">{c.keamanan.riwayatGagal}</p>
+          <p role="alert" className="text-body text-ink">{c.keamanan.riwayatGagal}</p>
         ) : (
           <DataTable
             caption={c.keamanan.riwayatJudul}
             columns={[
-              { id: 'w', header: k.waktu, cell: ({ row }) => <span className="whitespace-nowrap font-mono text-caption">{formatTanggalJam(row.original.waktu)}</span> },
+              { id: 'w', header: k.waktu, cell: ({ row }) => <span className="whitespace-nowrap">{formatTanggalJam(row.original.waktu)}</span> },
               { id: 'p', header: k.peristiwa, cell: ({ row }) => row.original.peristiwa },
               { id: 'h', header: k.hasil, cell: ({ row }) => <ResultTag ok={row.original.hasil === 'Berhasil'}>{row.original.hasil}</ResultTag> },
               { id: 'd', header: k.perangkat, cell: ({ row }) => row.original.perangkat ?? '—' },
@@ -384,13 +401,13 @@ function RiwayatMasuk({ onUbahSandi }: { onUbahSandi: () => void }) {
             data={q.data ?? []}
             getRowId={(e) => e.id}
             loading={q.isPending}
-            loadingContent={<p className="text-body-dense text-ink-muted">{t.app.memuat}</p>}
+            loadingContent={<p className="text-body text-ink-muted">{t.app.memuat}</p>}
             empty={<EmptyState title={c.keamanan.riwayatKosong} />}
           />
         )}
-        <p className="text-body-dense text-ink-muted">
+        <p className="text-body text-ink-muted">
           {c.keamanan.tidakMengenali}{' '}
-          <button type="button" onClick={onUbahSandi} className="font-semibold text-ink underline">
+          <button type="button" onClick={onUbahSandi} className="link-inline">
             {c.keamanan.ubahSandi}
           </button>
         </p>

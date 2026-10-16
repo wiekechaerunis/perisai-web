@@ -22,7 +22,8 @@ export const orgCopy = {
   gagalMuat: 'Daftar organisasi gagal dimuat.',
   cobaLagi: 'Coba lagi',
   memuat: 'Memuat…',
-  tabelJudul: 'Organisasi', // tanpa jumlah (arahan PM 14 Okt 2026); total ada di paginasi
+  tabelJudul: 'Daftar organisasi', // tanpa jumlah (arahan PM 14 Okt 2026); total ada di paginasi
+  entitas: 'organisasi', // DS v2 FilterPanel "Terapkan · n organisasi"
   tabel: 'Daftar organisasi',
   kolom: { nama: 'Nama', jenis: 'Jenis', domain: 'Domain email', email: 'Email', pengguna: 'Pengguna aktif', pic: 'Admin KKKS', status: 'Status' },
   tambahLainnya: (n: number) => `+${n}`,

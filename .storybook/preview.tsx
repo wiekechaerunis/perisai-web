@@ -3,7 +3,7 @@ import type { Preview } from '@storybook/react';
 import { MemoryRouter } from 'react-router-dom';
 import '../src/styles/index.css';
 
-/** Toggle tema DS: `standar` (default) dan `ruang-kendali` (gelap). */
+/** Toggle tema DS v2 · Lime: `light` (Terang, default) dan `dark` (Gelap, nilai usulan K2). */
 const preview: Preview = {
   parameters: {
     layout: 'padded',
@@ -20,8 +20,8 @@ const preview: Preview = {
       </MemoryRouter>
     ),
     withThemeByDataAttribute({
-      themes: { Standar: 'standar', 'Ruang kendali': 'ruang-kendali' },
-      defaultTheme: 'Standar',
+      themes: { Terang: 'light', Gelap: 'dark' },
+      defaultTheme: 'Terang',
       attributeName: 'data-theme',
     }),
   ],

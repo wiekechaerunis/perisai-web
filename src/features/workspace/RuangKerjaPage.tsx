@@ -30,7 +30,6 @@ export function RuangKerjaPage() {
                 key: 'login',
                 label: c.loginTerakhir,
                 value: user.loginTerakhir ? formatTanggalJam(user.loginTerakhir) : '—',
-                mono: true,
               },
             ]}
           />

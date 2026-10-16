@@ -6,7 +6,7 @@
  */
 import type { ColumnDef } from '@tanstack/react-table';
 import { PAGE_SIZE_OPTIONS, PAGE_SIZE_PARAM, parsePageSize } from '@/lib/page-size';
-import { Plus, Search } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
@@ -15,11 +15,12 @@ import { Section } from '@/components/layout/Section';
 import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
 import { DataTable } from '@/components/patterns/DataTable';
 import { EmptyState } from '@/components/patterns/EmptyState';
+import { AppliedFilters, ChipGroup, FilterGroup, FilterPanel, type AppliedFilter } from '@/components/patterns/FilterPanel';
+import { TableCard, TableSearch } from '@/components/patterns/TableCard';
 import { Pagination } from '@/components/patterns/Pagination';
 import { useToast } from '@/components/patterns/Toast';
 import { Button } from '@/components/ui/Button';
-import { Select } from '@/components/ui/Select';
-import { TextField } from '@/components/ui/TextField';
+import { t } from '@/lib/i18n/id';
 import { inviterRoleOf } from '@/lib/user-rules';
 import type { OrgDetail, OrgSummary, OrgType } from '@/services';
 import { logsCopy } from '../logs/copy';
@@ -59,14 +60,14 @@ function OwnOrgPage({ kode: orgId }: { kode: string }) {
     <>
       <PageHeader title={org?.nama ?? c.judul} summary={org ? <span className="font-mono">{org.kode}</span> : undefined} actions={org ? <OrgStatusBadge status={org.status} /> : undefined} />
       <PageBody>
-        <Section className="border border-border">
+        <Section>
           {org ? (
             <div className="flex flex-col gap-4">
               <OrgHeaderNotes org={org} />
               <OrgDetailContent org={org} level="baca" />
             </div>
           ) : (
-            <p role="status" className="text-body-dense text-ink-muted">{c.memuat}</p>
+            <p role="status" className="text-body text-ink-muted">{c.memuat}</p>
           )}
         </Section>
       </PageBody>
@@ -91,6 +92,17 @@ function OrgListPage() {
   const list = useOrgList({ search: search || undefined, jenis: jenis !== SEMUA ? (jenis as OrgType) : undefined, status: status !== SEMUA ? (status as 'Aktif' | 'Nonaktif') : undefined });
   const rows = list.data ?? [];
   const filtered = !!search || jenis !== SEMUA || status !== 'Aktif';
+  // DS v2 FilterPanel: pratinjau jumlah dari draf; status bawaan "Aktif" bukan pil (filter bawaan).
+  const [draft, setDraft] = useState<{ jenis: string; status: string } | null>(null);
+  const preview = useOrgList(
+    draft
+      ? { search: search || undefined, jenis: draft.jenis !== SEMUA ? (draft.jenis as OrgType) : undefined, status: draft.status !== SEMUA ? (draft.status as 'Aktif' | 'Nonaktif') : undefined }
+      : { search: search || undefined, jenis: jenis !== SEMUA ? (jenis as OrgType) : undefined, status: status !== SEMUA ? (status as 'Aktif' | 'Nonaktif') : undefined },
+  );
+  const applied: AppliedFilter[] = [
+    jenis !== SEMUA && { key: 'jenis', label: c.filterJenis, value: jenis, onRemove: () => setParam('jenis', SEMUA) },
+    status !== 'Aktif' && { key: 'status', label: c.filterStatus, value: status === SEMUA ? t.filter.semua : c.nonaktif, onRemove: () => setParam('status', 'Aktif') },
+  ].filter(Boolean) as AppliedFilter[];
 
   const setParam = (k: string, v: string) => {
     const next = new URLSearchParams(params);
@@ -101,15 +113,15 @@ function OrgListPage() {
   };
   const open = (k: string, extra?: OrgDetailNavState) => navigate(`/organisasi/${k}`, { state: { from: location.search, ...extra } satisfies OrgDetailNavState });
 
-  const dim = (o: OrgSummary) => (o.status === 'Nonaktif' ? 'text-ink-subtle' : 'text-ink');
+  const dim = (o: OrgSummary) => (o.status === 'Nonaktif' ? 'text-ink-muted' : 'text-ink');
   const columns: ColumnDef<OrgSummary, unknown>[] = [
     {
       id: 'nama',
       header: c.kolom.nama,
       cell: ({ row }) => (
         <span className={`flex flex-col ${dim(row.original)}`}>
-          <span className="font-medium">{row.original.nama}</span>
-          <span className="font-mono text-caption text-ink-subtle">{row.original.kode}</span>
+          <span className="text-body-strong">{row.original.nama}</span>
+          <span className="font-mono text-caption text-ink-muted">{row.original.kode}</span>
         </span>
       ),
     },
@@ -120,17 +132,17 @@ function OrgListPage() {
       cell: ({ row }) => (
         <span className={`flex items-center gap-1 ${dim(row.original)}`}>
           <span className="font-mono text-caption">{row.original.domains[0] ?? '—'}</span>
-          {row.original.domains.length > 1 && <span className="rounded-sm border border-border px-1 text-caption">{c.tambahLainnya(row.original.domains.length - 1)}</span>}
+          {row.original.domains.length > 1 && <span className="inline-flex h-5 items-center rounded-sm bg-surface-sunken px-[6px] text-caption font-semibold text-ink-muted">{c.tambahLainnya(row.original.domains.length - 1)}</span>}
         </span>
       ),
     },
-    { id: 'email', header: c.kolom.email, cell: ({ row }) => <span className="font-mono text-caption text-ink-muted">{row.original.emailDiizinkan ? c.tambahLainnya(row.original.emailDiizinkan) : '—'}</span> },
-    { id: 'pengguna', header: c.kolom.pengguna, meta: { align: 'right', mono: true }, cell: ({ row }) => <span className={`tabular-nums ${dim(row.original)}`}>{row.original.penggunaAktif}</span> },
+    { id: 'email', header: c.kolom.email, cell: ({ row }) => <span className="text-ink">{row.original.emailDiizinkan ? c.tambahLainnya(row.original.emailDiizinkan) : '—'}</span> },
+    { id: 'pengguna', header: c.kolom.pengguna, meta: { align: 'right' }, cell: ({ row }) => <span className={`tabular-nums ${dim(row.original)}`}>{row.original.penggunaAktif}</span> },
     {
       id: 'pic',
       header: c.kolom.pic,
       cell: ({ row }) =>
-        row.original.tanpaPic ? <AccountStatusBadge label={c.tanpaPic} tone="warning" /> : <span className={`font-mono tabular-nums ${dim(row.original)}`}>{row.original.picAktif}</span>,
+        row.original.tanpaPic ? <AccountStatusBadge label={c.tanpaPic} tone="warning" /> : <span className={`tabular-nums ${dim(row.original)}`}>{row.original.picAktif}</span>,
     },
     { id: 'status', header: c.kolom.status, cell: ({ row }) => <OrgStatusBadge status={row.original.status} /> },
   ];
@@ -154,39 +166,74 @@ function OrgListPage() {
         }
       />
       <PageBody>
-        <Section className="border border-border py-4">
-          <div className="flex flex-wrap items-end gap-2">
-            <TextField label={c.cariLabel} hideLabel placeholder={c.cari} value={search} onChange={(e) => setParam('cari', e.target.value)} leading={<Search size={16} strokeWidth={1.8} />} containerClassName="min-w-[220px] flex-1" />
-            <Select label={c.filterJenis} hideLabel value={jenis} onValueChange={(v) => setParam('jenis', v)} options={[{ value: SEMUA, label: c.semuaJenis }, ...JENIS.map((j) => ({ value: j, label: j }))]} className="w-[180px]" />
-            <Select
-              label={c.filterStatus}
-              hideLabel
-              value={status}
-              onValueChange={(v) => setParam('status', v)}
-              options={[
-                { value: 'Aktif', label: c.aktif },
-                { value: 'Nonaktif', label: c.nonaktif },
-                { value: SEMUA, label: c.semuaStatus },
-              ]}
-              className="w-[180px]"
-            />
-            {filtered && <Button variant="link" onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button>}
-          </div>
-        </Section>
-        <Section className="border border-border" title={c.tabelJudul}>
+        <TableCard
+          title={c.tabelJudul}
+          tools={
+            <>
+              <TableSearch label={c.cariLabel} placeholder={c.cari} value={search} onChange={(e) => setParam('cari', e.target.value)} />
+              <FilterPanel<{ jenis: string; status: string }>
+                value={{ jenis, status }}
+                emptyValue={{ jenis: SEMUA, status: 'Aktif' }}
+                activeCount={applied.length}
+                onApply={(v) => {
+                  const next = new URLSearchParams(params);
+                  if (v.jenis === SEMUA) next.delete('jenis');
+                  else next.set('jenis', v.jenis);
+                  if (v.status === 'Aktif') next.delete('status');
+                  else next.set('status', v.status);
+                  next.delete('hal');
+                  setParams(next, { replace: true });
+                }}
+                onDraftChange={setDraft}
+                applyLabel={() => (preview.data ? t.filter.terapkanJumlah(preview.data.length, c.entitas) : t.filter.terapkan)}
+                labels={t.filter}
+              >
+                {(d, set) => (
+                  <>
+                    <FilterGroup legend={c.filterJenis}>
+                      <ChipGroup label={c.filterJenis} value={d.jenis} onChange={(v) => set({ ...d, jenis: v })} options={[{ value: SEMUA, label: t.filter.semua }, ...JENIS.map((j) => ({ value: j, label: j }))]} />
+                    </FilterGroup>
+                    <FilterGroup legend={c.filterStatus}>
+                      <ChipGroup
+                        label={c.filterStatus}
+                        value={d.status}
+                        onChange={(v) => set({ ...d, status: v })}
+                        options={[
+                          { value: 'Aktif', label: c.aktif },
+                          { value: 'Nonaktif', label: c.nonaktif },
+                          { value: SEMUA, label: t.filter.semua },
+                        ]}
+                      />
+                    </FilterGroup>
+                  </>
+                )}
+              </FilterPanel>
+            </>
+          }
+          applied={<AppliedFilters filters={applied} onClear={() => setParams(new URLSearchParams(search ? { cari: search } : {}), { replace: true })} labels={t.filter} />}
+          footer={
+            <Pagination page={page} pageSize={PAGE} total={rows.length} onPageChange={(n) => setParam('hal', String(n))} pageSizeOptions={PAGE_SIZE_OPTIONS} onPageSizeChange={(n) => setParam(PAGE_SIZE_PARAM, String(n))} labels={logsCopy.halaman} />
+          }
+        >
           <DataTable
             caption={c.tabel}
             columns={columns}
             data={rows.slice((page - 1) * PAGE, page * PAGE)}
             getRowId={(o) => o.kode}
             loading={list.isPending}
-            loadingContent={<p className="text-body-dense text-ink-muted">{c.memuat}</p>}
+            loadingContent={<p className="px-4 text-body text-ink-muted">{c.memuat}</p>}
             error={list.isError ? c.gagalMuat : undefined}
             onRowClick={(o) => open(o.kode)}
-            empty={<EmptyState title={filtered ? c.kosongFilter : c.kosong} action={filtered ? <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button> : undefined} />}
+            empty={
+              <EmptyState
+                illustration={filtered ? 'filter-kosong' : 'kosong'}
+                illustrationSize={filtered ? 'sm' : 'md'}
+                title={filtered ? c.kosongFilter : c.kosong}
+                action={filtered ? <Button onClick={() => setParams(new URLSearchParams(), { replace: true })}>{c.hapusFilter}</Button> : undefined}
+              />
+            }
           />
-          <Pagination page={page} pageSize={PAGE} total={rows.length} onPageChange={(n) => setParam('hal', String(n))} pageSizeOptions={PAGE_SIZE_OPTIONS} onPageSizeChange={(n) => setParam(PAGE_SIZE_PARAM, String(n))} labels={logsCopy.halaman} />
-        </Section>
+        </TableCard>
       </PageBody>
       <AddOrgDialog open={addOpen} onOpenChange={setAddOpen} onCreated={created} />
     </>

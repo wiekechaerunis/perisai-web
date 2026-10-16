@@ -14,7 +14,10 @@ import { useEffect, useRef } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useToast } from '@/components/patterns/Toast';
 import { accessCopy } from '../access/copy';
-import logoSidebar from '@/assets/figma/perisai-logo-sidebar.png';
+import logoPerisai from '@/assets/logo-perisai.png';
+import logoTanda from '@/assets/logo-perisai-tanda.png';
+import logoSkk from '@/assets/logo-skk-migas.svg';
+import { useSidebarCollapsed } from '@/lib/use-sidebar-collapsed';
 import { AppHeader, AppShell } from '@/components/layout/AppShell';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Menu } from '@/components/patterns/Menu';
@@ -41,6 +44,7 @@ export function ProtectedLayout() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const toast = useToast();
+  const [sidebarCiut, setSidebarCiut] = useSidebarCollapsed();
   // FR-UDR-15: badge jumlah permintaan ubah email yang menunggu penyetuju ini.
   const isApprover = !!session?.user.roles.some((r) => EMAIL_APPROVER_ROLES.includes(r));
   // PRD Katalog Role FR-KR-03: seluruh tampilan role membaca katalog yang sama (nama + status).
@@ -86,8 +90,8 @@ export function ProtectedLayout() {
       align="end"
       header={
         <div className="flex flex-col gap-0.5">
-          <span className="text-caption font-medium text-ink">{user.nama}</span>
-          <span className="text-caption text-ink-subtle">{user.email}</span>
+          <span className="text-body-strong text-ink">{user.nama}</span>
+          <span className="text-caption text-ink-muted">{user.email}</span>
         </div>
       }
       items={[
@@ -98,16 +102,16 @@ export function ProtectedLayout() {
         <button
           type="button"
           aria-label={`${t.akun.menu}: ${user.nama}`}
-          className="flex h-control-md items-center gap-2 rounded-sm border border-border bg-surface px-2 hover:bg-surface-sunken focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
+          className="flex h-[44px] items-center gap-[10px] rounded-lg py-1 pl-1 pr-2 transition-colors duration-fast hover:bg-surface-sunken focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
         >
-          <span aria-hidden className="flex h-6 w-6 items-center justify-center rounded-full bg-action text-caption font-semibold text-on-action">
+          <span aria-hidden className="flex h-8 w-8 items-center justify-center rounded-pill bg-action text-caption font-semibold text-on-action">
             {initials(user.nama)}
           </span>
           <span className="hidden flex-col text-left sm:flex">
-            <span className="text-caption font-medium leading-4 text-ink">{user.nama}</span>
+            <span className="text-body-strong text-ink">{user.nama}</span>
             <span className="text-caption leading-4 text-ink-muted">{roleLabel}</span>
           </span>
-          <ChevronDown aria-hidden size={14} strokeWidth={1.8} className="text-ink-muted" />
+          <ChevronDown aria-hidden size={16} strokeWidth={2} className="text-ink-muted" />
         </button>
       }
     />
@@ -120,14 +124,21 @@ export function ProtectedLayout() {
       sidebar={
         <Sidebar
           navLabel={t.app.navUtama}
-          brand={<img src={logoSidebar} alt="PERISAI" className="h-[48px] w-[143px] object-contain object-left" />}
-          groups={buildNav(user.roles, { '/permintaan-ubah-email': emailRequests.data?.length ?? 0 })}
-          footer={
-            <div className="flex flex-col gap-3">
-              {services.dev && <DevTools />}
-              <p className="text-caption text-sidebar-muted">{t.akun.hakCipta}</p>
-            </div>
+          menuLabel={t.nav.menu}
+          brand={<img src={logoPerisai} alt="PERISAI" className="block h-auto w-[176px]" />}
+          brandMark={<img src={logoTanda} alt="PERISAI" className="block h-8 w-8" />}
+          collapsed={sidebarCiut}
+          onCollapsedChange={setSidebarCiut}
+          toggleLabels={{ collapse: t.app.perkecilSidebar, expand: t.app.perlebarSidebar }}
+          footerLogo={<img src={logoSkk} alt="SKK Migas" className="block h-auto w-10 shrink-0" />}
+          footerText={
+            <>
+              {t.akun.hakCipta} v{__APP_VERSION__}
+            </>
           }
+          footerTitle={`${t.akun.hakCipta} v${__APP_VERSION__}`}
+          groups={buildNav(user.roles, { '/permintaan-ubah-email': emailRequests.data?.length ?? 0 })}
+          footer={services.dev ? <DevTools /> : undefined}
         />
       }
     >

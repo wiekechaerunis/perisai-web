@@ -46,6 +46,10 @@ export const logsCopy = {
     berhasil: 'Berhasil',
     gagal: 'Gagal',
     gagalBeruntun: 'Hanya kegagalan login beruntun', // FR-LA-12 (Checkbox filter cepat)
+    gagalBeruntunPil: 'Kegagalan login beruntun', // pil filter aktif DS v2 (usulan)
+    kondisi: 'Kondisi', // legend panel filter DS v2
+    eksporLabel: 'Ekspor log akses (CSV)', // FR-LA-16; tombol ikon + tooltip (DS v2 DataTable)
+    entitas: 'entri', // "Terapkan · n entri" (DS v2 FilterPanel)
     gagalBeruntunAktif: (n: number) => `Menampilkan pengguna dengan ${n} kali atau lebih kegagalan login berturut-turut.`, // usulan
     kolom: { waktu: 'Waktu', pengguna: 'Pengguna', organisasi: 'Organisasi', peristiwa: 'Peristiwa', hasil: 'Hasil', sumber: 'Sumber' },
     tabel: 'Daftar log akses',
@@ -82,6 +86,9 @@ export const logsCopy = {
     ringkasan: 'Catatan perubahan data, akses, dan konfigurasi. Tidak dapat diubah atau dihapus.', // FR-JA-07 (copy usulan)
     awalJudul: 'Pilih filter untuk menampilkan jejak audit', // FR-JA-12 (copy usulan)
     awalIsi: 'Periode wajib diisi. Default 7 hari terakhir.',
+    pilihFilter: 'Pilih filter',
+    eksporLabel: 'Ekspor jejak audit (CSV)', // FR-JA-18; tombol ikon + tooltip (DS v2 DataTable) // usulan (DS v2: satu aksi pemulihan di EmptyState)
+    korelasi: 'Id korelasi', // FR-JA-15 (pil filter aktif)
     organisasi: 'Organisasi objek',
     modul: 'Modul',
     semuaModul: 'Semua modul',

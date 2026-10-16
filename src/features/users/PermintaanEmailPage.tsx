@@ -9,7 +9,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { useState } from 'react';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Section } from '@/components/layout/Section';
+import { TableCard } from '@/components/patterns/TableCard';
 import { Callout } from '@/components/patterns/Callout';
 import { DataTable } from '@/components/patterns/DataTable';
 import { ConfirmDialog } from '@/components/patterns/Dialog';
@@ -95,14 +95,15 @@ export function PermintaanEmailPage() {
     },
     { id: 'l', header: k.emailLama, cell: ({ row }) => <span className="break-all">{row.original.emailLama}</span> },
     { id: 'b', header: k.emailBaru, cell: ({ row }) => <span className="break-all font-medium">{row.original.emailBaru}</span> },
-    { id: 'w', header: k.diajukan, cell: ({ row }) => <span className="whitespace-nowrap font-mono text-caption">{formatTanggalJam(row.original.diajukan)}</span> },
+    { id: 'w', header: k.diajukan, cell: ({ row }) => <span className="whitespace-nowrap">{formatTanggalJam(row.original.diajukan)}</span> },
     {
       id: 'a',
       header: k.aksi,
       cell: ({ row }) => (
         <span className="flex gap-2">
-          <Button onClick={() => setApprove(row.original)}>{c.setujui}</Button>
+          <Button size="sm" onClick={() => setApprove(row.original)}>{c.setujui}</Button>
           <Button
+            size="sm"
             onClick={() => {
               setAlasan('');
               setAlasanErr(undefined);
@@ -120,25 +121,29 @@ export function PermintaanEmailPage() {
     <>
       <PageHeader title={c.judul} summary={c.ringkasan} />
       <PageBody>
-        <Section className="border border-border">
-          <div className="flex flex-col gap-4">
-            {alert && (
-              <Callout variant="error">
-                {alert}
-              </Callout>
-            )}
+        <TableCard
+          title={c.tabelJudul}
+          before={
+            alert && (
+              <div className="px-4 pb-3">
+                <Callout variant="error">{alert}</Callout>
+              </div>
+            )
+          }
+        >
+          <div>
             <DataTable
               caption={c.tabel}
               columns={columns}
               data={list.data ?? []}
               getRowId={(r) => r.userId}
               loading={list.isPending}
-              loadingContent={<p className="text-body-dense text-ink-muted">{usersCopy.profil.memuat}</p>}
+              loadingContent={<p className="px-4 pb-4 text-body text-ink-muted">{usersCopy.profil.memuat}</p>}
               error={list.isError ? usersCopy.kendalaIsi : undefined}
               empty={<EmptyState title={c.kosong} />}
             />
           </div>
-        </Section>
+        </TableCard>
       </PageBody>
       <ConfirmDialog
         open={!!approve}

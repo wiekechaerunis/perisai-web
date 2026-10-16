@@ -26,7 +26,7 @@ const sidebar = (
         ],
       },
     ]}
-    account={<p className="px-2 text-body-dense">Rina Wiyono</p>}
+    footerText="© 2026 SKK Migas. Hak cipta dilindungi. v0.1.0"
     footer={
       <RoleSwitcher
         label="Masuk sebagai (uji)"
@@ -62,11 +62,11 @@ export const LayarPublikSplit: S = {
   name: 'AuthSplitLayout (Figma Login 85:4794)',
   render: () => (
     <AuthSplitLayout
-      brand={<span className="text-heading-2 font-semibold tracking-[0.04em]">PERISAI</span>}
-      footer={<p className="text-caption text-ink-subtle">© 2026 SKK Migas</p>}
-      aside={<div className="absolute inset-0 bg-sidebar-bg" />}
+      brand={<span className="text-section-title font-semibold tracking-[0.04em]">PERISAI</span>}
+      footer={<p className="text-caption text-ink-muted">© 2026 SKK Migas</p>}
+      aside={<div className="absolute inset-0 bg-surface-sunken" />}
     >
-      <h1 className="text-display">Masuk ke PERISAI</h1>
+      <h1 className="text-page-title">Masuk ke PERISAI</h1>
     </AuthSplitLayout>
   ),
 };
@@ -74,8 +74,8 @@ export const LayarPublikSplit: S = {
 export const LayarPublikHeader: S = {
   name: 'AuthPageLayout (Figma OTP 118:235)',
   render: () => (
-    <AuthPageLayout brand={<span className="text-heading-2 font-semibold tracking-[0.04em]">PERISAI</span>} headerAction={<a className="text-body-dense underline" href="#">Hubungi Support</a>}>
-      <h1 className="text-center text-heading-1">Masukkan kode verifikasi</h1>
+    <AuthPageLayout brand={<span className="text-section-title font-semibold tracking-[0.04em]">PERISAI</span>} headerAction={<a className="text-body underline" href="#">Hubungi Support</a>}>
+      <h1 className="text-center text-page-title">Masukkan kode verifikasi</h1>
     </AuthPageLayout>
   ),
 };

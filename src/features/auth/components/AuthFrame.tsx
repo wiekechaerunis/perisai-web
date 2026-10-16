@@ -1,5 +1,5 @@
 /**
- * Bingkai layar publik PERISAI sesuai Figma CORE-PERISAI.
+ * Bingkai layar publik PERISAI — DS v2 · Lime AuthForm / StatusPage (kerangka AuthSplitLayout DS v1 tetap).
  * - LoginFrame: Login 85:4794 (split + panel hero).
  * - PublicFrame: OTP/Aktivasi 118:235, 116:144, 66:2546..2602 (header + kolom tengah). Lupa/Atur ulang kata sandi
  *   tidak punya frame Figma dan mengikuti bingkai ini (PR-11, keputusan 14 Okt 2026).
@@ -19,7 +19,7 @@ function Logo({ size }: { size: 'lg' | 'sm' }) {
     <img
       src={logoPerisai}
       alt={c.logoAlt}
-      className={size === 'lg' ? 'h-[50px] w-[150px] object-contain object-left' : 'h-[34px] w-[104px] object-contain object-left'}
+      className={size === 'lg' ? 'h-auto w-[120px]' : 'h-[26px] w-auto'}
     />
   );
 }
@@ -27,9 +27,9 @@ function Logo({ size }: { size: 'lg' | 'sm' }) {
 /** "Butuh Bantuan? Hubungi Support" (FR-AK-02; Figma 66:2549). */
 export function SupportLink() {
   return (
-    <p className="flex items-center gap-6 text-[14px] font-medium leading-[19.6px]">
-      <span className="hidden text-[color:var(--figma-header-muted)] sm:inline">{c.butuhBantuan}</span>
-      <a href={SUPPORT_URL} className="text-[color:var(--figma-link-support)] hover:underline">
+    <p className="flex items-center gap-4 text-caption">
+      <span className="hidden font-semibold text-ink-muted sm:inline">{c.butuhBantuan}</span>
+      <a href={SUPPORT_URL} className="link-inline">
         {c.hubungiSupport}
       </a>
     </p>
@@ -48,7 +48,7 @@ export function LoginFrame({ children }: { children: ReactNode }) {
               <DevRoleSwitcher inverse={false} />
             </div>
           )}
-          <p className="text-caption text-[color:var(--figma-footer-ink)]">{c.hakCipta}</p>
+          <p className="text-caption text-ink-muted">{c.hakCipta}</p>
         </div>
       }
     >

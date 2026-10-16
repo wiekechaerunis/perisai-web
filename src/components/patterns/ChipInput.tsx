@@ -6,6 +6,7 @@
 import { X } from 'lucide-react';
 import { useId, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { inputStateClass } from '../ui/TextField';
 
 export interface ChipItem {
   value: string;
@@ -57,8 +58,8 @@ export function ChipInput({ label, chips, onAdd, onRemove, removeLabel, placehol
   const hasError = !!error || chips.some((c) => c.tone === 'error');
 
   return (
-    <div className={cn('flex flex-col gap-1', className)}>
-      <label htmlFor={id} className="text-label text-ink-muted">
+    <div className={cn('flex flex-col gap-[6px]', className)}>
+      <label htmlFor={id} className="text-label text-ink">
         {label}
         {required && showRequired && (
           <span aria-hidden className="ml-1 text-error-ink">
@@ -68,10 +69,8 @@ export function ChipInput({ label, chips, onAdd, onRemove, removeLabel, placehol
       </label>
       <div
         className={cn(
-          'flex min-h-control-md flex-wrap items-center gap-2 rounded-md border bg-surface px-3 py-2',
-          'focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus-ring',
-          hasError ? 'border-error-ink' : 'border-border-control',
-          disabled && 'cursor-not-allowed bg-surface-sunken',
+          'flex min-h-control-height flex-wrap items-center gap-2 rounded-md px-3 py-[6px] transition-shadow duration-fast',
+          inputStateClass({ error: hasError, disabled }),
         )}
       >
         <ul className="contents">
@@ -79,11 +78,11 @@ export function ChipInput({ label, chips, onAdd, onRemove, removeLabel, placehol
             <li
               key={c.value}
               className={cn(
-                'flex items-center gap-[6px] rounded-full border px-2 py-1 text-[13px] font-medium',
+                'flex h-[28px] items-center gap-[6px] rounded-pill pl-[10px] pr-1 text-caption font-semibold',
                 mono && 'font-mono',
-                c.tone === 'error' && 'border-error-ink text-error-ink',
-                c.tone === 'warning' && 'border-caution bg-caution-bg text-caution-ink',
-                (!c.tone || c.tone === 'normal') && 'border-border bg-surface-sunken text-ink',
+                c.tone === 'error' && 'bg-error-bg text-error-ink shadow-[inset_0_0_0_1px_var(--color-error-ink)]',
+                c.tone === 'warning' && 'bg-caution-bg text-caution-ink',
+                (!c.tone || c.tone === 'normal') && 'bg-action-subtle-bg text-action-subtle-ink',
               )}
             >
               {c.value}
@@ -92,9 +91,9 @@ export function ChipInput({ label, chips, onAdd, onRemove, removeLabel, placehol
                 disabled={disabled}
                 onClick={() => onRemove(c.value)}
                 aria-label={`${removeLabel} ${c.value}`}
-                className="rounded-full p-0.5 text-current hover:bg-surface-selected focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
+                className="flex h-5 w-5 items-center justify-center rounded-full text-current transition-transform duration-appear hover:rotate-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
               >
-                <X aria-hidden size={12} strokeWidth={1.8} />
+                <X aria-hidden size={11} strokeWidth={2} />
               </button>
             </li>
           ))}
@@ -117,7 +116,7 @@ export function ChipInput({ label, chips, onAdd, onRemove, removeLabel, placehol
           }}
           onKeyDown={onKeyDown}
           onBlur={commit}
-          className={cn('h-8 min-w-[160px] flex-1 bg-transparent px-1 text-body text-ink outline-none placeholder:text-ink-subtle', mono && 'font-mono')}
+          className={cn('h-8 min-w-[160px] flex-1 bg-transparent px-1 text-body text-ink outline-none placeholder:text-ink-muted', mono && 'font-mono')}
         />
       </div>
       <div id={describedId} aria-live="polite" className="flex flex-col gap-0.5">
@@ -126,7 +125,7 @@ export function ChipInput({ label, chips, onAdd, onRemove, removeLabel, placehol
             <span className="font-mono">{c.value}</span>: {c.message}
           </p>
         ))}
-        {error ? <p className="text-caption text-error-ink">{error}</p> : hint ? <p className="text-caption text-ink-subtle">{hint}</p> : null}
+        {error ? <p className="text-caption text-error-ink">{error}</p> : hint ? <p className="text-caption text-ink-muted">{hint}</p> : null}
       </div>
     </div>
   );

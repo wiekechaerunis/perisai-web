@@ -6,6 +6,7 @@
 import { Check, ChevronDown, X } from 'lucide-react';
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { inputStateClass } from '../ui/TextField';
 
 export interface Option {
   value: string;
@@ -24,8 +25,8 @@ interface FieldShellProps {
 
 function FieldShell({ id, label, required, hint, error, children, className }: FieldShellProps) {
   return (
-    <div className={cn('flex flex-col gap-1', className)}>
-      <label id={`${id}-label`} htmlFor={id} className="text-label text-ink-muted">
+    <div className={cn('flex flex-col gap-[6px]', className)}>
+      <label id={`${id}-label`} htmlFor={id} className="text-label text-ink">
         {label}
         {required && (
           <span aria-hidden className="ml-1 text-error-ink">
@@ -35,7 +36,7 @@ function FieldShell({ id, label, required, hint, error, children, className }: F
       </label>
       {children}
       {(error || hint) && (
-        <p id={`${id}-hint`} className={cn('text-caption', error ? 'text-error-ink' : 'text-ink-subtle')} aria-live={error ? 'polite' : undefined}>
+        <p id={`${id}-hint`} className={cn('text-caption', error ? 'font-medium text-error-ink' : 'text-ink-muted')} aria-live={error ? 'polite' : undefined}>
           {error ?? hint}
         </p>
       )}
@@ -53,13 +54,17 @@ function useListNav(count: number, open: boolean) {
 
 const triggerCls = (error?: ReactNode, disabled?: boolean) =>
   cn(
-    'flex min-h-control-md w-full items-center gap-2 rounded-md border bg-surface px-3 py-1 text-left text-body-dense text-ink',
-    'focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-focus-ring',
-    error ? 'border-error-ink' : 'border-border-control',
-    disabled && 'cursor-not-allowed bg-surface-sunken opacity-60',
+    'flex min-h-control-height w-full items-center gap-2 rounded-md border-0 px-3 py-1 text-left text-body transition-shadow duration-fast',
+    inputStateClass({ error: !!error, disabled }),
   );
 
-const listCls = 'absolute left-0 right-0 top-full z-50 mt-1 max-h-[320px] overflow-y-auto rounded-md border border-border bg-surface py-1 shadow-overlay';
+const listCls = 'p-scroll absolute left-0 right-0 top-full z-50 mt-1 max-h-[320px] animate-pop-in overflow-y-auto rounded-lg bg-surface p-[6px] shadow-overlay';
+const optCls = (active: boolean, selected: boolean) =>
+  cn(
+    'flex min-h-control-sm cursor-default items-center justify-between gap-[10px] rounded-sm px-[10px] py-2 text-body transition-colors duration-fast',
+    selected ? 'bg-action-subtle-bg font-semibold text-action-subtle-ink' : 'text-ink',
+    active && !selected && 'bg-surface-sunken',
+  );
 
 /* ---------- Combobox ---------- */
 
@@ -145,14 +150,14 @@ export function Combobox({ label, options, value, onChange, placeholder, emptyTe
             onFocus={() => setOpen(true)}
             onClick={() => setOpen(true)}
             onKeyDown={onKey}
-            className="h-8 min-w-0 flex-1 bg-transparent outline-none placeholder:text-ink-subtle disabled:cursor-not-allowed"
+            className="h-8 min-w-0 flex-1 bg-transparent outline-none placeholder:text-ink-muted disabled:cursor-not-allowed"
           />
-          <ChevronDown aria-hidden size={16} strokeWidth={1.8} className="shrink-0 text-ink-muted" />
+          <ChevronDown aria-hidden size={16} strokeWidth={2} className="shrink-0 text-ink-muted" />
         </div>
         {open && !disabled && (
           <ul id={listId} role="listbox" aria-labelledby={`${id}-label`} className={listCls}>
             {filtered.length === 0 ? (
-              <li role="option" aria-disabled aria-selected={false} className="px-3 py-2 text-body-dense text-ink-subtle">
+              <li role="option" aria-disabled aria-selected={false} className="px-3 py-2 text-body text-ink-muted">
                 {emptyText}
               </li>
             ) : (
@@ -165,13 +170,10 @@ export function Combobox({ label, options, value, onChange, placeholder, emptyTe
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => choose(o)}
                   onMouseEnter={() => setActive(i)}
-                  className={cn(
-                    'flex min-h-[38px] cursor-default items-center justify-between px-3 py-2 text-body-dense text-ink',
-                    i === active && 'bg-surface-sunken',
-                  )}
+                  className={optCls(i === active, o.value === value)}
                 >
                   {o.label}
-                  {o.value === value && <Check aria-hidden size={16} strokeWidth={1.8} />}
+                  {o.value === value && <Check aria-hidden size={16} strokeWidth={2} />}
                 </li>
               ))
             )}
@@ -252,7 +254,7 @@ export function MultiSelect({
         <div className={triggerCls(error, disabled)}>
           <div className="flex min-w-0 flex-1 flex-wrap gap-2 py-1">
             {selected.map((o) => (
-              <span key={o.value} className="inline-flex items-center gap-[6px] rounded-full border border-border bg-surface-sunken px-2 py-1 text-[13px] font-medium">
+              <span key={o.value} className="inline-flex h-[28px] items-center gap-[6px] rounded-pill bg-action-subtle-bg pl-[10px] pr-2 text-caption font-semibold text-action-subtle-ink">
                 {o.label}
                 {!disabled && (
                   <button
@@ -279,17 +281,17 @@ export function MultiSelect({
               disabled={disabled}
               onClick={() => setOpen((o) => !o)}
               onKeyDown={onKey}
-              className="h-6 min-w-[80px] flex-1 text-left text-body-dense text-ink-subtle outline-none disabled:cursor-not-allowed"
+              className="h-6 min-w-[80px] flex-1 text-left text-body text-ink-muted outline-none disabled:cursor-not-allowed"
             >
               {selected.length === 0 ? placeholder : ''}
             </button>
           </div>
-          <ChevronDown aria-hidden size={16} strokeWidth={1.8} className="shrink-0 text-ink-muted" />
+          <ChevronDown aria-hidden size={16} strokeWidth={2} className="shrink-0 text-ink-muted" />
         </div>
         {open && !disabled && (
           <ul id={listId} role="listbox" aria-multiselectable aria-labelledby={`${id}-label`} className={listCls}>
             {options.length === 0 ? (
-              <li role="option" aria-disabled aria-selected={false} className="px-3 py-2 text-body-dense text-ink-subtle">
+              <li role="option" aria-disabled aria-selected={false} className="px-3 py-2 text-body text-ink-muted">
                 {emptyText}
               </li>
             ) : (
@@ -302,13 +304,10 @@ export function MultiSelect({
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => toggle(o.value)}
                   onMouseEnter={() => setActive(i)}
-                  className={cn(
-                    'flex min-h-[38px] cursor-default items-center justify-between px-3 py-2 text-body-dense text-ink',
-                    i === active && 'bg-surface-sunken',
-                  )}
+                  className={optCls(i === active, value.includes(o.value))}
                 >
                   {o.label}
-                  {value.includes(o.value) && <Check aria-hidden size={16} strokeWidth={1.8} />}
+                  {value.includes(o.value) && <Check aria-hidden size={16} strokeWidth={2} />}
                 </li>
               ))
             )}

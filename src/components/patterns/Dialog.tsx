@@ -1,9 +1,10 @@
 /**
- * Dialog / ConfirmDialog — PERISAI Design System `Perisai.Dialog` / `Perisai.ConfirmDialog`.
- * Lebar `dialog-width-base` 560px (bawaan), `dialog-width-md` 480px, `dialog-width-lg` 720px; scrim `overlay-scrim`
- * (standar ink 40%, ruang kendali hitam 60%). Kepala dengan garis bawah, isi, kaki dengan garis atas. Varian `media` (Figma 66:3553 "Undangan Gagal Dikirim"): ilustrasi + teks rata tengah tanpa garis.
- * Overlay memakai `shadow-overlay` (satu-satunya bayangan yang diizinkan DS). Radix: fokus terkunci, Esc menutup.
- * Aksi destruktif hanya boleh tampil di dialog ini (aturan Button DS).
+ * Dialog / ConfirmDialog — PERISAI DS v2 · Lime `Dialog` / `ConfirmDialog`.
+ * Lebar 480px (`md`, bawaan) atau 640px (`lg`); `surface`, `radius-xl`, `shadow-floating`, di atas `scrim`.
+ * Kepala: judul 17/24 700 + tombol tutup 28px, padding 20px 24px (tanpa garis). Isi: 13px `ink-subtle`, padding
+ * 8px 24px 20px, jarak 12px. Kaki: garis atas `border-subtle`, padding 14px 24px, tombol rata kanan (Batal sekunder lalu
+ * aksi), catatan opsional rata kiri. Varian Hasil (`media`): ilustrasi + teks rata tengah tanpa garis kepala/kaki.
+ * Muncul fade + geser 4px dalam 160ms. Radix: fokus terkunci, Esc menutup. Aksi destruktif hanya di dialog ini.
  */
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
@@ -27,7 +28,7 @@ export interface DialogProps {
   dismissible?: boolean;
   /** Ilustrasi di atas judul; tata letak rata tengah (Figma 66:3553). */
   media?: ReactNode;
-  /** `base` 560px (bawaan), `md` 480px untuk konfirmasi singkat, `lg` 720px untuk form atau isi panjang. */
+  /** `md`/`base` 480px (bawaan DS v2), `lg` 640px untuk isi berisi tabel atau form panjang. */
   size?: 'md' | 'base' | 'lg';
   className?: string;
   /** Elemen yang menerima fokus saat dialog dibuka (DS: tombol Batal untuk konfirmasi destructive). */
@@ -36,7 +37,7 @@ export interface DialogProps {
 
 const WIDTH = {
   md: 'w-[min(var(--dialog-width-md),calc(100vw-32px))]',
-  base: 'w-[min(var(--dialog-width-base),calc(100vw-32px))]',
+  base: 'w-[min(var(--dialog-width-md),calc(100vw-32px))]',
   lg: 'w-[min(var(--dialog-width-lg),calc(100vw-32px))]',
 } as const;
 
@@ -59,7 +60,7 @@ export function Dialog({
   return (
     <RadixDialog.Root open={open} onOpenChange={onOpenChange}>
       <RadixDialog.Portal>
-        <RadixDialog.Overlay className="fixed inset-0 z-40 bg-overlay-scrim" />
+        <RadixDialog.Overlay className="fixed inset-0 z-40 animate-fade-in bg-scrim" />
         <RadixDialog.Content
           onOpenAutoFocus={(e) => {
             if (initialFocus?.current) {
@@ -73,15 +74,15 @@ export function Dialog({
           className={cn(
             'fixed left-1/2 top-1/2 z-50 flex max-h-[calc(100vh-48px)] -translate-x-1/2 -translate-y-1/2 flex-col',
             WIDTH[size],
-            'rounded-lg border border-border bg-surface shadow-overlay focus-visible:outline-none',
+            'animate-pop-in rounded-xl bg-surface shadow-floating focus-visible:outline-none',
             className,
           )}
         >
-          <div className={cn('relative flex flex-col gap-[6px] px-6 pb-4 pt-5', centered ? 'items-center text-center' : 'border-b border-border')}>
-            {media && <div className="mb-3">{media}</div>}
-            <RadixDialog.Title className={cn('text-heading-2 text-ink', !centered && 'pr-8')}>{title}</RadixDialog.Title>
+          <div className={cn('relative flex flex-col gap-2 px-6 pt-5', centered ? 'items-center pb-2 pt-[28px] text-center' : 'pb-2')}>
+            {media && <div className="mb-2">{media}</div>}
+            <RadixDialog.Title className={cn('text-dialog-title text-ink', !centered && 'pr-[36px]')}>{title}</RadixDialog.Title>
             {description ? (
-              <RadixDialog.Description className="text-body-dense text-ink-muted">{description}</RadixDialog.Description>
+              <RadixDialog.Description className="text-body text-ink-subtle">{description}</RadixDialog.Description>
             ) : (
               <RadixDialog.Description className="sr-only">{title}</RadixDialog.Description>
             )}
@@ -90,23 +91,23 @@ export function Dialog({
                 <button
                   type="button"
                   aria-label={closeLabel}
-                  className="absolute right-5 top-5 flex h-6 w-6 items-center justify-center rounded-md text-ink-muted hover:bg-surface-sunken hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
+                  className="absolute right-4 top-4 flex h-[28px] w-[28px] items-center justify-center rounded-md text-ink transition-colors duration-fast hover:bg-surface-sunken focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
                 >
-                  <X aria-hidden size={16} strokeWidth={1.8} />
+                  <X aria-hidden size={16} strokeWidth={2} />
                 </button>
               </RadixDialog.Close>
             )}
           </div>
-          {children && <div className="flex min-h-0 flex-col gap-4 overflow-y-auto p-6">{children}</div>}
+          {children && <div className="p-scroll flex min-h-0 flex-col gap-3 overflow-y-auto px-6 pb-5 pt-2 text-body text-ink-subtle">{children}</div>}
           {(footer || footerNote) && (
             <div
               className={cn(
-                'flex items-center gap-3 px-6 pb-6 pt-4',
-                centered ? 'justify-center' : 'justify-between border-t border-border',
+                'flex items-center gap-2 px-6',
+                centered ? 'justify-center pb-6 pt-2' : 'justify-between border-t border-border-subtle py-[14px]',
               )}
             >
               {!centered && <span className="text-caption text-ink-muted">{footerNote}</span>}
-              <div className="flex gap-3">{footer}</div>
+              <div className="flex gap-2">{footer}</div>
             </div>
           )}
         </RadixDialog.Content>

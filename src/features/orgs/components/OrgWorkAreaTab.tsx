@@ -118,7 +118,7 @@ export function OrgWorkAreaTab({ org, canEdit }: { org: OrgDetail; canEdit: bool
   return (
     <section className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-heading-3 text-ink">{c.judul}</h3>
+        <h3 className="text-body-strong text-ink">{c.judul}</h3>
         {canEdit && (
           <Button icon={<Plus aria-hidden size={14} strokeWidth={1.8} />} onClick={() => setDialog({ kind: 'add' })}>
             {c.tambah}
@@ -126,9 +126,9 @@ export function OrgWorkAreaTab({ org, canEdit }: { org: OrgDetail; canEdit: bool
         )}
       </div>
       {org.wilayahKerja.length === 0 ? (
-        <p className="text-body-dense text-ink-muted">{c.kosong}</p>
+        <p className="text-body text-ink-muted">{c.kosong}</p>
       ) : (
-        <table className="w-full border-collapse text-left text-body-dense">
+        <table className="w-full border-collapse text-left text-body">
           <caption className="sr-only">{c.judul}</caption>
           <thead>
             <tr className="bg-surface-sunken text-label text-ink">
@@ -139,10 +139,10 @@ export function OrgWorkAreaTab({ org, canEdit }: { org: OrgDetail; canEdit: bool
           </thead>
           <tbody>
             {org.wilayahKerja.map((w) => (
-              <tr key={w.id} className={`border-b border-border-subtle align-top last:border-b-0 ${w.aktif ? '' : 'text-ink-subtle'}`}>
+              <tr key={w.id} className={`border-b border-border-subtle align-top last:border-b-0 ${w.aktif ? '' : 'text-ink-muted'}`}>
                 <td className="py-3 pr-3">
                   <span className="font-medium text-ink">{w.nama}</span>
-                  <span className="block font-mono text-caption text-ink-subtle">{w.kode}</span>
+                  <span className="block font-mono text-caption text-ink-muted">{w.kode}</span>
                   {w.dioperasikanBersama && <span className="block text-caption text-ink-muted">{c.bersama}</span>}
                   {canEdit && (
                     <span className="mt-1 flex gap-4">
@@ -156,7 +156,7 @@ export function OrgWorkAreaTab({ org, canEdit }: { org: OrgDetail; canEdit: bool
                   )}
                 </td>
                 <td className="py-3 pr-3">{w.aktif ? orgCopy.aktif : orgCopy.nonaktif}</td>
-                <td className="py-3 text-right font-mono tabular-nums">{w.pelapor}</td>
+                <td className="py-3 text-right tabular-nums">{w.pelapor}</td>
               </tr>
             ))}
           </tbody>

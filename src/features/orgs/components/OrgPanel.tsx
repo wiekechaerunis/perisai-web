@@ -151,10 +151,10 @@ function ProfilTab({ org, level, onInvitePic }: { org: OrgDetail; level: OrgLeve
             value: (
               <span className="flex flex-col">
                 <span className="font-mono">{org.kode}</span>
-                <span className="text-caption font-normal text-ink-subtle">{p.kodeTerkunci}</span>
+                <span className="text-caption font-normal text-ink-muted">{p.kodeTerkunci}</span>
               </span>
             ),
-            action: <Lock aria-label={p.kodeTerkunci} size={14} strokeWidth={1.8} className="text-ink-subtle" />,
+            action: <Lock aria-label={p.kodeTerkunci} size={14} strokeWidth={1.8} className="text-ink-muted" />,
           },
           { key: 'jenis', label: p.field.jenis, value: org.jenis },
           row('badanHukum', p.field.badanHukum, org.badanHukum ?? '—'),
@@ -164,10 +164,10 @@ function ProfilTab({ org, level, onInvitePic }: { org: OrgDetail; level: OrgLeve
       {level !== 'baca' && (
         <dl className="grid grid-cols-3 gap-3">
           {stats.map((s) => (
-            <div key={s.label} className="flex flex-col gap-1 rounded-md border border-border p-3">
+            <div key={s.label} className="flex flex-col gap-1 rounded-lg bg-surface-subtle p-3 shadow-[inset_0_0_0_1px_var(--color-border-subtle)]">
               <dt className="text-caption text-ink-muted">{s.label}</dt>
               <dd>
-                <Link to={s.to} className="font-mono text-heading-2 tabular-nums text-ink underline-offset-2 hover:underline">
+                <Link to={s.to} className="text-metric tabular-nums text-ink underline-offset-2 hover:underline">
                   {s.n}
                 </Link>
               </dd>
@@ -176,9 +176,9 @@ function ProfilTab({ org, level, onInvitePic }: { org: OrgDetail; level: OrgLeve
         </dl>
       )}
       <section className="flex flex-col gap-2">
-        <h3 className="text-heading-3 text-ink">{p.picAktif}</h3>
+        <h3 className="text-body-strong text-ink">{p.picAktif}</h3>
         {org.picNama.length ? (
-          <ul className="flex flex-col gap-1 text-body-dense text-ink">
+          <ul className="flex flex-col gap-1 text-body text-ink">
             {org.picNama.map((n) => (
               <li key={n}>{n}</li>
             ))}
@@ -192,7 +192,7 @@ function ProfilTab({ org, level, onInvitePic }: { org: OrgDetail; level: OrgLeve
             className="py-6"
           />
         ) : (
-          <p className="text-body-dense text-ink-muted">—</p>
+          <p className="text-body text-ink-muted">—</p>
         )}
       </section>
     </div>
@@ -201,13 +201,13 @@ function ProfilTab({ org, level, onInvitePic }: { org: OrgDetail; level: OrgLeve
 
 function RiwayatTab({ kode }: { kode: string }) {
   const h = useOrgHistory(kode);
-  if (h.isPending) return <p role="status" className="text-body-dense text-ink-muted">{orgCopy.memuat}</p>;
-  if (!h.data?.length) return <p className="text-body-dense text-ink-muted">{orgCopy.riwayat.kosong}</p>;
+  if (h.isPending) return <p role="status" className="text-body text-ink-muted">{orgCopy.memuat}</p>;
+  if (!h.data?.length) return <p className="text-body text-ink-muted">{orgCopy.riwayat.kosong}</p>;
   return (
     <ul className="flex flex-col gap-3">
       {h.data.map((e) => (
         <li key={e.id} className="flex flex-col gap-0.5">
-          <span className="text-body-dense text-ink">{e.perubahan}</span>
+          <span className="text-body text-ink">{e.perubahan}</span>
           <span className="text-caption text-ink-muted">{[e.pelaku, formatTanggalJam(e.waktu), e.alasan ? `Alasan: ${e.alasan}` : null].filter(Boolean).join(' · ')}</span>
         </li>
       ))}
@@ -231,7 +231,7 @@ export function OrgDetailContent({ org, level, onInvitePic }: { org: OrgDetail; 
 
 export function OrgHeaderNotes({ org }: { org: OrgDetail }) {
   if (org.status !== 'Nonaktif' || !org.nonaktif) return null;
-  return <p className="rounded-md bg-surface-sunken p-3 text-body-dense text-ink">{p.bannerNonaktif(formatTanggal(org.nonaktif.sejak), org.nonaktif.alasan)}</p>;
+  return <p className="rounded-md bg-surface-sunken p-3 text-body text-ink">{p.bannerNonaktif(formatTanggal(org.nonaktif.sejak), org.nonaktif.alasan)}</p>;
 }
 
 /** State navigasi ke halaman detail: query string daftar (tombol kembali memulihkan filter) dan permintaan membuka
@@ -268,7 +268,7 @@ export function OrgDetailPage({ level }: { level: Exclude<OrgLevel, 'baca'> }) {
       <>
         <PageHeader title={judul} breadcrumbs={crumbs(detail.isError ? p.tidakDitemukan : '…')} back={back} />
         <PageBody>
-          <p role="status" className="text-body-dense text-ink-muted">
+          <p role="status" className="text-body text-ink-muted">
             {detail.isError ? p.tidakDitemukanIsi : orgCopy.memuat}
           </p>
         </PageBody>
@@ -306,7 +306,7 @@ export function OrgDetailPage({ level }: { level: Exclude<OrgLevel, 'baca'> }) {
             <OrgHeaderNotes org={org} />
           </div>
         )}
-        <Section className="border border-border">
+        <Section>
           <OrgDetailContent org={org} level={level} onInvitePic={() => setInvite(true)} />
         </Section>
       </PageBody>

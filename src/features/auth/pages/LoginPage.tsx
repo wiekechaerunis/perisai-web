@@ -54,7 +54,9 @@ export function LoginPage() {
       navigate('/masuk/verifikasi', { state: challenge });
     },
     onError: (e) => {
-      setAlert(isServiceError(e) && ALERT_CODES.has(e.code) ? (e.code as LoginAlertCode) : 'NETWORK');
+      setAlert(
+        isServiceError(e) && ALERT_CODES.has(e.code) ? (e.code as LoginAlertCode) : 'NETWORK',
+      );
       setPassword('');
     },
   });
@@ -84,13 +86,17 @@ export function LoginPage() {
   return (
     <LoginFrame>
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-display text-ink">{c.judul}</h1>
-          <p className="text-body-dense text-ink-muted">{c.deskripsi}</p>
+        <div className="flex flex-col gap-2 text-center">
+          <h1 className="text-page-title text-ink">{c.judul}</h1>
+          <p className="text-lead text-ink-subtle">{c.deskripsi}</p>
         </div>
         <div ref={alertRef} aria-live="assertive" className="empty:hidden">
           {alert ? (
-            <LoginAlert title={c.alert[alert].judul} body={c.alert[alert].isi} linkText={c.tautanSupport} />
+            <LoginAlert
+              title={c.alert[alert].judul}
+              body={c.alert[alert].isi}
+              linkText={c.tautanSupport}
+            />
           ) : notice ? (
             <LoginAlert variant="info" title="" body={notice} />
           ) : null}
@@ -103,14 +109,14 @@ export function LoginPage() {
             inputMode="email"
             autoComplete="username"
             placeholder={c.emailPlaceholder}
-            leading={<Mail size={16} strokeWidth={1.8} />}
+            size="lg"
+            leading={<Mail size={18} strokeWidth={1.9} />}
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
               if (errors.email) setErrors((p) => ({ ...p, email: undefined }));
             }}
             error={errors.email}
-            containerClassName="py-[10px]"
             required
           />
           <TextField
@@ -121,23 +127,30 @@ export function LoginPage() {
             revealLabels={passwordCopy.reveal}
             autoComplete="current-password"
             placeholder={c.sandiPlaceholder}
-            leading={<Lock size={16} strokeWidth={1.8} />}
+            size="lg"
+            leading={<Lock size={18} strokeWidth={1.9} />}
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
               if (errors.password) setErrors((p) => ({ ...p, password: undefined }));
             }}
             error={errors.password}
-            containerClassName="py-[10px]"
             required
           />
           <Link
             to="/lupa-kata-sandi"
-            className="self-start text-[13px] font-medium text-[color:var(--figma-link-accent)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
+            className="self-end text-caption font-semibold text-ink underline-offset-[3px] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
           >
             {c.lupa}
           </Link>
-          <Button type="submit" variant="primary" size="lg" block loading={login.isPending} loadingLabel={c.memproses} className="font-semibold">
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            block
+            loading={login.isPending}
+            loadingLabel={c.memproses}
+          >
             {c.masuk}
           </Button>
         </div>

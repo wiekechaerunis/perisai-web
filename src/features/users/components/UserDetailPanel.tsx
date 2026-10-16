@@ -13,7 +13,7 @@
  * Tab Profil: tautan "Ubah" per field → halaman /pengguna/:id/ubah (PRD Ubah Data & Role, keputusan PM 14 Okt 2026);
  * Masa berlaku → dialog Perpanjang (FR-SA-22). Riwayat akun: Diundang, Diaktifkan, Login terakhir.
  */
-import { KeyRound, Lock, MoreHorizontal, RotateCcw, Send, XCircle } from 'lucide-react';
+import { Check, Clock, KeyRound, Lock, LogIn, MoreHorizontal, RotateCcw, Send, XCircle } from 'lucide-react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -28,10 +28,11 @@ import { LOG_ROLES } from '../../shell/navigation';
 import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
 import { Callout } from '@/components/patterns/Callout';
 import { KeyValueList, type KeyValueItem } from '@/components/patterns/KeyValueList';
+import { Timeline, type TimelineEvent, type TimelineGroup } from '@/components/patterns/Timeline';
 import { Menu } from '@/components/patterns/Menu';
 import { Button } from '@/components/ui/Button';
 import { Tabs } from '@/components/ui/Tabs';
-import { formatTanggal, formatTanggalJam } from '@/lib/format';
+import { formatJam, formatTanggal, formatTanggalJam } from '@/lib/format';
 import { ACCOUNT_STATUS_DISPLAY } from '@/lib/status';
 import { actionsForStatus } from '@/lib/user-rules';
 import type { Session, UserDetail } from '@/services';
@@ -67,6 +68,49 @@ export interface FromListState {
   from?: string;
 }
 
+function initialsOf(nama: string): string {
+  return nama
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0]!.toUpperCase())
+    .join('');
+}
+
+/** Riwayat akun (Figma 109:16236: Diundang, Diaktifkan, Login terakhir) sebagai Timeline DS v2. */
+function accountTimeline(u: UserDetail, copy: typeof p): TimelineGroup[] {
+  const done: (TimelineEvent & { at: string })[] = [];
+  if (u.loginTerakhir) done.push({ key: 'login', at: u.loginTerakhir, title: copy.loginTerakhir, icon: <LogIn strokeWidth={2.4} /> });
+  if (u.diaktifkanPada) done.push({ key: 'aktif', at: u.diaktifkanPada, title: copy.diaktifkan, icon: <Check strokeWidth={2.4} />, tone: 'ok' });
+  if (u.diundangPada)
+    done.push({
+      key: 'diundang',
+      at: u.diundangPada,
+      title: copy.diundang,
+      icon: <Send strokeWidth={2.4} />,
+      actor: u.diundangOleh ? { name: u.diundangOleh, initials: initialsOf(u.diundangOleh) } : undefined,
+    });
+  done.sort((a, b) => b.at.localeCompare(a.at));
+  if (done[0]) done[0].tone = 'now';
+  const groups: TimelineGroup[] = [];
+  // Langkah yang sedang ditunggu (garis putus, tanpa jam): akun aktif yang belum pernah login.
+  if (!u.loginTerakhir && u.status === 'Aktif')
+    groups.push({ key: 'next', events: [{ key: 'next', title: copy.belumPernahLogin, icon: <Clock strokeWidth={2.4} />, tone: 'next' }] });
+  for (const e of done) {
+    const day = formatTanggal(e.at);
+    const ev: TimelineEvent = { ...e, time: formatJam(e.at), srLabel: `${typeof e.title === 'string' ? e.title : ''}${e.actor ? ` oleh ${e.actor.name}` : ''}, ${formatTanggalJam(e.at)}` };
+    const g = groups.find((x) => x.key === day);
+    if (g) g.events.push(ev);
+    else groups.push({ key: day, label: day, events: [ev] });
+  }
+  // Langkah "next" digabung ke kelompok pertama agar garis putusnya tersambung ke kejadian terbaru.
+  if (groups[0]?.key === 'next' && groups[1]) {
+    groups[1].events.unshift(groups[0].events[0]!);
+    groups.shift();
+  }
+  return groups;
+}
+
 export function UserDetailPage() {
   const { id: userId } = useParams();
   const { session } = useSession();
@@ -88,7 +132,7 @@ export function UserDetailPage() {
       <>
         <PageHeader title={detail.isError ? c.profil.tidakDitemukan : c.profil.memuat} breadcrumbs={crumbs(detail.isError ? c.profil.tidakDitemukan : '…')} back={back} />
         <PageBody>
-          <p role="status" className="text-body-dense text-ink-muted">
+          <p role="status" className="text-body text-ink-muted">
             {detail.isError ? c.profil.tidakDitemukanIsi : c.profil.memuat}
           </p>
         </PageBody>
@@ -119,7 +163,7 @@ export function UserDetailPage() {
         ))}
       {cancelled && (
         <div className="flex flex-col gap-1 rounded-md bg-surface-sunken p-4">
-          <p className="text-body-dense font-semibold text-ink">{c.profil.belumSelesaiJudul}</p>
+          <p className="text-body font-semibold text-ink">{c.profil.belumSelesaiJudul}</p>
           <p className="text-caption text-ink-muted">{c.profil.belumSelesaiIsi}</p>
           <div className="mt-2">
             <Button onClick={() => setReinvite(true)}>{c.profil.kirimUndanganBaru}</Button>
@@ -127,11 +171,11 @@ export function UserDetailPage() {
         </div>
       )}
       {u.status === 'Diundang' && u.undanganBerlakuSampai && (
-        <p className="text-caption text-ink-subtle">{c.profil.berlakuSampai(formatTanggalJam(u.undanganBerlakuSampai))}</p>
+        <p className="text-caption text-ink-muted">{c.profil.berlakuSampai(formatTanggalJam(u.undanganBerlakuSampai))}</p>
       )}
     </>
   ) : u.organisasi.status === 'Nonaktif' ? (
-    <p role="status" className="rounded-md bg-surface-sunken p-3 text-body-dense text-ink">
+    <p role="status" className="rounded-md bg-surface-sunken p-3 text-body text-ink">
       <strong className="font-semibold">{c.organisasiNonaktif}.</strong> {c.organisasiNonaktifTooltip}
     </p>
   ) : null;
@@ -184,10 +228,10 @@ export function UserDetailPage() {
       </div>
   ) : null;
 
-  const lock = <Lock aria-label={p.tidakDapatDiubah} size={14} strokeWidth={1.8} className="text-ink-subtle" />;
+  const lock = <Lock aria-label={p.tidakDapatDiubah} size={14} strokeWidth={1.8} className="text-ink-muted" />;
   const ubah = (onClick?: () => void) =>
     onClick ? (
-      <button type="button" onClick={onClick} className="text-body-dense font-semibold text-ink underline">
+      <button type="button" onClick={onClick} className="text-body font-semibold text-ink underline-offset-[3px] hover:underline">
         {p.ubah}
       </button>
     ) : (
@@ -222,31 +266,15 @@ export function UserDetailPage() {
       action: manage && a.perpanjang ? ubah(() => setAction('perpanjang')) : undefined,
     },
   ];
-  const riwayatAkun: KeyValueItem[] = [
-    ...(u.diundangPada
-      ? [
-          {
-            key: 'diundang',
-            label: p.diundang,
-            value: (
-              <span className="flex flex-col">
-                <span>{formatTanggalJam(u.diundangPada)}</span>
-                {u.diundangOleh && <span className="font-normal text-ink-muted">{c.profil.oleh(u.diundangOleh)}</span>}
-              </span>
-            ),
-          },
-        ]
-      : []),
-    ...(u.diaktifkanPada ? [{ key: 'aktif', label: p.diaktifkan, value: formatTanggalJam(u.diaktifkanPada) }] : []),
-    { key: 'login', label: p.loginTerakhir, value: u.loginTerakhir ? formatTanggalJam(u.loginTerakhir) : p.belumPernahLogin },
-  ];
+  // DS v2 Timeline: riwayat akun terbaru di atas, dikelompokkan per hari; kejadian terbaru simpul lime.
+  const riwayatAkun = accountTimeline(u, p);
 
   return (
     <>
       <PageHeader title={u.nama} titleAside={<StatusBadge user={u} />} summary={u.email} breadcrumbs={crumbs(u.nama)} back={back} actions={headerActions} />
       <PageBody>
         {notes && <div className="flex max-w-[720px] flex-col gap-3">{notes}</div>}
-        <Section className="border border-border">
+        <Section>
         <Tabs
           label={c.profil.tabLabel}
           items={[
@@ -257,8 +285,8 @@ export function UserDetailPage() {
                 <div className="flex flex-col gap-6">
                   <KeyValueList items={items} fullWidth />
                   <section className="flex flex-col gap-3">
-                    <h3 className="text-heading-3 text-ink">{p.riwayatAkun}</h3>
-                    <KeyValueList items={riwayatAkun} fullWidth />
+                    <h3 className="text-body-strong text-ink">{p.riwayatAkun}</h3>
+                    <Timeline label={p.riwayatAkun} groups={riwayatAkun} className="max-w-[560px]" />
                   </section>
                 </div>
               ),

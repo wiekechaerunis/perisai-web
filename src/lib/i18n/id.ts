@@ -4,15 +4,32 @@
  * Teks khusus fitur (termasuk pesan validasi PRD yang disalin persis) ada di features/<fitur>/copy.ts.
  */
 export const t = {
+  /** Pola filter tabel DS v2 (FilterPanel, AppliedFilters). */
+  filter: {
+    trigger: 'Filter',
+    title: 'Filter',
+    close: 'Tutup filter',
+    reset: 'Atur ulang',
+    terapkan: 'Terapkan',
+    terapkanJumlah: (n: number, entitas: string) => `Terapkan · ${n} ${entitas}`,
+    region: 'Filter aktif',
+    clear: 'Hapus filter',
+    remove: (label: string, value: string) => `Hapus filter ${label}: ${value}`,
+    more: (n: number) => `+${n} filter lainnya`,
+    semua: 'Semua',
+  },
   app: {
     nama: 'PERISAI',
     lompatKeKonten: 'Lompat ke konten',
     navUtama: 'Navigasi utama',
+    perkecilSidebar: 'Perkecil sidebar', // DS v2 Sidebar
+    perlebarSidebar: 'Perlebar sidebar',
     memuat: 'Memuat…',
     tutup: 'Tutup',
     notifikasi: 'Notifikasi',
   },
   nav: {
+    menu: 'Menu',
     ikhtisar: 'Ikhtisar',
     administrasi: 'Administrasi',
     pengguna: 'Pengguna',

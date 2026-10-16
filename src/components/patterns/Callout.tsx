@@ -1,27 +1,28 @@
 /**
- * Callout — PERISAI Design System `Perisai.Callout` (Umpan balik).
- * Kalimat pertama menyebut masalah, kalimat kedua langkah berikutnya.
+ * Callout — Banner DS v2 · Lime (pesan di dalam halaman). Kalimat pertama menyebut masalah, kalimat kedua langkah berikutnya.
  *
- * Anatomi DS (Figma CORE-PERISAI): latar berwarna penuh + garis kiri 4px, radius `radius-sm` hanya di sudut kanan,
- * padding 12px, ikon 16px, jarak ikon–teks 10px. Ini satu-satunya pengecualian aturan "tanpa garis tebal di sisi kiri".
- * Varian: info (`surface-sunken`/`ink-subtle`), peringatan (`caution`), kritis (`sev-kritis`, hanya untuk sinyal/insiden
- * Kritis), error (`error-bg`/`error-ink`, kegagalan form atau server). Ukuran `compact` (12px) di dalam form dan Dialog.
+ * Anatomi DS v2: kotak `radius-lg`, padding 12px 14px, ikon 16px, jarak ikon–teks 10px, TANPA garis kiri.
+ * - info = Catatan tetap: `surface` + garis `border`, teks `ink-subtle` (tidak berwarna status).
+ * - peringatan = Banner peristiwa: `caution-bg` / `caution-ink`.
+ * - error = Banner gagal: `error-bg` / `error-ink` (kegagalan form atau server).
+ * - kritis: `sev-critical-*`, hanya untuk sinyal/insiden Kritis.
+ * Ukuran `compact` (12px) di dalam form dan Dialog.
  */
 import { cva, type VariantProps } from 'class-variance-authority';
 import { AlertTriangle, Info, OctagonAlert, XCircle } from 'lucide-react';
 import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { cn } from '@/lib/cn';
 
-const calloutVariants = cva('flex gap-[10px] rounded-r-sm border-l-4 p-3', {
+const calloutVariants = cva('flex animate-fade-in gap-[10px] rounded-lg px-[14px] py-3', {
   variants: {
     variant: {
-      info: 'border-ink-subtle bg-surface-sunken text-ink',
-      peringatan: 'border-caution bg-caution-bg text-caution-ink',
-      kritis: 'border-sev-kritis bg-sev-kritis-bg text-sev-kritis-ink',
-      error: 'border-error-ink bg-error-bg text-error-ink',
+      info: 'border border-border bg-surface text-ink-subtle',
+      peringatan: 'bg-caution-bg text-caution-ink',
+      kritis: 'bg-sev-critical-bg text-sev-critical-ink',
+      error: 'bg-error-bg text-error-ink',
     },
     size: {
-      md: 'text-body-dense',
+      md: 'text-body',
       compact: 'text-caption',
     },
   },
@@ -52,7 +53,7 @@ export const Callout = forwardRef<HTMLDivElement, CalloutProps>(function Callout
       className={cn(calloutVariants({ variant, size }), className)}
       {...rest}
     >
-      <Icon aria-hidden size={16} strokeWidth={1.8} className="mt-0.5 shrink-0" />
+      <Icon aria-hidden size={16} strokeWidth={2} className="mt-px shrink-0" />
       <div className="flex min-w-0 flex-col gap-1">
         {title && <p className="font-semibold">{title}</p>}
         {children && <div>{children}</div>}

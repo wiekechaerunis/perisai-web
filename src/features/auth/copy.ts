@@ -8,6 +8,7 @@
 export const passwordCopy = {
   reveal: { show: 'Tampilkan kata sandi', hide: 'Sembunyikan kata sandi' },
   kekuatan: 'Kekuatan kata sandi',
+  kekuatanPrefiks: 'Kekuatan', // DS v2 PasswordField: "Kekuatan: Cukup"
   syarat: 'Syarat kata sandi',
   syaratStatus: { met: 'terpenuhi', unmet: 'belum terpenuhi' },
 } as const;
@@ -15,8 +16,8 @@ export const passwordCopy = {
 /** Bingkai layar publik (Figma 85:4794, 66:2547). */
 export const authFrameCopy = {
   logoAlt: 'PERISAI',
-  butuhBantuan: 'Butuh Bantuan?',
-  hubungiSupport: 'Hubungi Support',
+  butuhBantuan: 'Butuh bantuan?', // DS v2 StatusPage (kalimat biasa)
+  hubungiSupport: 'Hubungi support',
   // Figma 85:4825 (bahasa Inggris; F-07)
   hakCipta: '© 2026 SKK Migas. Hak cipta dilindungi.',
 } as const;
@@ -50,10 +51,10 @@ export const loginCopy = {
   // Tabel E-1 (field, sumber browser)
   emailKosong: 'Email wajib diisi.',
   emailFormat: 'Masukkan alamat email yang valid.',
-  sandiKosong: 'Password wajib diisi.',
+  sandiKosong: 'Kata sandi wajib diisi.', // DS v2: istilah UI 'kata sandi'
   // Tabel E-1 (alert di atas form, sumber server)
   alert: {
-    INVALID_CREDENTIALS: { judul: 'Kredensial tidak valid', isi: 'Email atau password yang Anda masukkan salah.' },
+    INVALID_CREDENTIALS: { judul: 'Kredensial tidak valid', isi: 'Email atau kata sandi yang Anda masukkan salah.' },
     ACCOUNT_DEACTIVATED: { judul: 'Akun dinonaktifkan', isi: 'Akun Anda sedang dinonaktifkan. Hubungi Support untuk bantuan.' },
     ACCOUNT_SUSPENDED: {
       judul: 'Akun ditangguhkan',
@@ -95,7 +96,7 @@ export const otpCopy = {
     isi: (email: string, menit: number) =>
       `Masukkan kode 6 digit yang kami kirim ke ${email} untuk menyelesaikan aktivasi akun. Kode berlaku ${menit} menit.`,
     tombol: 'Aktifkan akun', // FR-AK-10
-    kembali: 'Kembali ke buat password', // usulan (FR-AK-15)
+    kembali: 'Kembali ke buat kata sandi', // usulan (FR-AK-15)
   },
   memproses: 'Memverifikasi…',
   belumMenerima: 'Belum menerima kode?',
@@ -115,22 +116,23 @@ export const otpCopy = {
 
 /** PRD Aktivasi Akun (tab e34d9005-d913) + Figma 66:2602, 66:2546, 66:2569, 66:2582. */
 export const aktivasiCopy = {
-  judul: 'Buat password', // Figma "Buat Password" → sentence case (K-3)
+  judul: 'Buat kata sandi', // DS v2 AuthForm (istilah 'kata sandi', 16 Okt 2026)
   // Figma: "Silahkan buat password baru {email} untuk login ke aplikasi PERISAI" → "Silakan" (baku, F-09)
-  deskripsi: (email: string) => ({ before: 'Silakan buat password baru ', email, after: ' untuk login ke aplikasi PERISAI' }),
-  baru: 'Password baru',
-  konfirmasi: 'Konfirmasi password baru',
-  placeholder: 'Min. 8 karakter',
-  simpan: 'Simpan password baru', // T-1 CTA "Simpan Password Baru" (K-3)
+  // DS v2 AuthForm: email tersamar (keputusan PM 16 Okt 2026; FR-AK-08 perlu diperbarui).
+  deskripsi: (email: string) => ({ before: 'Buat kata sandi untuk akun ', email, after: ' agar bisa masuk ke PERISAI.' }),
+  baru: 'Kata sandi baru',
+  konfirmasi: 'Konfirmasi kata sandi baru',
+  placeholder: 'Masukkan kata sandi', // DS v2: syarat di checklist, bukan placeholder
+  simpan: 'Simpan kata sandi baru', // T-1 CTA (DS v2 AuthForm)
   menyimpan: 'Menyimpan…',
   // Tabel V-2
-  baruKosong: 'Password baru wajib diisi.',
-  kurangDari8: 'Password minimal 8 karakter.',
-  konfirmasiKosong: 'Konfirmasi password wajib diisi.',
-  konfirmasiTidakCocok: 'Konfirmasi password tidak cocok.',
-  terlaluUmum: 'Password ini terlalu umum. Gunakan kombinasi lain.', // FR-AK-06
+  baruKosong: 'Kata sandi baru wajib diisi.',
+  kurangDari8: 'Kata sandi minimal 8 karakter.',
+  konfirmasiKosong: 'Konfirmasi kata sandi wajib diisi.',
+  konfirmasiTidakCocok: 'Konfirmasi kata sandi tidak cocok.',
+  terlaluUmum: 'Kata sandi ini terlalu umum. Gunakan kombinasi lain.', // FR-AK-06
   // FR-AK-12
-  otpTerkunci: 'Terlalu banyak percobaan. Silakan buat password dan minta kode baru.',
+  otpTerkunci: 'Terlalu banyak percobaan. Silakan buat kata sandi dan minta kode baru.',
   // FR-AK-14
   sukses: 'Akun berhasil diaktifkan.',
   // Tabel T-1 (copy PRD; Figma 66:2556 berbeda untuk "tidak valid", F-10)
@@ -181,10 +183,10 @@ export const aturUlangCopy = {
   simpan: 'Simpan kata sandi baru',
   menyimpan: 'Menyimpan…',
   // Pesan validasi: Tabel V-2 PRD Aktivasi (FR-LP-12)
-  baruKosong: 'Password baru wajib diisi.',
-  konfirmasiKosong: 'Konfirmasi password wajib diisi.',
-  konfirmasiTidakCocok: 'Konfirmasi password tidak cocok.',
-  terlaluUmum: 'Password ini terlalu umum. Gunakan kombinasi lain.',
+  baruKosong: 'Kata sandi baru wajib diisi.',
+  konfirmasiKosong: 'Konfirmasi kata sandi wajib diisi.',
+  konfirmasiTidakCocok: 'Konfirmasi kata sandi tidak cocok.',
+  terlaluUmum: 'Kata sandi ini terlalu umum. Gunakan kombinasi lain.',
   // FR-LP-13 (copy usulan PRD)
   samaDenganLama: 'Kata sandi baru harus berbeda dari kata sandi sebelumnya.',
   // Tabel L-3

@@ -41,7 +41,7 @@ describe('Login (FR-LG-01..10b, Tabel E-1)', () => {
     renderAuth('/masuk');
     await userEvent.click(await screen.findByRole('button', { name: 'Masuk' }));
     expect(screen.getByText('Email wajib diisi.')).toBeInTheDocument();
-    expect(screen.getByText('Password wajib diisi.')).toBeInTheDocument();
+    expect(screen.getByText('Kata sandi wajib diisi.')).toBeInTheDocument();
     expect(screen.getByLabelText('Email')).toHaveFocus();
     await userEvent.type(screen.getByLabelText('Email'), 'bukan-email');
     await userEvent.click(screen.getByRole('button', { name: 'Masuk' }));
@@ -118,12 +118,13 @@ describe('Aktivasi (FR-AK-01..17)', () => {
 
   it('buat password → verifikasi email → akun aktif dan masuk', async () => {
     renderAuth('/aktivasi/undangan-agus-berlaku');
-    expect(await screen.findByRole('heading', { name: 'Buat password' })).toBeInTheDocument();
-    expect(screen.getByText('a.pranoto@andalas-energi.example')).toBeInTheDocument();
-    const save = screen.getByRole('button', { name: 'Simpan password baru' });
+    expect(await screen.findByRole('heading', { name: 'Buat kata sandi' })).toBeInTheDocument();
+    // DS v2 AuthForm (keputusan PM 16 Okt 2026): email tersamar juga di layar Buat kata sandi.
+    expect(screen.getByText('a.pr****@andalas-energi.example')).toBeInTheDocument();
+    const save = screen.getByRole('button', { name: 'Simpan kata sandi baru' });
     expect(save).toBeDisabled();
-    await userEvent.type(screen.getByLabelText('Password baru'), 'Agus#Aman2026');
-    await userEvent.type(screen.getByLabelText('Konfirmasi password baru'), 'Agus#Aman2026');
+    await userEvent.type(screen.getByLabelText('Kata sandi baru'), 'Agus#Aman2026');
+    await userEvent.type(screen.getByLabelText('Konfirmasi kata sandi baru'), 'Agus#Aman2026');
     await userEvent.click(save);
     expect(await screen.findByRole('heading', { name: 'Verifikasi email Anda' })).toBeInTheDocument();
     await userEvent.type(screen.getByLabelText('Kode verifikasi'), await lastCode());
@@ -135,9 +136,9 @@ describe('Aktivasi (FR-AK-01..17)', () => {
 
   it('password umum ditolak (FR-AK-06)', async () => {
     renderAuth('/aktivasi/undangan-agus-berlaku');
-    await userEvent.type(await screen.findByLabelText('Password baru'), 'Password1');
-    await userEvent.type(screen.getByLabelText('Konfirmasi password baru'), 'Password1');
-    await userEvent.click(screen.getByRole('button', { name: 'Simpan password baru' }));
-    expect(await screen.findByText('Password ini terlalu umum. Gunakan kombinasi lain.')).toBeInTheDocument();
+    await userEvent.type(await screen.findByLabelText('Kata sandi baru'), 'Password1');
+    await userEvent.type(screen.getByLabelText('Konfirmasi kata sandi baru'), 'Password1');
+    await userEvent.click(screen.getByRole('button', { name: 'Simpan kata sandi baru' }));
+    expect(await screen.findByText('Kata sandi ini terlalu umum. Gunakan kombinasi lain.')).toBeInTheDocument();
   });
 });

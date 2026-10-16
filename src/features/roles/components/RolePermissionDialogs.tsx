@@ -67,13 +67,13 @@ export function PermissionPicker({
   return (
     <fieldset className="flex flex-col gap-2" aria-describedby="izin-hint">
       <legend className="text-label text-ink-muted">{c.legend}</legend>
-      <p id="izin-hint" className="text-caption text-ink-subtle">
+      <p id="izin-hint" className="text-caption text-ink-muted">
         {c.hint(JENIS_LABEL[orgType])} · {c.terpilih(total)}
       </p>
       {/* Matriks modul × aksi (masukan PM 15 Okt 2026). Kolom tetap (PICKER_COLUMNS); sel tanpa kotak
           centang (titik) = aksi tidak tersedia untuk modul itu (FR-KR-09b). */}
-      <div className={cn('overflow-x-auto rounded-md border border-border', scroll && 'max-h-[360px] overflow-y-auto')}>
-        <table className="w-full border-collapse text-left text-body-dense">
+      <div className={cn('overflow-x-auto rounded-lg border border-border', scroll && 'max-h-[360px] overflow-y-auto')}>
+        <table className="w-full border-collapse text-left text-body">
           <caption className="sr-only">{c.legend}</caption>
           <thead className={cn(scroll && 'sticky top-0 z-10')}>
             <tr className="border-b border-border bg-surface">
@@ -91,7 +91,7 @@ export function PermissionPicker({
             {modules.map((m) => (
               <tr key={m} className="border-b border-border-subtle last:border-b-0 hover:bg-surface-sunken">
                 <th scope="row" className="whitespace-nowrap px-3 py-2 font-normal text-ink">
-                  <span className="font-mono text-caption text-ink-subtle">{m}</span> {MODULES[m].name}
+                  <span className="font-mono text-caption text-ink-muted">{m}</span> {MODULES[m].name}
                 </th>
                 {columns.map((act) =>
                   (allowed[m] ?? []).includes(act) ? (
@@ -101,11 +101,11 @@ export function PermissionPicker({
                         aria-label={`${ACTION_LABEL[act]} — ${m} ${MODULES[m].name}`}
                         checked={(value[m] ?? []).includes(act)}
                         onChange={() => toggle(m, act)}
-                        className="h-4 w-4 align-middle accent-[var(--color-action)]"
+                        className="h-4 w-4 align-middle accent-[var(--color-ink)]"
                       />
                     </td>
                   ) : (
-                    <td key={act} className="px-3 py-2 text-center text-ink-subtle">
+                    <td key={act} className="px-3 py-2 text-center text-ink-muted">
                       <span aria-hidden>·</span>
                       <span className="sr-only">{c.tidakTersedia}</span>
                     </td>

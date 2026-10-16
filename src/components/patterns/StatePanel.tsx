@@ -1,19 +1,22 @@
 /**
- * StatePanel — komponen NON-DS (usulan di DS_GAPS.md). Keadaan satu halaman penuh yang bukan daftar kosong:
- * "Tautan tidak valid", "Akun sudah aktif", "Undangan tidak berlaku lagi" (FR-AK-01 T-1, FR-LP-10 L-3),
- * kelak juga "Anda tidak memiliki akses" (FR-PA-19). EmptyState DS khusus untuk daftar kosong.
+ * StatePanel — PERISAI DS v2 · Lime `StatusPage` (isi): halaman status penuh di luar menu (tautan tidak valid, akun
+ * sudah aktif, undangan kedaluwarsa, sesi habis) dan di dalam AppShell (404, 403). FR-AK-01 T-1, FR-LP-10 L-3, FR-PA-19.
  *
- * - align `start` (default): ikon + judul rata kiri (halaman kerja).
- * - align `center` + `media`: tata letak Figma Aktivasi 66:2546/2569/2582 — ilustrasi di atas, teks dan CTA di tengah.
- *   Ilustrasi bertentangan dengan aturan DS "tanpa ilustrasi" untuk EmptyState (DS_GAPS F-11).
+ * - align `center` (StatusPage): ilustrasi 200×140 → judul `page-title-child` (20/28 700) → satu-dua kalimat `ink-muted`
+ *   maks. 420px → satu tombol (primer bila satu-satunya jalan lanjut, sekunder bila hanya jalan keluar).
+ * - align `start`: ikon + judul rata kiri (state di dalam halaman kerja).
+ * Ilustrasi dekoratif aria-hidden; judul adalah h1 halaman.
  */
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { cn } from '@/lib/cn';
+import { Illustration, type IllustrationName } from './Illustration';
 
 export interface StatePanelProps {
   icon?: LucideIcon;
-  /** Gambar/ilustrasi di atas judul (dekoratif). */
+  /** Ilustrasi DS v2 (dipakai bila `media` kosong). */
+  illustration?: IllustrationName;
+  /** Gambar/ilustrasi lain di atas judul (dekoratif). */
   media?: ReactNode;
   title: ReactNode;
   description?: ReactNode;
@@ -27,6 +30,7 @@ export interface StatePanelProps {
 
 export function StatePanel({
   icon: Icon,
+  illustration,
   media,
   title,
   description,
@@ -37,15 +41,18 @@ export function StatePanel({
 }: StatePanelProps) {
   const Heading = headingLevel === 1 ? 'h1' : 'h2';
   const center = align === 'center';
+  const art = media ?? (illustration ? <Illustration name={illustration} size="lg" /> : null);
   return (
-    <div className={cn('flex flex-col gap-3', center ? 'items-center gap-10 text-center' : 'items-start', className)}>
-      {media && <div aria-hidden>{media}</div>}
-      <div className={cn('flex flex-col gap-3', center ? 'items-center gap-5' : 'items-start')}>
-        {Icon && <Icon aria-hidden size={18} strokeWidth={1.8} className="text-ink-muted" />}
-        <Heading className={cn('text-ink', 'text-heading-panel')}>{title}</Heading>
-        {description && <div className={cn('text-body text-ink-muted', !center && 'max-w-content-max')}>{description}</div>}
-        {actions && <div className={cn('mt-2 flex flex-col gap-3', center ? 'w-[318px] max-w-full' : 'w-full')}>{actions}</div>}
-      </div>
+    <div className={cn('il-host flex flex-col', center ? 'items-center gap-2 text-center' : 'items-start gap-3', className)}>
+      {art && (
+        <div aria-hidden className={center ? 'mb-3' : ''}>
+          {art}
+        </div>
+      )}
+      {Icon && !art && <Icon aria-hidden size={20} strokeWidth={1.9} className="text-ink-muted" />}
+      <Heading className="text-page-title-child text-ink">{title}</Heading>
+      {description && <div className={cn('text-body text-ink-muted', center ? 'max-w-[420px]' : 'max-w-content-max')}>{description}</div>}
+      {actions && <div className={cn('mt-3 flex flex-col gap-3', center ? 'w-[320px] max-w-full' : 'w-full')}>{actions}</div>}
     </div>
   );
 }

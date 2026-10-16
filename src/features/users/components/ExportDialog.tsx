@@ -57,8 +57,8 @@ export function ExportDialog({ query, count, onClose }: { query: UserListQuery; 
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-1 text-label text-ink-muted">{p.eksporFormat}</legend>
         {(['xlsx', 'csv'] as const).map((f) => (
-          <label key={f} className="flex items-center gap-2 text-body-dense text-ink">
-            <input type="radio" name="format-ekspor" value={f} checked={format === f} onChange={() => setFormat(f)} className="h-4 w-4 accent-[var(--color-action)]" />
+          <label key={f} className="flex items-center gap-2 text-body text-ink">
+            <input type="radio" name="format-ekspor" value={f} checked={format === f} onChange={() => setFormat(f)} className="h-4 w-4 accent-[var(--color-ink)]" />
             {f === 'xlsx' ? p.eksporXlsx : p.eksporCsv}
           </label>
         ))}

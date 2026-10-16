@@ -8,7 +8,6 @@ import { AccountStatusBadge } from './patterns/AccountStatusBadge';
 import { Callout } from './patterns/Callout';
 import { Combobox, MultiSelect } from './patterns/Combobox';
 import { DataTable } from './patterns/DataTable';
-import { FilterBar } from './patterns/FilterBar';
 import { ConfirmDialog } from './patterns/Dialog';
 import { Pagination } from './patterns/Pagination';
 import { PasswordChecklist } from './patterns/PasswordChecklist';
@@ -133,7 +132,7 @@ describe('DataTable', () => {
         data={[{ n: 'B', v: 2 }, { n: 'A', v: 1 }]}
         columns={[
           { accessorKey: 'n', header: 'Nama' },
-          { accessorKey: 'v', header: 'Nilai', meta: { align: 'right', mono: true } },
+          { accessorKey: 'v', header: 'Nilai', meta: { align: 'right' } },
         ]}
       />,
     );
@@ -254,33 +253,3 @@ describe('Pagination', () => {
   });
 });
 
-describe('FilterBar (pola Filter daftar DS)', () => {
-  const labels = { more: (n: number) => (n ? `Filter lainnya (${n})` : 'Filter lainnya'), less: 'Sembunyikan filter', clear: 'Hapus filter', remove: (l: string) => `Hapus filter ${l}`, active: 'Filter aktif' };
-
-  it('filter tambahan aktif tampil sebagai pil saat tertutup dan bisa dihapus satu per satu', async () => {
-    const onRemove = vi.fn();
-    render(
-      <FilterBar
-        primary={<TextField label="Pengguna" />}
-        advanced={<TextField label="Alamat IP" />}
-        activeFilters={[{ key: 'ip', label: 'Alamat IP: 10.0.0.1', onRemove }]}
-        onClear={() => {}}
-        labels={labels}
-      />,
-    );
-    // Ada filter tambahan aktif → terbuka otomatis; pil tidak digandakan.
-    expect(screen.getByRole('button', { name: /Sembunyikan filter/ })).toHaveAttribute('aria-expanded', 'true');
-    expect(screen.queryByRole('list', { name: 'Filter aktif' })).not.toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: /Sembunyikan filter/ }));
-    expect(screen.getByRole('list', { name: 'Filter aktif' })).toHaveTextContent('Alamat IP: 10.0.0.1');
-    await userEvent.click(screen.getByRole('button', { name: 'Hapus filter Alamat IP: 10.0.0.1' }));
-    expect(onRemove).toHaveBeenCalled();
-    expect(screen.getByRole('button', { name: 'Hapus filter' })).toBeInTheDocument();
-  });
-
-  it('tanpa filter aktif: tombol berupa teks tanpa angka dan tanpa "Hapus filter"', () => {
-    render(<FilterBar primary={<TextField label="Pengguna" />} advanced={<TextField label="Alamat IP" />} labels={labels} />);
-    expect(screen.getByRole('button', { name: /^Filter lainnya$/ })).toHaveAttribute('aria-expanded', 'false');
-    expect(screen.queryByRole('button', { name: 'Hapus filter' })).not.toBeInTheDocument();
-  });
-});

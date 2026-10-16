@@ -54,8 +54,8 @@ function SaveBar({ dirty, busy, onCancel, onSave, saveLabel }: { dirty: boolean;
 function ReadRow({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="grid gap-1 border-b border-border-subtle py-3 last:border-b-0 md:grid-cols-[200px_1fr] md:gap-4">
-      <dt className="text-body-dense text-ink-muted">{label}</dt>
-      <dd className="text-body-dense text-ink">{children}</dd>
+      <dt className="text-body text-ink-muted">{label}</dt>
+      <dd className="text-body text-ink">{children}</dd>
     </div>
   );
 }
@@ -97,7 +97,7 @@ export function RoleInfoForm({ role, onDirtyChange }: { role: RoleEntry; onDirty
     setErrors({});
   }
   return (
-    <Section className="border border-border" title={c.panel.infoJudul}>
+    <Section title={c.panel.infoJudul}>
       <div className="flex flex-col gap-4">
         <div className="flex max-w-[640px] flex-col gap-4">
           <TextField label={c.ubah.nama} required showRequired value={nama} onChange={(e) => (setNama(e.target.value), setErrors((p) => ({ ...p, nama: undefined })))} hint={c.ubah.namaHint} error={errors.nama} />
@@ -108,7 +108,7 @@ export function RoleInfoForm({ role, onDirtyChange }: { role: RoleEntry; onDirty
           <ReadRow label={c.panel.cakupan}>{role.cakupan}</ReadRow>
           <ReadRow label={c.panel.status}>{role.status}</ReadRow>
           <ReadRow label={c.panel.pengguna}>
-            <Link to={`/pengguna?role=${role.id}`} className="font-mono underline">
+            <Link to={`/pengguna?role=${role.id}`} className="link-inline font-mono">
               {c.panel.penggunaLink(role.pengguna)}
             </Link>
           </ReadRow>
@@ -148,7 +148,7 @@ export function RolePermissionsForm({ role, onDirtyChange }: { role: RoleEntry; 
     });
   }
   return (
-    <Section className="border border-border" title={c.panel.hakAkses} description={c.panel.hakAksesKet}>
+    <Section title={c.panel.hakAkses} description={c.panel.hakAksesKet}>
       <div className="flex flex-col gap-4">
         <PermissionPicker orgType={role.orgType} value={izin} onChange={(v) => (setIzin(v), setErr(undefined))} error={err} scroll={false} />
         <SaveBar

@@ -15,6 +15,7 @@ import { useToast } from '@/components/patterns/Toast';
 import { Button } from '@/components/ui/Button';
 import { TextField } from '@/components/ui/TextField';
 import { t } from '@/lib/i18n/id';
+import { maskEmail } from '@/lib/format';
 import { meetsPolicy, PASSWORD_MIN_LENGTH } from '@/lib/password';
 import type { InviteTokenState } from '@/lib/status';
 import { isServiceError, services } from '@/services';
@@ -27,7 +28,13 @@ export interface AktivasiPageState {
   otpTerkunci?: boolean;
 }
 
-function TokenState({ state, token }: { state: Exclude<InviteTokenState, 'valid'>; token: string }) {
+function TokenState({
+  state,
+  token,
+}: {
+  state: Exclude<InviteTokenState, 'valid'>;
+  token: string;
+}) {
   const navigate = useNavigate();
   const toast = useToast();
   const request = useMutation({
@@ -36,7 +43,14 @@ function TokenState({ state, token }: { state: Exclude<InviteTokenState, 'valid'
   });
 
   if (state === 'invalid') {
-    return <StatePanel align="center" media={<Illustration kind="invalid" />} title={c.tidakValidJudul} description={c.tidakValidIsi} />;
+    return (
+      <StatePanel
+        align="center"
+        media={<Illustration kind="invalid" />}
+        title={c.tidakValidJudul}
+        description={c.tidakValidIsi}
+      />
+    );
   }
   if (state === 'used') {
     return (
@@ -70,7 +84,13 @@ function TokenState({ state, token }: { state: Exclude<InviteTokenState, 'valid'
               {c.kendalaIsi}
             </Callout>
           )}
-          <Button variant="primary" block loading={request.isPending} loadingLabel={c.mengirim} onClick={() => request.mutate()}>
+          <Button
+            variant="primary"
+            block
+            loading={request.isPending}
+            loadingLabel={c.mengirim}
+            onClick={() => request.mutate()}
+          >
             {c.mintaUndangan}
           </Button>
         </>
@@ -88,7 +108,11 @@ export function AktivasiPage() {
     if (location.state) navigate(location.pathname, { replace: true, state: null });
   }, [location.state, location.pathname, navigate]);
 
-  const invite = useQuery({ queryKey: ['invite', token], queryFn: () => services.activation.checkInvite(token), retry: false });
+  const invite = useQuery({
+    queryKey: ['invite', token],
+    queryFn: () => services.activation.checkInvite(token),
+    retry: false,
+  });
   const [pw, setPw] = useState('');
   const [confirm, setConfirm] = useState('');
   const [errors, setErrors] = useState<{ pw?: string; confirm?: string }>({});
@@ -98,7 +122,8 @@ export function AktivasiPage() {
 
   const save = useMutation({
     mutationFn: () => services.activation.setPendingPassword(token, pw),
-    onSuccess: (challenge) => navigate(`/aktivasi/${encodeURIComponent(token)}/verifikasi`, { state: challenge }),
+    onSuccess: (challenge) =>
+      navigate(`/aktivasi/${encodeURIComponent(token)}/verifikasi`, { state: challenge }),
     onError: (e) => {
       if (isServiceError(e, 'COMMON_PASSWORD')) setErrors({ pw: c.terlaluUmum });
       // Tabel V-2: token kedaluwarsa saat submit → state "Undangan tidak berlaku lagi" (halaman penuh).
@@ -127,10 +152,16 @@ export function AktivasiPage() {
     if (canSubmit) save.mutate();
   }
 
-  const state = lateState ?? (invite.data && invite.data.state !== 'valid' ? invite.data.state : null);
+  const state =
+    lateState ?? (invite.data && invite.data.state !== 'valid' ? invite.data.state : null);
 
   let body;
-  if (invite.isPending) body = <p role="status" className="text-center text-body text-ink-muted">{t.app.memuat}</p>;
+  if (invite.isPending)
+    body = (
+      <p role="status" className="text-center text-body text-ink-muted">
+        {t.app.memuat}
+      </p>
+    );
   else if (invite.isError)
     body = (
       <Callout variant="error" title={c.kendalaJudul}>
@@ -139,13 +170,13 @@ export function AktivasiPage() {
     );
   else if (state) body = <TokenState state={state} token={token} />;
   else {
-    const d = c.deskripsi(invite.data!.email ?? '');
+    const d = c.deskripsi(maskEmail(invite.data!.email ?? ''));
     body = (
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-8">
         <div className="flex flex-col gap-3 text-center">
-          <h1 className="text-heading-1 text-ink">{c.judul}</h1>
+          <h1 className="text-center text-page-title text-ink">{c.judul}</h1>
           {/* FR-AK-08: email akun read-only */}
-          <p className="text-body-dense text-ink-muted">
+          <p className="text-body text-ink-muted">
             {d.before}
             <strong className="font-semibold text-ink">{d.email}</strong>
             <br />
@@ -171,6 +202,7 @@ export function AktivasiPage() {
             required
           />
           <TextField
+            size="lg"
             ref={confirmRef}
             label={c.konfirmasi}
             type="password"
@@ -189,7 +221,14 @@ export function AktivasiPage() {
           />
         </div>
         {/* FR-AK-04: tombol aktif hanya bila semua syarat terpenuhi */}
-        <Button type="submit" variant="primary" block disabled={!canSubmit} loading={save.isPending} loadingLabel={c.menyimpan}>
+        <Button
+          type="submit"
+          variant="primary"
+          block
+          disabled={!canSubmit}
+          loading={save.isPending}
+          loadingLabel={c.menyimpan}
+        >
           {c.simpan}
         </Button>
       </form>

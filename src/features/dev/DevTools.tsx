@@ -15,7 +15,7 @@ import { services } from '@/services';
 import { SESSION_QUERY_KEY, useSession } from '../session/SessionProvider';
 import { devCopy as c } from './copy';
 
-export function DevRoleSwitcher({ inverse = true }: { inverse?: boolean }) {
+export function DevRoleSwitcher({ inverse = false }: { inverse?: boolean }) {
   const dev = services.dev;
   const qc = useQueryClient();
   const navigate = useNavigate();
@@ -78,14 +78,14 @@ export function DevTools() {
         variant="quiet"
         icon={<FlaskConical aria-hidden size={16} strokeWidth={1.8} />}
         onClick={() => setOpen(true)}
-        className="w-full justify-start text-sidebar-ink hover:bg-sidebar-active"
+        className="w-full justify-start"
       >
         {c.judul}
       </Button>
       <Dialog open={open} onOpenChange={setOpen} title={c.judul} description={c.keterangan} closeLabel={c.tutup} size="lg">
         <div className="flex max-h-[60vh] flex-col gap-5 overflow-y-auto">
           <section className="flex flex-col gap-2">
-            <h3 className="text-heading-3 text-ink-muted">{c.simulasi}</h3>
+            <h3 className="text-body-strong text-ink-muted">{c.simulasi}</h3>
             <div className="flex flex-wrap gap-2">
               <Button onClick={() => run(() => dev.advanceClock(28 * 60_000))}>{c.majukan28}</Button>
               <Button onClick={() => run(() => dev.advanceClock(11 * 60_000))}>{c.majukan11}</Button>
@@ -99,7 +99,7 @@ export function DevTools() {
             </div>
           </section>
           <section className="flex flex-col gap-2">
-            <h3 className="text-heading-3 text-ink-muted">{c.tautanUji}</h3>
+            <h3 className="text-body-strong text-ink-muted">{c.tautanUji}</h3>
             <div className="flex flex-wrap gap-2">
               <Button onClick={() => issue('reset', 'valid')}>{c.resetValid}</Button>
               <Button onClick={() => issue('reset', 'used')}>{c.resetDipakai}</Button>
@@ -109,10 +109,10 @@ export function DevTools() {
               <Button onClick={() => issue('aktivasi', 'expired')}>{c.aktivasiKedaluwarsa}</Button>
             </div>
             {links.length > 0 && (
-              <ul className="flex flex-col gap-1 text-body-dense">
+              <ul className="flex flex-col gap-1 text-body">
                 {links.map((l) => (
                   <li key={l}>
-                    <Link to={l} onClick={() => setOpen(false)} className="font-mono text-caption text-ink underline">
+                    <Link to={l} onClick={() => setOpen(false)} className="font-mono text-caption text-ink underline-offset-[3px] hover:underline">
                       {l}
                     </Link>
                   </li>
@@ -122,25 +122,25 @@ export function DevTools() {
           </section>
           <section className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
-              <h3 className="text-heading-3 text-ink-muted">{c.kotakMasuk}</h3>
+              <h3 className="text-body-strong text-ink-muted">{c.kotakMasuk}</h3>
               <Button variant="quiet" onClick={() => run(() => dev.clearInbox())}>{c.kosongkan}</Button>
             </div>
             {(inbox.data ?? []).length === 0 ? (
-              <p className="text-body-dense text-ink-muted">{c.kotakMasukKosong}</p>
+              <p className="text-body text-ink-muted">{c.kotakMasukKosong}</p>
             ) : (
               <ul className="flex flex-col">
                 {inbox.data!.map((m) => (
                   <li key={m.id} className="flex flex-col gap-1 border-b border-border-subtle py-3 last:border-b-0">
-                    <div className="flex items-center gap-2 text-body-dense font-semibold text-ink">
+                    <div className="flex items-center gap-2 text-body font-semibold text-ink">
                       <Mail aria-hidden size={14} strokeWidth={1.8} />
                       {m.subject}
                     </div>
-                    <p className="text-caption text-ink-subtle">
+                    <p className="text-caption text-ink-muted">
                       {m.to} · {formatTanggalJam(m.sentAt)}
                     </p>
-                    <p className="text-body-dense text-ink">{m.body}</p>
+                    <p className="text-body text-ink">{m.body}</p>
                     {m.link && (
-                      <Link to={m.link} onClick={() => setOpen(false)} className="font-mono text-caption text-ink underline">
+                      <Link to={m.link} onClick={() => setOpen(false)} className="font-mono text-caption text-ink underline-offset-[3px] hover:underline">
                         {m.link}
                       </Link>
                     )}

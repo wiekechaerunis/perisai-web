@@ -10,7 +10,8 @@ export const usersCopy = {
   detail: { crumb: 'Pengguna', kembali: 'Kembali ke Pengguna' }, // usulan
   ringkasan: 'Kelola akun, organisasi, status, dan izin efektif pengguna.', // Figma 66:3139
   // Figma 66:3139 menampilkan "Manajemen pengguna · n"; jumlah dihapus dari judul (arahan PM 14 Okt 2026), total ada di paginasi.
-  tabelJudul: 'Manajemen pengguna',
+  tabelJudul: 'Daftar pengguna',
+  entitas: 'pengguna', // DS v2 FilterPanel "Terapkan · n pengguna"
   undang: 'Undang pengguna',
   cari: 'Cari nama atau email', // Figma 66:3139
   cariLabel: 'Cari pengguna',
@@ -380,6 +381,7 @@ export const usersCopy = {
     judul: 'Permintaan ubah email',
     ringkasan: 'Permintaan yang menunggu persetujuan Anda. Email baru sudah diverifikasi pengguna.', // usulan
     tabel: 'Daftar permintaan ubah email',
+    tabelJudul: 'Daftar permintaan',
     kolom: { pengguna: 'Pengguna', emailLama: 'Email lama', emailBaru: 'Email baru', diajukan: 'Diajukan', aksi: 'Aksi' },
     kosong: 'Tidak ada permintaan yang menunggu persetujuan.', // usulan
     setujui: 'Setujui',

@@ -7,6 +7,7 @@ export const roleCopy = {
   judul: 'Role',
   ringkasan: 'Daftar role baku yang berlaku sama di seluruh organisasi.', // usulan
   tabel: 'Daftar role',
+  tabelJudul: 'Daftar role',
   kolom: { kode: 'Kode', nama: 'Nama', jenis: 'Jenis organisasi', cakupan: 'Cakupan', status: 'Status', pengguna: 'Pengguna' },
   aktif: 'Aktif',
   tidakAktif: 'Tidak aktif',

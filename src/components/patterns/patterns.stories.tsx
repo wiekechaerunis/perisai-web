@@ -133,7 +133,7 @@ export const MenuAkun: S = {
   name: 'Menu',
   render: () => (
     <Menu
-      header={<span className="text-body-dense font-semibold">Rina Wiyono</span>}
+      header={<span className="text-body font-semibold">Rina Wiyono</span>}
       trigger={<Button>Menu akun</Button>}
       items={[
         { key: 'a', label: 'Pengaturan akun', onSelect: () => undefined },

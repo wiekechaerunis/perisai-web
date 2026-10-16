@@ -8,7 +8,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Callout } from '@/components/patterns/Callout';
 import { useToast } from '@/components/patterns/Toast';
 import { Button } from '@/components/ui/Button';
-import { TextField } from '@/components/ui/TextField';
+import { OtpField } from '@/components/patterns/OtpField';
 import { formatHitungMundur } from '@/lib/format';
 import { SECURITY_PARAMS } from '@/lib/security-params';
 import { isServiceError, ServiceError, type OtpChallenge } from '@/services';
@@ -110,47 +110,44 @@ export function OtpForm({ context, challenge: initial, verify, resend, onTermina
   }
 
   return (
-    <form noValidate onSubmit={onSubmit} className="flex flex-col gap-3">
-      <h1 className="text-center text-heading-1 text-ink">{copy.judul}</h1>
-      <p className="text-center text-body-dense text-ink-muted">{copy.isi(challenge.maskedEmail, menit)}</p>
-      <div className="h-5" aria-hidden />
+    <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <h1 className="text-center text-page-title text-ink">{copy.judul}</h1>
+        <p className="text-center text-lead text-ink-subtle">{copy.isi(challenge.maskedEmail, menit)}</p>
+      </div>
       {alert && (
         <Callout variant="error" title={alert.title}>
           {alert.body}
         </Callout>
       )}
-      <TextField
+      <OtpField
         ref={inputRef}
         label={c.label}
-        size="lg"
+        length={SECURITY_PARAMS.otpLength}
         value={code}
-        onChange={(e) => {
-          setCode(e.target.value.slice(0, SECURITY_PARAMS.otpLength));
+        onChange={(v) => {
+          setCode(v);
           if (error) setError(undefined);
         }}
-        digitsOnly
-        inputMode="numeric"
-        autoComplete="one-time-code"
-        maxLength={SECURITY_PARAMS.otpLength}
         error={error}
         required
       />
-      <Button type="submit" variant="primary" size="lg" block loading={verifying} loadingLabel={c.memproses} className="mt-3">
+      <Button type="submit" variant="primary" size="lg" block loading={verifying} loadingLabel={c.memproses} className="mt-2">
         {copy.tombol}
       </Button>
-      <p className="mt-1 text-center text-[13px] leading-[18px] text-ink-muted" aria-live="polite">
+      <p className="text-center text-caption text-ink-muted" aria-live="polite">
         {c.belumMenerima}{' '}
         {secondsLeft > 0 ? (
           <span>
             {c.kirimUlangDalam.replace('{waktu}', '')}
-            <strong className="font-mono font-semibold text-ink">{formatHitungMundur(secondsLeft)}</strong>
+            <strong className="font-semibold tabular-nums text-ink">{formatHitungMundur(secondsLeft)}</strong>
           </span>
         ) : (
           <button
             type="button"
             onClick={onResend}
             disabled={resending}
-            className="font-semibold text-ink underline-offset-2 hover:underline disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
+            className="link-inline disabled:opacity-[.45] focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
           >
             {c.kirimUlang}
           </button>
@@ -159,7 +156,7 @@ export function OtpForm({ context, challenge: initial, verify, resend, onTermina
       <button
         type="button"
         onClick={onBack}
-        className="mx-auto mt-2 text-body-dense text-ink underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
+        className="mx-auto text-caption font-semibold text-ink underline-offset-[3px] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-focus-ring"
       >
         {copy.kembali}
       </button>

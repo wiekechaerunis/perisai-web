@@ -1,7 +1,9 @@
-@import '@fontsource/ibm-plex-sans/400.css';
-@import '@fontsource/ibm-plex-sans/500.css';
-@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/plus-jakarta-sans/400.css';
+@import '@fontsource/plus-jakarta-sans/500.css';
+@import '@fontsource/plus-jakarta-sans/600.css';
+@import '@fontsource/plus-jakarta-sans/700.css';
 @import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
 @import './tokens.css';
 @import './figma.css';
 
@@ -21,11 +23,150 @@
     font-family: var(--type-body-family);
     font-size: var(--type-body-size);
     line-height: var(--type-body-line);
+    font-variant-numeric: tabular-nums;
     -webkit-font-smoothing: antialiased;
   }
-  /* Fokus keyboard: cincin 2px focus-ring dengan jarak 2px (DS). */
+  /* Fokus keyboard: cincin 2px focus-ring dengan jarak 2px (DS v2). */
   :focus-visible {
     outline: 2px solid var(--color-focus-ring);
     outline-offset: 2px;
+  }
+
+  /* DS v2 · Lime Checkbox/Radio (Ekspresi E4 — pilihan pengguna): kotak 16px sudut 4px (radius-xs), garis 1,5px border-control.
+     Tercentang/sebagian: latar action + garis 1px action-line + tanda 3px on-action. Radio terpilih: cincin 4px action
+     bergaris action-line dengan titik on-action. Hover garis ink; error garis error-ink + latar error-bg; nonaktif sunken. */
+  input[type='checkbox'],
+  input[type='radio'] {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    flex: none;
+    margin: 0;
+    cursor: pointer;
+    background: var(--color-surface) center / 12px 12px no-repeat;
+    box-shadow: inset 0 0 0 1.5px var(--color-border-control);
+    transition: box-shadow 0.12s ease, background-color 0.12s ease;
+    vertical-align: middle;
+  }
+  input[type='checkbox'] {
+    border-radius: var(--radius-xs);
+  }
+  input[type='radio'] {
+    border-radius: 50%;
+  }
+  input[type='checkbox']:hover:not(:checked):not(:indeterminate):not(:disabled),
+  input[type='radio']:hover:not(:checked):not(:disabled),
+  label:hover > input[type='checkbox']:not(:checked):not(:indeterminate):not(:disabled),
+  label:hover > input[type='radio']:not(:checked):not(:disabled) {
+    box-shadow: inset 0 0 0 1.5px var(--color-ink);
+  }
+  input[type='checkbox']:checked,
+  input[type='checkbox']:indeterminate {
+    background-color: var(--color-action);
+    box-shadow: inset 0 0 0 1px var(--color-action-line);
+  }
+  input[type='checkbox']:checked {
+    /* Centang on-action (#1C1D21 di kedua tema). */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231C1D21' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  }
+  input[type='checkbox']:indeterminate {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231C1D21' stroke-width='3.5' stroke-linecap='round'%3E%3Cpath d='M6 12h12'/%3E%3C/svg%3E");
+  }
+  input[type='radio']:checked {
+    background-color: var(--color-on-action);
+    box-shadow: inset 0 0 0 4px var(--color-action), inset 0 0 0 5px var(--color-action-line);
+  }
+  input[type='checkbox'][aria-invalid='true']:not(:checked),
+  input[type='radio'][aria-invalid='true']:not(:checked) {
+    background-color: var(--color-error-bg);
+    box-shadow: inset 0 0 0 1.5px var(--color-error-ink);
+  }
+  input[type='checkbox']:disabled,
+  input[type='radio']:disabled {
+    cursor: not-allowed;
+    background-color: var(--color-surface-sunken);
+    box-shadow: inset 0 0 0 1.5px var(--color-border);
+  }
+  input[type='checkbox']:checked:disabled {
+    opacity: 0.45;
+  }
+
+  /* Link di dalam kalimat (README Tipografi DS v2): garis bawah tipis border-control berjarak 3px, jadi ink saat hover.
+     Link aksi berdiri sendiri tidak bergaris bawah (Button variant link). */
+  .link-inline {
+    font-weight: 600;
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-decoration-color: var(--color-border-control);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.12s ease;
+  }
+  .link-inline:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* Tanpa spinner bawaan di input angka (README TextField). */
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+}
+
+/* Bidang merek sidebar (DS v2 `p-wedge`, Ekspresi E6): gradasi lime lembut di kiri bawah, tanpa potongan bersudut. */
+.sidebar-wedge {
+  background-image:
+    radial-gradient(120% 55% at 0% 100%, color-mix(in srgb, var(--color-action) 16%, transparent) 0%, transparent 70%),
+    linear-gradient(180deg, transparent 45%, color-mix(in srgb, var(--color-action) 7%, transparent) 100%);
+}
+
+/* Scrollbar minimalis DS v2 (`p-scroll`): untuk wadah bergulir di dalam aplikasi, bukan body. Thumb 4px membulat tanpa
+   track/panah; diam switch-off, wadah di-hover border-control, thumb di-hover ink-muted (6px), diseret ink-subtle. */
+.p-scroll {
+  scrollbar-gutter: stable;
+}
+@supports (-moz-appearance: none) {
+  .p-scroll { scrollbar-width: thin; scrollbar-color: var(--color-switch-off) transparent; }
+  .p-scroll:hover { scrollbar-color: var(--color-border-control) transparent; }
+}
+.p-scroll::-webkit-scrollbar { width: 10px; height: 10px; }
+.p-scroll::-webkit-scrollbar-track,
+.p-scroll::-webkit-scrollbar-corner { background: transparent; }
+.p-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-switch-off);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+.p-scroll:hover::-webkit-scrollbar-thumb { background-color: var(--color-border-control); }
+.p-scroll::-webkit-scrollbar-thumb:hover { background-color: var(--color-ink-muted); border-width: 2px; }
+.p-scroll::-webkit-scrollbar-thumb:active { background-color: var(--color-ink-subtle); }
+.p-scroll::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+
+/* Ilustrasi garis EmptyState DS v2 (components/patterns/Illustration.tsx). */
+@layer components {
+  .il .ln { fill: none; stroke: var(--color-ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .il .pa, .il .pa.ln { fill: var(--color-surface); }
+  .il .so, .il .so.ln, .il .gr { fill: var(--color-surface-sunken); }
+  .il .ac, .il .ac.ln { fill: var(--color-action); }
+  .il .at, .il .at.ln { fill: var(--color-accent-card-border); }
+  .il .er, .il .er.ln { fill: var(--color-caution-bg); }
+  .il { animation: p-rise 0.4s ease both; }
+  .il-host:hover .il .ac { transform-box: fill-box; transform-origin: center; animation: p-nudge 0.5s ease; }
+}
+@keyframes p-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes p-nudge { 50% { transform: scale(1.12); } }
+
+/* Gerak DS v2: semua animasi dan transisi mati saat pengguna meminta gerak dikurangi. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

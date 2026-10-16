@@ -16,11 +16,11 @@ export interface RoleSwitcherProps {
   onSelect: (userId: string) => void;
   label: string;
   placeholder: string;
-  /** inverse = di atas sidebar-bg. */
+  /** @deprecated Sidebar DS v2 berlatar terang. */
   tone?: 'default' | 'inverse';
 }
 
-export function RoleSwitcher({ users, currentUserId, onSelect, label, placeholder, tone = 'inverse' }: RoleSwitcherProps) {
+export function RoleSwitcher({ users, currentUserId, onSelect, label, placeholder, tone = 'default' }: RoleSwitcherProps) {
   return (
     <Select
       tone={tone}

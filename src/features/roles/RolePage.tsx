@@ -11,7 +11,7 @@ import { useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { PageBody } from '@/components/layout/AppShell';
 import { PageHeader } from '@/components/layout/PageHeader';
-import { Section } from '@/components/layout/Section';
+import { TableCard } from '@/components/patterns/TableCard';
 import { AccountStatusBadge } from '@/components/patterns/AccountStatusBadge';
 import { DataTable } from '@/components/patterns/DataTable';
 import { ConfirmDialog } from '@/components/patterns/Dialog';
@@ -55,7 +55,7 @@ export function RoleDetailPage() {
       <>
         <PageHeader title={judul} breadcrumbs={crumbs(q.isError ? judul : '…')} back={back} />
         <PageBody>
-          <p role="status" className="text-body-dense text-ink-muted">{q.isError ? c.panel.tidakDitemukanIsi : c.memuat}</p>
+          <p role="status" className="text-body text-ink-muted">{q.isError ? c.panel.tidakDitemukanIsi : c.memuat}</p>
         </PageBody>
       </>
     );
@@ -92,7 +92,7 @@ export function RoleDetailPage() {
         }
       />
       <PageBody>
-        {!r.dapatDinonaktifkan && <p className="text-caption text-ink-subtle">{c.panel.tidakDapatNonaktif}</p>}
+        {!r.dapatDinonaktifkan && <p className="text-caption text-ink-muted">{c.panel.tidakDapatNonaktif}</p>}
         <RoleInfoForm role={r} onDirtyChange={setInfoDirty} />
         <RolePermissionsForm role={r} onDirtyChange={setIzinDirty} />
       </PageBody>
@@ -123,9 +123,9 @@ export function RolePage() {
       id: 'nama',
       header: c.kolom.nama,
       cell: ({ row }) => (
-        <span className={`flex flex-col ${row.original.status === 'Aktif' ? 'text-ink' : 'text-ink-subtle'}`}>
-          <span className="font-medium">{row.original.nama}</span>
-          <span className="text-caption text-ink-subtle">{row.original.sistem ? c.sistem : c.buatan}</span>
+        <span className={`flex flex-col ${row.original.status === 'Aktif' ? 'text-ink' : 'text-ink-muted'}`}>
+          <span className="text-body-strong">{row.original.nama}</span>
+          <span className="text-caption text-ink-muted">{row.original.sistem ? c.sistem : c.buatan}</span>
         </span>
       ),
     },
@@ -135,10 +135,10 @@ export function RolePage() {
     {
       id: 'pengguna',
       header: c.kolom.pengguna,
-      meta: { align: 'right', mono: true },
+      meta: { align: 'right' },
       // FR-KR-07: jumlah pengguna dapat diklik → daftar pengguna terfilter role.
       cell: ({ row }) => (
-        <Link to={`/pengguna?role=${row.original.id}`} onClick={(e) => e.stopPropagation()} className="tabular-nums underline">
+        <Link to={`/pengguna?role=${row.original.id}`} onClick={(e) => e.stopPropagation()} className="link-inline tabular-nums">
           {row.original.pengguna}
         </Link>
       ),
@@ -156,18 +156,18 @@ export function RolePage() {
         }
       />
       <PageBody>
-        <Section className="border border-border">
+        <TableCard title={c.tabelJudul}>
           <DataTable
             caption={c.tabel}
             columns={columns}
             data={list.data ?? []}
             getRowId={(r) => r.id}
             loading={list.isPending}
-            loadingContent={<p className="text-body-dense text-ink-muted">{c.memuat}</p>}
+            loadingContent={<p className="px-4 pb-4 text-body text-ink-muted">{c.memuat}</p>}
             error={list.isError ? c.gagal : undefined}
             onRowClick={(r) => navigate(`/role/${r.id}`)}
           />
-        </Section>
+        </TableCard>
       </PageBody>
     </>
   );

@@ -145,7 +145,7 @@ export function AddOrgDialog({ open, onOpenChange, onCreated }: { open: boolean;
           <TextField
             label={
               <>
-                {c.badanHukum} <span className="text-ink-subtle">{c.opsional}</span>
+                {c.badanHukum} <span className="text-ink-muted">{c.opsional}</span>
               </>
             }
             placeholder={c.badanHukumPlaceholder}
@@ -156,7 +156,7 @@ export function AddOrgDialog({ open, onOpenChange, onCreated }: { open: boolean;
           <Select
             label={
               <>
-                {c.skema} <span className="text-ink-subtle">{c.opsional}</span>
+                {c.skema} <span className="text-ink-muted">{c.opsional}</span>
               </>
             }
             placeholder={c.skemaPlaceholder}
